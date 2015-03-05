@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace timetracker
 {
@@ -101,6 +102,18 @@ namespace timetracker
 
     case MatchAlgorithm.ExactInsensitive:
      return str.Equals(str2, StringComparison.InvariantCultureIgnoreCase);
+
+    case MatchAlgorithm.RegularExpression:
+     {
+      try
+      {
+       Regex regex = new Regex(str);
+       return regex.IsMatch(str2);
+      } catch ( Exception )
+      {
+       return false;
+      }
+     }
    }
 
    return false;

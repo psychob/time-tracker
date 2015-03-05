@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +14,8 @@ namespace timetracker
 {
  public partial class MainWindow : Form
  {
+  ApplicationDatabase appDB;
+
   public MainWindow()
   {
    InitializeComponent();
@@ -19,23 +23,20 @@ namespace timetracker
 
   private void MainWindow_Load(object sender, EventArgs e)
   {
-   LoadBaseData();
-   LoadTrackData();
-   AddAllRunningProcess();
-   EnableHook();
+   {
+    Assembly ass = Assembly.GetExecutingAssembly();
+    FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ass.Location);
+    this.Text = "Time Tracker v" + fvi.ProductVersion;
+   }
+
+   appDB = new ApplicationDatabase(this);
+
+   appDB.StartApp();
   }
 
   private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
   {
-   DisableHook();
-   FinishAllTrackedProcess();
-   SaveTrackData();
-   SaveBaseData();
-  }
-
-  private void timer_RefreshCurrentApplications_Tick(object sender, EventArgs e)
-  {
-   refreshTrackApplication();
+   appDB.CloseApp();
   }
 
   private void niMainApp_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -58,41 +59,38 @@ namespace timetracker
    this.Close();
   }
 
-  private void applicationDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+  private void timer_RefreshCurrentApplications_Tick(object sender, EventArgs e)
   {
-   AppDB_Window.ApplicationDatabase appDbWin = new AppDB_Window.ApplicationDatabase();
+   List<ApplicationDatabase.DatabaseCurrentView> list = appDB.PollActiveApps();
 
-   appDbWin.listOfAllApplications = dbBaseApplications;
+   list = list.OrderByDescending(o => o.currentTime).ToList();
 
-   appDbWin.ShowDialog(this);
+   lvTrackApp.SuspendLayout();
 
-   dbBaseApplications = appDbWin.listOfAllApplications;
-  }
+   lvTrackApp.Items.Clear();
 
-  private void trackedApplicationDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
-  {
-   AppDBTrackedApp_Window.ApplicationTrackedDatabase atd = new AppDBTrackedApp_Window.ApplicationTrackedDatabase();
-
-   List<AppTrack_Entry> ate = dbTrackApplication.OrderByDescending(o => o.allTime).ToList();
-
-   foreach (AppTrack_Entry it in ate)
+   foreach (ApplicationDatabase.DatabaseCurrentView it in list)
    {
-    var dbInfo = checkIfAppExistInDBInternal(it.internalName);
-    if ( !dbInfo.HasValue )
-     continue;
-
-    ListViewItem lvi = new ListViewItem(dbInfo.Value.nameOfApp);
+    ListViewItem lvi = new ListViewItem(it.processid.ToString());
+    lvi.SubItems.Add(it.name);
+    lvi.SubItems.Add(Utils.calculateTime(it.currentTime));
     lvi.SubItems.Add(Utils.calculateTime(it.allTime));
 
-    atd.lvAllAps.Items.Add(lvi);
+    lvTrackApp.Items.Add(lvi);
    }
 
-   atd.ShowDialog(this);
+   lvTrackApp.ResumeLayout(true);
   }
 
-  private void removeZombiesToolStripMenuItem_Click(object sender, EventArgs e)
+  private void applicationDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
   {
-   removeZombieProcess();
+   window.AllApplicationDatabase aad = new window.AllApplicationDatabase();
+
+   aad.listOfAllEntries = appDB.PollAllEntries();
+
+   aad.ShowDialog(this);
+
+   appDB.SynchronizeEntries(aad.listOfAllEntries);
   }
  }
 }

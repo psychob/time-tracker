@@ -42,7 +42,6 @@
    this.niMainApp = new System.Windows.Forms.NotifyIcon(this.components);
    this.cmsNotifyStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
    this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-   this.removeZombiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
    this.menuStrip1.SuspendLayout();
    this.cmsNotifyStrip.SuspendLayout();
    this.SuspendLayout();
@@ -90,8 +89,7 @@
    // 
    this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applicationDatabaseToolStripMenuItem,
-            this.trackedApplicationDatabaseToolStripMenuItem,
-            this.removeZombiesToolStripMenuItem});
+            this.trackedApplicationDatabaseToolStripMenuItem});
    this.menuStrip1.Location = new System.Drawing.Point(0, 0);
    this.menuStrip1.Name = "menuStrip1";
    this.menuStrip1.Size = new System.Drawing.Size(537, 24);
@@ -110,7 +108,6 @@
    this.trackedApplicationDatabaseToolStripMenuItem.Name = "trackedApplicationDatabaseToolStripMenuItem";
    this.trackedApplicationDatabaseToolStripMenuItem.Size = new System.Drawing.Size(161, 20);
    this.trackedApplicationDatabaseToolStripMenuItem.Text = "Tracked Application Database";
-   this.trackedApplicationDatabaseToolStripMenuItem.Click += new System.EventHandler(this.trackedApplicationDatabaseToolStripMenuItem_Click);
    // 
    // timer_RefreshCurrentApplications
    // 
@@ -139,13 +136,6 @@
    this.closeToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
    this.closeToolStripMenuItem.Text = "Close";
    this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
-   // 
-   // removeZombiesToolStripMenuItem
-   // 
-   this.removeZombiesToolStripMenuItem.Name = "removeZombiesToolStripMenuItem";
-   this.removeZombiesToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
-   this.removeZombiesToolStripMenuItem.Text = "Remove Zombies";
-   this.removeZombiesToolStripMenuItem.Click += new System.EventHandler(this.removeZombiesToolStripMenuItem_Click);
    // 
    // MainWindow
    // 
@@ -182,7 +172,6 @@
   private System.Windows.Forms.ContextMenuStrip cmsNotifyStrip;
   private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
   private System.Windows.Forms.ToolStripMenuItem trackedApplicationDatabaseToolStripMenuItem;
-  private System.Windows.Forms.ToolStripMenuItem removeZombiesToolStripMenuItem;
  }
 }
 
