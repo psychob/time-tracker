@@ -517,7 +517,10 @@ namespace timetracker
 
     DatabaseTrack? dbt_ = searchForTrackEntry(it.internalId);
     if (dbt_.HasValue)
-     dcv.allTime = dbt_.Value.countedTime;
+     dcv.allTime = dbt_.Value.countedTime + (WinAPI.GetTickCount64() - it.startTime);
+    else
+     dcv.allTime = (WinAPI.GetTickCount64() - it.startTime);
+
 
     ret.Add(dcv);
    }
