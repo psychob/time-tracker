@@ -29,7 +29,7 @@ namespace timetracker
     this.Text = "Time Tracker v" + fvi.ProductVersion;
    }
 
-   appDB = new ApplicationDatabase(this);
+   appDB = new ApplicationDatabase();
 
    appDB.StartApp();
   }
@@ -91,6 +91,14 @@ namespace timetracker
    aad.ShowDialog(this);
 
    appDB.SynchronizeEntries(aad.listOfAllEntries);
+  }
+
+  private void trackedApplicationDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   window.ShowTracked st = new window.ShowTracked();
+
+   st.listOfTracked = appDB.PollTrackedApps();
+   st.ShowDialog(this);
   }
  }
 }

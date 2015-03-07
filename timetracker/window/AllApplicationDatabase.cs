@@ -46,5 +46,34 @@ namespace timetracker.window
     listOfAllEntries.Add(dbentry);
    }
   }
+
+  private void btnEdit_Click(object sender, EventArgs e)
+  {
+   if ( lbAllAps.SelectedIndex != -1 )
+   {
+    AddNewApplication ana = new AddNewApplication();
+
+    ApplicationDatabase.DatabaseEntry dbe = listOfAllEntries[lbAllAps.SelectedIndex];
+    ana.entry_rules = dbe.rules;
+    ana.entry_appInternal = dbe.internalId;
+    ana.entry_appName = dbe.nameOfApplication;
+    ana.isEditable = false;
+
+    ana.ShowDialog(this);
+
+    if ( ana.isValid )
+    {
+     dbe.nameOfApplication = ana.entry_appName;
+     dbe.rules = ana.entry_rules;
+
+     listOfAllEntries.RemoveAt(lbAllAps.SelectedIndex);
+     lbAllAps.Items.RemoveAt(lbAllAps.SelectedIndex);
+
+     listOfAllEntries.Add(dbe);
+
+     lbAllAps.Items.Add(dbe.nameOfApplication);
+    }
+   }
+  }
  }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Management;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace timetracker
 {
@@ -62,6 +63,30 @@ namespace timetracker
    public ulong allTime;
   }
 
+  public struct DatabaseTrackView
+  {
+   public string name;
+   public ulong allTime;
+  }
+
+  private struct PidTable
+  {
+   public int pid;
+   public int count;
+
+   public PidTable( int pid_ )
+   {
+    pid = pid_;
+    count = 1;
+   }
+
+   public PidTable( int pid_, int count_ )
+   {
+    pid = pid_;
+    count = count_;
+   }
+  }
+
   [XmlRoot("db")]
   public struct CfgDatabase
   {
@@ -75,17 +100,14 @@ namespace timetracker
   }
 
   // pola
-  MainWindow linkToForm;
+  Object objLock = new Object();
   List<DatabaseEntry> dbAllEntries;
   List<DatabaseTrack> dbTrackEntries;
   List<DatabaseCurrent> dbCurrentEntries = new List<DatabaseCurrent>();
   ManagementEventWatcher mewCreatingProcess,
                          mewDeletingProcess;
 
-  public ApplicationDatabase( MainWindow mw )
-  {
-   linkToForm = mw;
-  }
+  List<PidTable> processToCheck = new List<PidTable>();
 
   public void StartApp()
   {
@@ -278,7 +300,7 @@ namespace timetracker
 
   private void _newProcessArrived(int p)
   {
-   this.linkToForm.Invoke((MethodInvoker)delegate
+   lock ( objLock )
    {
     int process_id = p;
     string process_filename,
@@ -293,13 +315,27 @@ namespace timetracker
      Process proc = Process.GetProcessById(process_id);
      process_filename = Path.GetFileName(proc.MainModule.FileName);
      process_path = proc.MainModule.FileName;
-     process_fileversion_name = proc.MainModule.FileVersionInfo.ProductName;
-     process_fileversion_company = proc.MainModule.FileVersionInfo.CompanyName;
-     process_fileversion_product_version = proc.MainModule.FileVersionInfo.ProductVersion;
-     process_fileversion_file_version = proc.MainModule.FileVersionInfo.FileVersion;
-     process_fileversion_description = proc.MainModule.FileVersionInfo.FileDescription;
-    } catch (Exception)
+
+     FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(process_path);
+
+     process_fileversion_name = fvi.ProductName;
+     process_fileversion_company = fvi.CompanyName;
+     process_fileversion_product_version = fvi.ProductVersion;
+     process_fileversion_file_version = fvi.FileVersion;
+     process_fileversion_description = fvi.FileDescription;
+    }
+    catch (Win32Exception w32)
     {
+     if (w32.NativeErrorCode == 299)
+     {
+      this.processToCheck.Add(new PidTable(process_id));
+      return;
+     }
+     return;
+    }
+    catch (Exception)
+    {
+     //MessageBox.Show(e.ToString());
      return;
     }
 
@@ -307,20 +343,20 @@ namespace timetracker
                         process_fileversion_name, process_fileversion_company,
                         process_fileversion_product_version,
                         process_fileversion_file_version, process_fileversion_description);
-   });
+   }
   }
 
   private void _processWasDestroyed(int p)
   {
-   this.linkToForm.Invoke((MethodInvoker)delegate
+   lock ( objLock )
    {
     foreach (ApplicationDatabase.DatabaseCurrent it in dbCurrentEntries)
-     if ( it.processId == p )
+     if (it.processId == p)
      {
       _unregisterNewProcess(p);
       break;
      }
-   });
+   }
   }
 
   private void _registerNewProcess(int process_id, string process_filename,
@@ -581,6 +617,28 @@ namespace timetracker
 
   public List<DatabaseCurrentView> PollActiveApps()
   {
+   if (processToCheck.Count > 0)
+   {
+    lock (objLock)
+    {
+     var tmp = processToCheck.ToList();
+
+     foreach (var pid in tmp)
+     {
+      if (pid.count < 10)
+       _newProcessArrived(pid.pid);
+     }
+     var t = new List<PidTable>();
+
+     tmp.ForEach(o => t.Add(new PidTable(o.pid, o.count + 1)));
+
+     tmp = t;
+     tmp.RemoveAll(o => o.count > 10);
+
+     processToCheck = tmp;
+    }
+   }
+
    List<DatabaseCurrentView> ret = new List<DatabaseCurrentView>();
 
    foreach (DatabaseCurrent it in dbCurrentEntries)
@@ -615,6 +673,26 @@ namespace timetracker
    dbAllEntries = list;
 
    _RegisterAllCurrentProcess();
+  }
+
+  public List<DatabaseTrackView> PollTrackedApps()
+  {
+   List<DatabaseTrackView> dtv = new List<DatabaseTrackView>();
+
+   foreach (DatabaseTrack it in dbTrackEntries)
+   {
+    DatabaseTrackView dtvv = new DatabaseTrackView();
+    var dbEntry = searchForDatabaseEntry(it.internalId);
+
+    if (!dbEntry.HasValue)
+     continue;
+
+    dtvv.name = dbEntry.Value.nameOfApplication;
+    dtvv.allTime = it.countedTime;
+    dtv.Add(dtvv);
+   }
+
+   return dtv;
   }
  }
 }

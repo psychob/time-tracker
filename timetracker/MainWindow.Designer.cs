@@ -108,6 +108,7 @@
    this.trackedApplicationDatabaseToolStripMenuItem.Name = "trackedApplicationDatabaseToolStripMenuItem";
    this.trackedApplicationDatabaseToolStripMenuItem.Size = new System.Drawing.Size(161, 20);
    this.trackedApplicationDatabaseToolStripMenuItem.Text = "Tracked Application Database";
+   this.trackedApplicationDatabaseToolStripMenuItem.Click += new System.EventHandler(this.trackedApplicationDatabaseToolStripMenuItem_Click);
    // 
    // timer_RefreshCurrentApplications
    // 

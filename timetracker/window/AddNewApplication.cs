@@ -234,6 +234,17 @@ namespace timetracker.window
    entry_currentRule_compareTo = ApplicationDatabase.DatabaseEntryRuleCompareTo.FileName;
 
    btnNewRule.Enabled = false;
+
+   if (!isEditable)
+   {
+    tbInternalString.Enabled = false;
+
+    foreach ( var it in entry_rules_list )
+    {
+     string to_add = "Compare: " + it.what.ToString() + " to: '" + it.str + "' with: " + it.how.ToString();
+     lbAllRules.Items.Add(to_add);
+    }
+   }
   }
 
   private void tbPattern_TextChanged(object sender, EventArgs e)
@@ -294,6 +305,15 @@ namespace timetracker.window
   {
    entry_appInternal = "";
    Close();
+  }
+
+  private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   if ( lbAllRules.SelectedIndex != -1 )
+   {
+    entry_rules_list.RemoveAt(lbAllRules.SelectedIndex);
+    lbAllRules.Items.RemoveAt(lbAllRules.SelectedIndex);
+   }
   }
  }
 }

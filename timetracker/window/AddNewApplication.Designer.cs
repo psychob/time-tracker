@@ -28,6 +28,7 @@
   /// </summary>
   private void InitializeComponent()
   {
+   this.components = new System.ComponentModel.Container();
    System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddNewApplication));
    this.tbApplicationTitle = new System.Windows.Forms.TextBox();
    this.tbInternalString = new System.Windows.Forms.TextBox();
@@ -47,6 +48,9 @@
    this.label5 = new System.Windows.Forms.Label();
    this.label6 = new System.Windows.Forms.Label();
    this.cbIsReqired = new System.Windows.Forms.CheckBox();
+   this.cmsRules = new System.Windows.Forms.ContextMenuStrip(this.components);
+   this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+   this.cmsRules.SuspendLayout();
    this.SuspendLayout();
    // 
    // tbApplicationTitle
@@ -132,6 +136,7 @@
    // 
    // lbAllRules
    // 
+   this.lbAllRules.ContextMenuStrip = this.cmsRules;
    this.lbAllRules.FormattingEnabled = true;
    this.lbAllRules.Location = new System.Drawing.Point(12, 203);
    this.lbAllRules.Name = "lbAllRules";
@@ -223,6 +228,21 @@
    this.cbIsReqired.Text = "Is Required";
    this.cbIsReqired.UseVisualStyleBackColor = true;
    // 
+   // cmsRules
+   // 
+   this.cmsRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeToolStripMenuItem});
+   this.cmsRules.Name = "cmsRules";
+   this.cmsRules.ShowImageMargin = false;
+   this.cmsRules.Size = new System.Drawing.Size(128, 48);
+   // 
+   // removeToolStripMenuItem
+   // 
+   this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+   this.removeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+   this.removeToolStripMenuItem.Text = "Remove";
+   this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+   // 
    // AddNewApplication
    // 
    this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,6 +273,7 @@
    this.Name = "AddNewApplication";
    this.Text = "Add New Application";
    this.Load += new System.EventHandler(this.AddNewApplication_Load);
+   this.cmsRules.ResumeLayout(false);
    this.ResumeLayout(false);
    this.PerformLayout();
 
@@ -278,5 +299,7 @@
   private System.Windows.Forms.Label label5;
   private System.Windows.Forms.Label label6;
   private System.Windows.Forms.CheckBox cbIsReqired;
+  private System.Windows.Forms.ContextMenuStrip cmsRules;
+  private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
  }
 }
