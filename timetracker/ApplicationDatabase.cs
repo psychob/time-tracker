@@ -294,6 +294,8 @@ namespace timetracker
 
   private void _UnregisterAllCurrentProcess()
   {
+   ValidateRunningProcess();
+
    while (dbCurrentEntries.Count > 0)
     _unregisterNewProcess(dbCurrentEntries[0].processId);
   }
@@ -415,150 +417,10 @@ namespace timetracker
   {
    foreach (DatabaseEntry it in dbAllEntries)
    {
-    // testujemy zasady
-    bool req_test = true;
-    bool ret_test = false;
-    int req_count = 0;
-    int ret_count = 0;
-
-    foreach (DatabaseEntryRule jt in it.rules)
-    {
-     switch ( jt.what )
-     {
-      case DatabaseEntryRuleCompareTo.FileName:
-       {
-        bool test = Utils.compareStrings(jt.str, filename, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-
-      case DatabaseEntryRuleCompareTo.FilePath:
-       {
-        bool test = Utils.compareStrings(jt.str, path, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-
-      case DatabaseEntryRuleCompareTo.FileVersionCompany:
-       {
-        bool test = Utils.compareStrings(jt.str, fv_company, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-
-      case DatabaseEntryRuleCompareTo.FileVersionDescription:
-       {
-        bool test = Utils.compareStrings(jt.str, fv_file_desc, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-
-      case DatabaseEntryRuleCompareTo.FileVersionFileVersion:
-       {
-        bool test = Utils.compareStrings(jt.str, fv_file_version, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-
-      case DatabaseEntryRuleCompareTo.FileVersionName:
-       {
-        bool test = Utils.compareStrings(jt.str, fv_name, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-
-      case DatabaseEntryRuleCompareTo.FileVersionProductVersion:
-       {
-        bool test = Utils.compareStrings(jt.str, fv_product_version, jt.how);
-
-        if (jt.required)
-        {
-         req_test &= test;
-         req_count++;
-        }
-        else
-        {
-         ret_test |= test;
-         ret_count++;
-        }
-       }
-       break;
-     }
-
-     if ( req_count > 0 && ret_count > 0)
-     {
-      if (req_test == true && ret_test == true)
-       return it;
-     } else if ( req_count > 0 && ret_count == 0 )
-     {
-      if (req_test == true)
-       return it;
-     } else if ( req_count == 0 && ret_count > 0)
-     {
-      if (ret_test == true)
-       return it;
-     }
-    }
+    if (_checkIfProcessConformTo(filename, path, fv_name, fv_company,
+                                  fv_product_version, fv_file_version,
+                                  fv_file_desc, it.rules))
+     return it;
    }
    return null;
   }
@@ -693,6 +555,216 @@ namespace timetracker
    }
 
    return dtv;
+  }
+
+  public void ValidateRunningProcess()
+  {
+   lock ( objLock )
+   {
+    if ( dbCurrentEntries.Count > 0 )
+    {
+     List<DatabaseCurrent> dbc = new List<DatabaseCurrent>();
+
+     foreach ( DatabaseCurrent dc in dbCurrentEntries )
+     {
+      if (_ValidateProcess(dc.processId, dc.internalId))
+       dbc.Add(dc);
+     }
+
+     dbCurrentEntries = dbc;
+    }
+   }
+  }
+
+  private bool _ValidateProcess(int pid, string istr)
+  {
+   DatabaseEntry? de = searchForDatabaseEntry(istr);
+
+   if (!de.HasValue)
+    return false;
+
+   return checkIfProcessIsStillValid(pid, de.Value);
+  }
+
+  private bool checkIfProcessIsStillValid(int pid, DatabaseEntry databaseEntry)
+  {
+   try
+   {
+    Process p = Process.GetProcessById(pid);
+
+    return _checkIfProcessConformTo(Path.GetFileName(p.MainModule.FileName),
+                                    p.MainModule.FileName,
+                                    p.MainModule.FileVersionInfo.ProductName,
+                                    p.MainModule.FileVersionInfo.CompanyName,
+                                    p.MainModule.FileVersionInfo.ProductVersion,
+                                    p.MainModule.FileVersionInfo.FileVersion,
+                                    p.MainModule.FileVersionInfo.FileDescription,
+                                    databaseEntry.rules);
+   } catch ( Exception )
+   {
+    return false;
+   }
+  }
+
+  private bool _checkIfProcessConformTo(string filename, string path, string fv_name,
+                                        string fv_company, string fv_product_version, string fv_file_version,
+                                        string fv_file_desc, DatabaseEntryRule[] databaseEntryRule)
+  {
+   if (databaseEntryRule.Length == 0)
+    return false;
+
+   int req_count = 0,
+       ret_count = 0;
+   bool req_test = true,
+        ret_test = false;
+
+   foreach (DatabaseEntryRule jt in databaseEntryRule)
+   {
+    switch (jt.what)
+    {
+     case DatabaseEntryRuleCompareTo.FileName:
+      {
+       bool test = Utils.compareStrings(jt.str, filename, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+
+     case DatabaseEntryRuleCompareTo.FilePath:
+      {
+       bool test = Utils.compareStrings(jt.str, path, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+
+     case DatabaseEntryRuleCompareTo.FileVersionCompany:
+      {
+       bool test = Utils.compareStrings(jt.str, fv_company, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+
+     case DatabaseEntryRuleCompareTo.FileVersionDescription:
+      {
+       bool test = Utils.compareStrings(jt.str, fv_file_desc, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+
+     case DatabaseEntryRuleCompareTo.FileVersionFileVersion:
+      {
+       bool test = Utils.compareStrings(jt.str, fv_file_version, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+
+     case DatabaseEntryRuleCompareTo.FileVersionName:
+      {
+       bool test = Utils.compareStrings(jt.str, fv_name, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+
+     case DatabaseEntryRuleCompareTo.FileVersionProductVersion:
+      {
+       bool test = Utils.compareStrings(jt.str, fv_product_version, jt.how);
+
+       if (jt.required)
+       {
+        req_test &= test;
+        req_count++;
+       }
+       else
+       {
+        ret_test |= test;
+        ret_count++;
+       }
+      }
+      break;
+    }
+   }
+
+   if (req_count > 0)
+    return req_test;
+
+   if (ret_count > 0)
+    return ret_test;
+
+   return false;
+  }
+
+  public void AddFakeProcess()
+  {
+   Random r = new Random();
+   int it_max = r.Next(10);
+   for ( int it = 0; it < it_max; ++it )
+   {
+    DatabaseCurrent dbc = new DatabaseCurrent();
+    dbc.processId = r.Next(30000);
+    dbc.startTime = WinAPI.GetTickCount64();
+    dbc.internalId = dbAllEntries[r.Next(dbAllEntries.Count - 1)].internalId;
+
+    dbCurrentEntries.Add(dbc);
+   }
   }
  }
 }

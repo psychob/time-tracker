@@ -69,22 +69,39 @@ namespace timetracker
    }
 
    if (y > 0)
+   {
     ret += y.ToString() + "y ";
-
-   if (o > 0)
+    ret += o.ToString("D2") + "mo ";
+    ret += d.ToString("D2") + "d ";
+    ret += h.ToString("D2") + "h ";
+    ret += m.ToString("D2") + "m ";
+    ret += s.ToString("D2") + "s ";
+   } else if ( o > 0 )
+   {
     ret += o.ToString() + "mo ";
-
-   if (d > 0)
+    ret += d.ToString("D2") + "d ";
+    ret += h.ToString("D2") + "h ";
+    ret += m.ToString("D2") + "m ";
+    ret += s.ToString("D2") + "s ";
+   } else if ( d > 0 )
+   {
     ret += d.ToString() + "d ";
-
-   if (h > 0)
+    ret += h.ToString("D2") + "h ";
+    ret += m.ToString("D2") + "m ";
+    ret += s.ToString("D2") + "s ";
+   } else if ( h > 0 )
+   {
     ret += h.ToString() + "h ";
-
-   if (m > 0)
+    ret += m.ToString("D2") + "m ";
+    ret += s.ToString("D2") + "s ";
+   } else if ( m > 0 )
+   {
     ret += m.ToString() + "m ";
-
-   if (s > 0)
+    ret += s.ToString("D2") + "s ";
+   } else
+   {
     ret += s.ToString() + "s ";
+   }
 
    ret = ret.Trim();
    if (ret == string.Empty)

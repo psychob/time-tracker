@@ -32,6 +32,9 @@ namespace timetracker
    appDB = new ApplicationDatabase();
 
    appDB.StartApp();
+
+   validate_time = (ulong)timer_validate.Interval;
+   refresh_time = (ulong)timer_RefreshCurrentApplications.Interval;
   }
 
   private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
@@ -80,6 +83,7 @@ namespace timetracker
    }
 
    lvTrackApp.ResumeLayout(true);
+   refresh_time = (ulong)timer_RefreshCurrentApplications.Interval;
   }
 
   private void applicationDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -99,6 +103,29 @@ namespace timetracker
 
    st.listOfTracked = appDB.PollTrackedApps();
    st.ShowDialog(this);
+  }
+
+  ulong refresh_time = 1000,
+        validate_time = 1000 * 60 * 5;
+
+  private void timer_validate_Tick(object sender, EventArgs e)
+  {
+   appDB.ValidateRunningProcess();
+   validate_time = (ulong)timer_validate.Interval;
+  }
+
+  private void validateProcessToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   appDB.ValidateRunningProcess();
+  }
+
+  private void timer_updateTimers_Tick(object sender, EventArgs e)
+  {
+   tsslRefreshCount.Text = Utils.calculateTime(refresh_time);
+   tsslValidateRefresh.Text = Utils.calculateTime(validate_time);
+
+   refresh_time -= (ulong)timer_updateTimers.Interval;
+   validate_time -= (ulong)timer_updateTimers.Interval;
   }
  }
 }

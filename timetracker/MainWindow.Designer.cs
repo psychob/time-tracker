@@ -38,12 +38,21 @@
    this.menuStrip1 = new System.Windows.Forms.MenuStrip();
    this.applicationDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
    this.trackedApplicationDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+   this.validateProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
    this.timer_RefreshCurrentApplications = new System.Windows.Forms.Timer(this.components);
    this.niMainApp = new System.Windows.Forms.NotifyIcon(this.components);
    this.cmsNotifyStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
    this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+   this.timer_validate = new System.Windows.Forms.Timer(this.components);
+   this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+   this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+   this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+   this.tsslRefreshCount = new System.Windows.Forms.ToolStripStatusLabel();
+   this.tsslValidateRefresh = new System.Windows.Forms.ToolStripStatusLabel();
+   this.timer_updateTimers = new System.Windows.Forms.Timer(this.components);
    this.menuStrip1.SuspendLayout();
    this.cmsNotifyStrip.SuspendLayout();
+   this.statusStrip1.SuspendLayout();
    this.SuspendLayout();
    // 
    // lvTrackApp
@@ -60,7 +69,7 @@
    this.lvTrackApp.GridLines = true;
    this.lvTrackApp.Location = new System.Drawing.Point(12, 27);
    this.lvTrackApp.Name = "lvTrackApp";
-   this.lvTrackApp.Size = new System.Drawing.Size(513, 234);
+   this.lvTrackApp.Size = new System.Drawing.Size(513, 221);
    this.lvTrackApp.TabIndex = 0;
    this.lvTrackApp.UseCompatibleStateImageBehavior = false;
    this.lvTrackApp.View = System.Windows.Forms.View.Details;
@@ -89,7 +98,8 @@
    // 
    this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.applicationDatabaseToolStripMenuItem,
-            this.trackedApplicationDatabaseToolStripMenuItem});
+            this.trackedApplicationDatabaseToolStripMenuItem,
+            this.validateProcessToolStripMenuItem});
    this.menuStrip1.Location = new System.Drawing.Point(0, 0);
    this.menuStrip1.Name = "menuStrip1";
    this.menuStrip1.Size = new System.Drawing.Size(537, 24);
@@ -110,10 +120,17 @@
    this.trackedApplicationDatabaseToolStripMenuItem.Text = "Tracked Application Database";
    this.trackedApplicationDatabaseToolStripMenuItem.Click += new System.EventHandler(this.trackedApplicationDatabaseToolStripMenuItem_Click);
    // 
+   // validateProcessToolStripMenuItem
+   // 
+   this.validateProcessToolStripMenuItem.Name = "validateProcessToolStripMenuItem";
+   this.validateProcessToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
+   this.validateProcessToolStripMenuItem.Text = "Validate Process";
+   this.validateProcessToolStripMenuItem.Click += new System.EventHandler(this.validateProcessToolStripMenuItem_Click);
+   // 
    // timer_RefreshCurrentApplications
    // 
    this.timer_RefreshCurrentApplications.Enabled = true;
-   this.timer_RefreshCurrentApplications.Interval = 1750;
+   this.timer_RefreshCurrentApplications.Interval = 5125;
    this.timer_RefreshCurrentApplications.Tick += new System.EventHandler(this.timer_RefreshCurrentApplications_Tick);
    // 
    // niMainApp
@@ -138,11 +155,61 @@
    this.closeToolStripMenuItem.Text = "Close";
    this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
    // 
+   // timer_validate
+   // 
+   this.timer_validate.Enabled = true;
+   this.timer_validate.Interval = 300000;
+   this.timer_validate.Tick += new System.EventHandler(this.timer_validate_Tick);
+   // 
+   // statusStrip1
+   // 
+   this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.tsslRefreshCount,
+            this.toolStripStatusLabel2,
+            this.tsslValidateRefresh});
+   this.statusStrip1.Location = new System.Drawing.Point(0, 251);
+   this.statusStrip1.Name = "statusStrip1";
+   this.statusStrip1.Size = new System.Drawing.Size(537, 22);
+   this.statusStrip1.TabIndex = 2;
+   this.statusStrip1.Text = "statusStrip1";
+   // 
+   // toolStripStatusLabel1
+   // 
+   this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+   this.toolStripStatusLabel1.Size = new System.Drawing.Size(49, 17);
+   this.toolStripStatusLabel1.Text = "Refresh:";
+   // 
+   // toolStripStatusLabel2
+   // 
+   this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+   this.toolStripStatusLabel2.Size = new System.Drawing.Size(49, 17);
+   this.toolStripStatusLabel2.Text = "Validate:";
+   // 
+   // tsslRefreshCount
+   // 
+   this.tsslRefreshCount.Name = "tsslRefreshCount";
+   this.tsslRefreshCount.Size = new System.Drawing.Size(70, 17);
+   this.tsslRefreshCount.Text = "Refresh Time";
+   // 
+   // tsslValidateRefresh
+   // 
+   this.tsslValidateRefresh.Name = "tsslValidateRefresh";
+   this.tsslValidateRefresh.Size = new System.Drawing.Size(70, 17);
+   this.tsslValidateRefresh.Text = "Validate Time";
+   // 
+   // timer_updateTimers
+   // 
+   this.timer_updateTimers.Enabled = true;
+   this.timer_updateTimers.Interval = 1000;
+   this.timer_updateTimers.Tick += new System.EventHandler(this.timer_updateTimers_Tick);
+   // 
    // MainWindow
    // 
    this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
    this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
    this.ClientSize = new System.Drawing.Size(537, 273);
+   this.Controls.Add(this.statusStrip1);
    this.Controls.Add(this.lvTrackApp);
    this.Controls.Add(this.menuStrip1);
    this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -154,6 +221,8 @@
    this.menuStrip1.ResumeLayout(false);
    this.menuStrip1.PerformLayout();
    this.cmsNotifyStrip.ResumeLayout(false);
+   this.statusStrip1.ResumeLayout(false);
+   this.statusStrip1.PerformLayout();
    this.ResumeLayout(false);
    this.PerformLayout();
 
@@ -173,6 +242,14 @@
   private System.Windows.Forms.ContextMenuStrip cmsNotifyStrip;
   private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
   private System.Windows.Forms.ToolStripMenuItem trackedApplicationDatabaseToolStripMenuItem;
+  private System.Windows.Forms.ToolStripMenuItem validateProcessToolStripMenuItem;
+  private System.Windows.Forms.Timer timer_validate;
+  private System.Windows.Forms.StatusStrip statusStrip1;
+  private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+  private System.Windows.Forms.ToolStripStatusLabel tsslRefreshCount;
+  private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+  private System.Windows.Forms.ToolStripStatusLabel tsslValidateRefresh;
+  private System.Windows.Forms.Timer timer_updateTimers;
  }
 }
 

@@ -28,6 +28,7 @@
   /// </summary>
   private void InitializeComponent()
   {
+   System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShowTracked));
    this.lvTrackedApps = new System.Windows.Forms.ListView();
    this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
    this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,6 +67,7 @@
    this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
    this.ClientSize = new System.Drawing.Size(399, 570);
    this.Controls.Add(this.lvTrackedApps);
+   this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
    this.Name = "ShowTracked";
    this.Text = "ShowTracked";
    this.Load += new System.EventHandler(this.ShowTracked_Load);
