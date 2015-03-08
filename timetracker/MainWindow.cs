@@ -26,7 +26,7 @@ namespace timetracker
    {
     Assembly ass = Assembly.GetExecutingAssembly();
     FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ass.Location);
-    this.Text = "Time Tracker v" + fvi.ProductVersion;
+    this.Text = "Time Tracker v" + fvi.ProductVersion.Trim('0', '.');
    }
 
    appDB = new ApplicationDatabase();
@@ -126,6 +126,271 @@ namespace timetracker
 
    refresh_time -= (ulong)timer_updateTimers.Interval;
    validate_time -= (ulong)timer_updateTimers.Interval;
+  }
+
+  private void sToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 5;
+   refresh_time = 1000 * 5;
+   sToolStripMenuItem.Checked = true;
+  }
+
+  private void sToolStripMenuItem1_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 15;
+   refresh_time = 1000 * 15;
+   sToolStripMenuItem1.Checked = true;
+  }
+
+  private void sToolStripMenuItem2_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 30;
+   refresh_time = 1000 * 30;
+   sToolStripMenuItem2.Checked = true;
+  }
+
+  private void sToolStripMenuItem3_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 45;
+   refresh_time = 1000 * 45;
+   sToolStripMenuItem3.Checked = true;
+  }
+
+  private void mToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 1;
+   refresh_time = 1000 * 60 * 1;
+   mToolStripMenuItem.Checked = true;
+  }
+
+  private void mToolStripMenuItem1_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 2;
+   refresh_time = 1000 * 60 * 2;
+   mToolStripMenuItem1.Checked = true;
+  }
+
+  private void mToolStripMenuItem2_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 5;
+   refresh_time = 1000 * 60 * 5;
+   mToolStripMenuItem2.Checked = true;
+  }
+
+  private void mToolStripMenuItem3_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 10;
+   refresh_time = 1000 * 60 * 10;
+   mToolStripMenuItem3.Checked = true;
+  }
+
+  private void mToolStripMenuItem4_Click(object sender, EventArgs e)
+  {
+   sToolStripMenuItem.Checked = false;
+   sToolStripMenuItem1.Checked = false;
+   sToolStripMenuItem2.Checked = false;
+   sToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem.Checked = false;
+   mToolStripMenuItem1.Checked = false;
+   mToolStripMenuItem2.Checked = false;
+   mToolStripMenuItem3.Checked = false;
+   mToolStripMenuItem4.Checked = false;
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 15;
+   refresh_time = 1000 * 60 * 15;
+   mToolStripMenuItem3.Checked = true;
+  }
+
+  private void mToolStripMenuItem5_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 1;
+   validate_time = 1000 * 60 * 1;
+
+   mToolStripMenuItem5.Checked = true;
+  }
+
+  private void mToolStripMenuItem6_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 2;
+   validate_time = 1000 * 60 * 2;
+
+   mToolStripMenuItem6.Checked = true;
+  }
+
+  private void mToolStripMenuItem7_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 5;
+   validate_time = 1000 * 60 * 5;
+
+   mToolStripMenuItem7.Checked = true;
+  }
+
+  private void mToolStripMenuItem8_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 10;
+   validate_time = 1000 * 60 * 10;
+
+   mToolStripMenuItem8.Checked = true;
+  }
+
+  private void mToolStripMenuItem9_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 15;
+   validate_time = 1000 * 60 * 15;
+
+   mToolStripMenuItem9.Checked = true;
+  }
+
+  private void mToolStripMenuItem10_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 30;
+   validate_time = 1000 * 60 * 30;
+
+   mToolStripMenuItem10.Checked = true;
+  }
+
+  private void hToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   mToolStripMenuItem5.Checked = false;
+   mToolStripMenuItem6.Checked = false;
+   mToolStripMenuItem7.Checked = false;
+   mToolStripMenuItem8.Checked = false;
+   mToolStripMenuItem9.Checked = false;
+   mToolStripMenuItem10.Checked = false;
+   hToolStripMenuItem.Checked = false;
+
+   timer_validate.Interval = 1000 * 60 * 60;
+   validate_time = 1000 * 60 * 60;
+
+   hToolStripMenuItem.Checked = true;
   }
  }
 }
