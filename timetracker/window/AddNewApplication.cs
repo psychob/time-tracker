@@ -197,6 +197,7 @@ namespace timetracker.window
   }
 
   private List<ApplicationDatabase.DatabaseEntryRule> entry_rules_list = new List<ApplicationDatabase.DatabaseEntryRule>();
+  public List<ApplicationDatabase.DatabaseEntryRule> entry_rules_list_;
   public ApplicationDatabase.DatabaseEntryRule[] entry_rules
   {
    get
@@ -239,10 +240,9 @@ namespace timetracker.window
    {
     tbInternalString.Enabled = false;
 
-    foreach ( var it in entry_rules_list )
+    foreach ( var it in entry_rules_list_ )
     {
-     string to_add = "Compare: " + it.what.ToString() + " to: '" + it.str + "' with: " + it.how.ToString();
-     lbAllRules.Items.Add(to_add);
+     _AddNewRule(it);
     }
    }
   }
@@ -280,6 +280,8 @@ namespace timetracker.window
    if (entry_currentRule_stringMatch == "")
     return;
 
+   _AddNewRule();
+
    string to_add = "Compare: " + entry_currentRule_compareTo.ToString() + " to: '" + entry_currentRule_stringMatch + "' with: " + entry_currentRule_compareAlgorithm.ToString();
 
    ApplicationDatabase.DatabaseEntryRule der = new ApplicationDatabase.DatabaseEntryRule();
@@ -314,6 +316,40 @@ namespace timetracker.window
     entry_rules_list.RemoveAt(lbAllRules.SelectedIndex);
     lbAllRules.Items.RemoveAt(lbAllRules.SelectedIndex);
    }
+  }
+
+  private void _AddNewRule(ApplicationDatabase.DatabaseEntryRule it)
+  {
+   _AddNewRule(it.how, it.required, it.str, it.what);
+  }
+
+  private void _AddNewRule()
+  {
+   _AddNewRule(entry_currentRule_compareAlgorithm, entry_currentRule_isRequired,
+               entry_currentRule_stringMatch, entry_currentRule_compareTo);
+
+   entry_currentRule_isRequired = false;
+   entry_currentRule_stringMatch = "";
+  }
+
+  private void _AddNewRule(Utils.MatchAlgorithm matchAlgorithm, bool isRequired,
+                           string matchString,
+                           ApplicationDatabase.DatabaseEntryRuleCompareTo databaseEntryRuleCompareTo)
+  {
+   string to_add = "String: '" + matchString + "' will be matched with: " +
+                   databaseEntryRuleCompareTo.ToString() + " with algorithm: " +
+                   matchAlgorithm.ToString() + " is required: " + isRequired.ToString();
+
+   lbAllRules.Items.Add(to_add);
+
+   ApplicationDatabase.DatabaseEntryRule der = new ApplicationDatabase.DatabaseEntryRule();
+
+   der.required = isRequired;
+   der.str = matchString;
+   der.how = matchAlgorithm;
+   der.what = databaseEntryRuleCompareTo;
+
+   entry_rules_list.Add(der);
   }
  }
 }

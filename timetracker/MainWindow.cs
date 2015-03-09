@@ -123,6 +123,7 @@ namespace timetracker
   {
    tsslRefreshCount.Text = Utils.calculateTime(refresh_time);
    tsslValidateRefresh.Text = Utils.calculateTime(validate_time);
+   tsslInvalidProcessQueue.Text = appDB.GetInvalidProcessQueueCount().ToString();
 
    refresh_time -= (ulong)timer_updateTimers.Interval;
    validate_time -= (ulong)timer_updateTimers.Interval;
@@ -391,6 +392,11 @@ namespace timetracker
    validate_time = 1000 * 60 * 60;
 
    hToolStripMenuItem.Checked = true;
+  }
+
+  private void timer_InvalidProcessorRefresh_Tick(object sender, EventArgs e)
+  {
+   appDB.ProcessInvalidProcessQueue();
   }
  }
 }

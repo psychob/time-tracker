@@ -39,6 +39,8 @@
    this.btnNewRule = new System.Windows.Forms.Button();
    this.btnPollDataFromCurrentProcess = new System.Windows.Forms.Button();
    this.lbAllRules = new System.Windows.Forms.ListBox();
+   this.cmsRules = new System.Windows.Forms.ContextMenuStrip(this.components);
+   this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
    this.btnAdd = new System.Windows.Forms.Button();
    this.btnDiscard = new System.Windows.Forms.Button();
    this.label1 = new System.Windows.Forms.Label();
@@ -48,8 +50,6 @@
    this.label5 = new System.Windows.Forms.Label();
    this.label6 = new System.Windows.Forms.Label();
    this.cbIsReqired = new System.Windows.Forms.CheckBox();
-   this.cmsRules = new System.Windows.Forms.ContextMenuStrip(this.components);
-   this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
    this.cmsRules.SuspendLayout();
    this.SuspendLayout();
    // 
@@ -57,7 +57,7 @@
    // 
    this.tbApplicationTitle.Location = new System.Drawing.Point(199, 12);
    this.tbApplicationTitle.Name = "tbApplicationTitle";
-   this.tbApplicationTitle.Size = new System.Drawing.Size(293, 20);
+   this.tbApplicationTitle.Size = new System.Drawing.Size(430, 20);
    this.tbApplicationTitle.TabIndex = 0;
    this.tbApplicationTitle.TextChanged += new System.EventHandler(this.tbApplicationTitle_TextChanged);
    // 
@@ -65,7 +65,7 @@
    // 
    this.tbInternalString.Location = new System.Drawing.Point(199, 39);
    this.tbInternalString.Name = "tbInternalString";
-   this.tbInternalString.Size = new System.Drawing.Size(292, 20);
+   this.tbInternalString.Size = new System.Drawing.Size(429, 20);
    this.tbInternalString.TabIndex = 1;
    // 
    // cbCompareWith
@@ -81,7 +81,7 @@
             "File Version - File Version,"});
    this.cbCompareWith.Location = new System.Drawing.Point(199, 65);
    this.cbCompareWith.Name = "cbCompareWith";
-   this.cbCompareWith.Size = new System.Drawing.Size(293, 21);
+   this.cbCompareWith.Size = new System.Drawing.Size(430, 21);
    this.cbCompareWith.TabIndex = 2;
    // 
    // cbCompareAlgorithm
@@ -95,7 +95,7 @@
             "Regular Expression"});
    this.cbCompareAlgorithm.Location = new System.Drawing.Point(199, 92);
    this.cbCompareAlgorithm.Name = "cbCompareAlgorithm";
-   this.cbCompareAlgorithm.Size = new System.Drawing.Size(293, 21);
+   this.cbCompareAlgorithm.Size = new System.Drawing.Size(430, 21);
    this.cbCompareAlgorithm.TabIndex = 3;
    this.cbCompareAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cbCompareAlgorithm_SelectedIndexChanged);
    // 
@@ -103,7 +103,7 @@
    // 
    this.tbPattern.Location = new System.Drawing.Point(199, 120);
    this.tbPattern.Name = "tbPattern";
-   this.tbPattern.Size = new System.Drawing.Size(293, 20);
+   this.tbPattern.Size = new System.Drawing.Size(430, 20);
    this.tbPattern.TabIndex = 4;
    this.tbPattern.TextChanged += new System.EventHandler(this.tbPattern_TextChanged);
    // 
@@ -111,13 +111,13 @@
    // 
    this.tbTestingString.Location = new System.Drawing.Point(199, 147);
    this.tbTestingString.Name = "tbTestingString";
-   this.tbTestingString.Size = new System.Drawing.Size(291, 20);
+   this.tbTestingString.Size = new System.Drawing.Size(430, 20);
    this.tbTestingString.TabIndex = 5;
    this.tbTestingString.TextChanged += new System.EventHandler(this.tbTestingString_TextChanged);
    // 
    // btnNewRule
    // 
-   this.btnNewRule.Location = new System.Drawing.Point(393, 174);
+   this.btnNewRule.Location = new System.Drawing.Point(533, 174);
    this.btnNewRule.Name = "btnNewRule";
    this.btnNewRule.Size = new System.Drawing.Size(96, 23);
    this.btnNewRule.TabIndex = 6;
@@ -140,13 +140,28 @@
    this.lbAllRules.FormattingEnabled = true;
    this.lbAllRules.Location = new System.Drawing.Point(12, 203);
    this.lbAllRules.Name = "lbAllRules";
-   this.lbAllRules.Size = new System.Drawing.Size(477, 186);
+   this.lbAllRules.Size = new System.Drawing.Size(617, 186);
    this.lbAllRules.TabIndex = 8;
+   // 
+   // cmsRules
+   // 
+   this.cmsRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeToolStripMenuItem});
+   this.cmsRules.Name = "cmsRules";
+   this.cmsRules.ShowImageMargin = false;
+   this.cmsRules.Size = new System.Drawing.Size(89, 26);
+   // 
+   // removeToolStripMenuItem
+   // 
+   this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+   this.removeToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+   this.removeToolStripMenuItem.Text = "Remove";
+   this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
    // 
    // btnAdd
    // 
    this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-   this.btnAdd.Location = new System.Drawing.Point(245, 395);
+   this.btnAdd.Location = new System.Drawing.Point(385, 394);
    this.btnAdd.Name = "btnAdd";
    this.btnAdd.Size = new System.Drawing.Size(244, 23);
    this.btnAdd.TabIndex = 9;
@@ -228,26 +243,11 @@
    this.cbIsReqired.Text = "Is Required";
    this.cbIsReqired.UseVisualStyleBackColor = true;
    // 
-   // cmsRules
-   // 
-   this.cmsRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.removeToolStripMenuItem});
-   this.cmsRules.Name = "cmsRules";
-   this.cmsRules.ShowImageMargin = false;
-   this.cmsRules.Size = new System.Drawing.Size(128, 48);
-   // 
-   // removeToolStripMenuItem
-   // 
-   this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-   this.removeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
-   this.removeToolStripMenuItem.Text = "Remove";
-   this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
-   // 
    // AddNewApplication
    // 
    this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
    this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-   this.ClientSize = new System.Drawing.Size(504, 429);
+   this.ClientSize = new System.Drawing.Size(639, 429);
    this.Controls.Add(this.cbIsReqired);
    this.Controls.Add(this.label6);
    this.Controls.Add(this.label5);

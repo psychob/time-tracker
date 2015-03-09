@@ -69,21 +69,24 @@ namespace timetracker
    public ulong allTime;
   }
 
-  private struct PidTable
+  public struct PidTable
   {
    public int pid;
    public int count;
+   public ulong time;
 
-   public PidTable( int pid_ )
+   public PidTable( int pid_, ulong time_ )
    {
     pid = pid_;
     count = 1;
+    time = time_;
    }
 
-   public PidTable( int pid_, int count_ )
+   public PidTable( int pid_, int count_, ulong time_ )
    {
     pid = pid_;
     count = count_;
+    time = time_;
    }
   }
 
@@ -269,7 +272,7 @@ namespace timetracker
   {
    ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
 
-   _newProcessArrived((int)(UInt32)mbo.Properties["ProcessId"].Value);
+   _newProcessArrived((int)(UInt32)mbo.Properties["ProcessId"].Value, WinAPI.GetTickCount64());
   }
 
   private void _RegisterAllCurrentProcess()
@@ -286,7 +289,7 @@ namespace timetracker
       int id = (int)(UInt32)mo["ProcessId"];
 
       if (id != 0)
-       _newProcessArrived(id);
+       _newProcessArrived(id, WinAPI.GetTickCount64());
      }
     }
    }
@@ -300,7 +303,7 @@ namespace timetracker
     _unregisterNewProcess(dbCurrentEntries[0].processId);
   }
 
-  private void _newProcessArrived(int p)
+  private void _newProcessArrived(int p, ulong time)
   {
    lock ( objLock )
    {
@@ -330,7 +333,7 @@ namespace timetracker
     {
      if (w32.NativeErrorCode == 299)
      {
-      this.processToCheck.Add(new PidTable(process_id));
+      this.processToCheck.Add(new PidTable(process_id, time));
       return;
      }
      return;
@@ -344,7 +347,8 @@ namespace timetracker
     _registerNewProcess(process_id, process_filename, process_path,
                         process_fileversion_name, process_fileversion_company,
                         process_fileversion_product_version,
-                        process_fileversion_file_version, process_fileversion_description);
+                        process_fileversion_file_version, process_fileversion_description,
+                        time);
    }
   }
 
@@ -365,7 +369,8 @@ namespace timetracker
                                    string process_path, string process_fileversion_name,
                                    string process_fileversion_company, string process_fileversion_product_version,
                                    string process_fileversion_file_version,
-                                   string process_fileversion_description)
+                                   string process_fileversion_description,
+                                   ulong time)
   {
    // sprawdzamy czy process nie został już zarejestrowany
    foreach (DatabaseCurrent it in dbCurrentEntries)
@@ -386,7 +391,7 @@ namespace timetracker
    DatabaseCurrent db = new DatabaseCurrent();
 
    db.processId = process_id;
-   db.startTime = WinAPI.GetTickCount64();
+   db.startTime = time;
    db.internalId = dbEntry_.Value.internalId;
 
    dbCurrentEntries.Add(db);
@@ -479,28 +484,6 @@ namespace timetracker
 
   public List<DatabaseCurrentView> PollActiveApps()
   {
-   if (processToCheck.Count > 0)
-   {
-    lock (objLock)
-    {
-     var tmp = processToCheck.ToList();
-
-     foreach (var pid in tmp)
-     {
-      if (pid.count < 10)
-       _newProcessArrived(pid.pid);
-     }
-     var t = new List<PidTable>();
-
-     tmp.ForEach(o => t.Add(new PidTable(o.pid, o.count + 1)));
-
-     tmp = t;
-     tmp.RemoveAll(o => o.count > 10);
-
-     processToCheck = tmp;
-    }
-   }
-
    List<DatabaseCurrentView> ret = new List<DatabaseCurrentView>();
 
    foreach (DatabaseCurrent it in dbCurrentEntries)
@@ -755,18 +738,33 @@ namespace timetracker
    return false;
   }
 
-  public void AddFakeProcess()
+  public int GetInvalidProcessQueueCount()
   {
-   Random r = new Random();
-   int it_max = r.Next(10);
-   for ( int it = 0; it < it_max; ++it )
+   lock ( objLock )
    {
-    DatabaseCurrent dbc = new DatabaseCurrent();
-    dbc.processId = r.Next(30000);
-    dbc.startTime = WinAPI.GetTickCount64();
-    dbc.internalId = dbAllEntries[r.Next(dbAllEntries.Count - 1)].internalId;
+    return processToCheck.Count;
+   }
+  }
 
-    dbCurrentEntries.Add(dbc);
+  public void ProcessInvalidProcessQueue()
+  {
+   lock (objLock)
+   {
+    var tmp = processToCheck.Distinct(new PidTableComparer()).ToList();
+
+    foreach (var pid in tmp)
+    {
+     if (pid.count < 10)
+      _newProcessArrived(pid.pid, pid.time);
+    }
+    var t = new List<PidTable>();
+
+    tmp.ForEach(o => t.Add(new PidTable(o.pid, o.count + 1, o.time)));
+
+    tmp = t;
+    tmp.RemoveAll(o => o.count > 10);
+
+    processToCheck = tmp;
    }
   }
  }

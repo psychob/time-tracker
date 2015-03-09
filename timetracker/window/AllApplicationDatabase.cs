@@ -54,7 +54,7 @@ namespace timetracker.window
     AddNewApplication ana = new AddNewApplication();
 
     ApplicationDatabase.DatabaseEntry dbe = listOfAllEntries[lbAllAps.SelectedIndex];
-    ana.entry_rules = dbe.rules;
+    ana.entry_rules_list_ = dbe.rules.ToList();
     ana.entry_appInternal = dbe.internalId;
     ana.entry_appName = dbe.nameOfApplication;
     ana.isEditable = false;
