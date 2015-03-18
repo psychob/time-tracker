@@ -68,9 +68,9 @@
    this.tsslRefreshCount = new System.Windows.Forms.ToolStripStatusLabel();
    this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
    this.tsslValidateRefresh = new System.Windows.Forms.ToolStripStatusLabel();
-   this.timer_updateTimers = new System.Windows.Forms.Timer(this.components);
    this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
    this.tsslInvalidProcessQueue = new System.Windows.Forms.ToolStripStatusLabel();
+   this.timer_updateTimers = new System.Windows.Forms.Timer(this.components);
    this.timer_InvalidProcessorRefresh = new System.Windows.Forms.Timer(this.components);
    this.menuStrip1.SuspendLayout();
    this.cmsNotifyStrip.SuspendLayout();
@@ -378,12 +378,6 @@
    this.tsslValidateRefresh.Size = new System.Drawing.Size(70, 17);
    this.tsslValidateRefresh.Text = "Validate Time";
    // 
-   // timer_updateTimers
-   // 
-   this.timer_updateTimers.Enabled = true;
-   this.timer_updateTimers.Interval = 1000;
-   this.timer_updateTimers.Tick += new System.EventHandler(this.timer_updateTimers_Tick);
-   // 
    // toolStripStatusLabel3
    // 
    this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
@@ -395,6 +389,12 @@
    this.tsslInvalidProcessQueue.Name = "tsslInvalidProcessQueue";
    this.tsslInvalidProcessQueue.Size = new System.Drawing.Size(13, 17);
    this.tsslInvalidProcessQueue.Text = "0";
+   // 
+   // timer_updateTimers
+   // 
+   this.timer_updateTimers.Enabled = true;
+   this.timer_updateTimers.Interval = 1000;
+   this.timer_updateTimers.Tick += new System.EventHandler(this.timer_updateTimers_Tick);
    // 
    // timer_InvalidProcessorRefresh
    // 

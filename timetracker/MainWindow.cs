@@ -12,13 +12,16 @@ using System.Windows.Forms;
 
 namespace timetracker
 {
- public partial class MainWindow : Form
+ public partial class MainWindow : Form, IDisposable
  {
   ApplicationDatabase appDB;
 
   public MainWindow()
   {
    InitializeComponent();
+
+   appDB = new ApplicationDatabase();
+   appDB.StartApp();
   }
 
   private void MainWindow_Load(object sender, EventArgs e)
@@ -28,10 +31,6 @@ namespace timetracker
     FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ass.Location);
     this.Text = "Time Tracker v" + fvi.ProductVersion.Trim('0', '.');
    }
-
-   appDB = new ApplicationDatabase();
-
-   appDB.StartApp();
 
    validate_time = (ulong)timer_validate.Interval;
    refresh_time = (ulong)timer_RefreshCurrentApplications.Interval;

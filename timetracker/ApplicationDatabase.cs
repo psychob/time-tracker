@@ -751,12 +751,16 @@ namespace timetracker
    lock (objLock)
    {
     var tmp = processToCheck.Distinct(new PidTableComparer()).ToList();
+    var pids = new HashSet<int>(dbCurrentEntries.Select(x => x.processId));
+
+    tmp.RemoveAll(x => pids.Contains(x.pid));
 
     foreach (var pid in tmp)
     {
      if (pid.count < 10)
       _newProcessArrived(pid.pid, pid.time);
     }
+
     var t = new List<PidTable>();
 
     tmp.ForEach(o => t.Add(new PidTable(o.pid, o.count + 1, o.time)));
