@@ -128,160 +128,21 @@ namespace timetracker
    validate_time -= (ulong)timer_updateTimers.Interval;
   }
 
-  private void sToolStripMenuItem_Click(object sender, EventArgs e)
+  private void _clearRefreshRateCheckedMenu( )
   {
    sToolStripMenuItem.Checked = false;
    sToolStripMenuItem1.Checked = false;
    sToolStripMenuItem2.Checked = false;
    sToolStripMenuItem3.Checked = false;
+   sToolStripMenuItem4.Checked = false;
    mToolStripMenuItem.Checked = false;
    mToolStripMenuItem1.Checked = false;
    mToolStripMenuItem2.Checked = false;
    mToolStripMenuItem3.Checked = false;
    mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 5;
-   refresh_time = 1000 * 5;
-   sToolStripMenuItem.Checked = true;
   }
 
-  private void sToolStripMenuItem1_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 15;
-   refresh_time = 1000 * 15;
-   sToolStripMenuItem1.Checked = true;
-  }
-
-  private void sToolStripMenuItem2_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 30;
-   refresh_time = 1000 * 30;
-   sToolStripMenuItem2.Checked = true;
-  }
-
-  private void sToolStripMenuItem3_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 45;
-   refresh_time = 1000 * 45;
-   sToolStripMenuItem3.Checked = true;
-  }
-
-  private void mToolStripMenuItem_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 1;
-   refresh_time = 1000 * 60 * 1;
-   mToolStripMenuItem.Checked = true;
-  }
-
-  private void mToolStripMenuItem1_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 2;
-   refresh_time = 1000 * 60 * 2;
-   mToolStripMenuItem1.Checked = true;
-  }
-
-  private void mToolStripMenuItem2_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 5;
-   refresh_time = 1000 * 60 * 5;
-   mToolStripMenuItem2.Checked = true;
-  }
-
-  private void mToolStripMenuItem3_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 10;
-   refresh_time = 1000 * 60 * 10;
-   mToolStripMenuItem3.Checked = true;
-  }
-
-  private void mToolStripMenuItem4_Click(object sender, EventArgs e)
-  {
-   sToolStripMenuItem.Checked = false;
-   sToolStripMenuItem1.Checked = false;
-   sToolStripMenuItem2.Checked = false;
-   sToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem.Checked = false;
-   mToolStripMenuItem1.Checked = false;
-   mToolStripMenuItem2.Checked = false;
-   mToolStripMenuItem3.Checked = false;
-   mToolStripMenuItem4.Checked = false;
-
-   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 15;
-   refresh_time = 1000 * 60 * 15;
-   mToolStripMenuItem3.Checked = true;
-  }
-
-  private void mToolStripMenuItem5_Click(object sender, EventArgs e)
+  private void _clearRefreshValidRateCheckedMenu()
   {
    mToolStripMenuItem5.Checked = false;
    mToolStripMenuItem6.Checked = false;
@@ -290,6 +151,92 @@ namespace timetracker
    mToolStripMenuItem9.Checked = false;
    mToolStripMenuItem10.Checked = false;
    hToolStripMenuItem.Checked = false;
+  }
+
+  private void sToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 5;
+   refresh_time = 1000 * 5;
+   sToolStripMenuItem.Checked = true;
+  }
+
+  private void sToolStripMenuItem1_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 15;
+   refresh_time = 1000 * 15;
+   sToolStripMenuItem1.Checked = true;
+  }
+
+  private void sToolStripMenuItem2_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 30;
+   refresh_time = 1000 * 30;
+   sToolStripMenuItem2.Checked = true;
+  }
+
+  private void sToolStripMenuItem3_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 45;
+   refresh_time = 1000 * 45;
+   sToolStripMenuItem3.Checked = true;
+  }
+
+  private void mToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 1;
+   refresh_time = 1000 * 60 * 1;
+   mToolStripMenuItem.Checked = true;
+  }
+
+  private void mToolStripMenuItem1_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 2;
+   refresh_time = 1000 * 60 * 2;
+   mToolStripMenuItem1.Checked = true;
+  }
+
+  private void mToolStripMenuItem2_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 5;
+   refresh_time = 1000 * 60 * 5;
+   mToolStripMenuItem2.Checked = true;
+  }
+
+  private void mToolStripMenuItem3_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 10;
+   refresh_time = 1000 * 60 * 10;
+   mToolStripMenuItem3.Checked = true;
+  }
+
+  private void mToolStripMenuItem4_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 60 * 15;
+   refresh_time = 1000 * 60 * 15;
+   mToolStripMenuItem3.Checked = true;
+  }
+
+  private void mToolStripMenuItem5_Click(object sender, EventArgs e)
+  {
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 1;
    validate_time = 1000 * 60 * 1;
@@ -299,13 +246,7 @@ namespace timetracker
 
   private void mToolStripMenuItem6_Click(object sender, EventArgs e)
   {
-   mToolStripMenuItem5.Checked = false;
-   mToolStripMenuItem6.Checked = false;
-   mToolStripMenuItem7.Checked = false;
-   mToolStripMenuItem8.Checked = false;
-   mToolStripMenuItem9.Checked = false;
-   mToolStripMenuItem10.Checked = false;
-   hToolStripMenuItem.Checked = false;
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 2;
    validate_time = 1000 * 60 * 2;
@@ -315,13 +256,7 @@ namespace timetracker
 
   private void mToolStripMenuItem7_Click(object sender, EventArgs e)
   {
-   mToolStripMenuItem5.Checked = false;
-   mToolStripMenuItem6.Checked = false;
-   mToolStripMenuItem7.Checked = false;
-   mToolStripMenuItem8.Checked = false;
-   mToolStripMenuItem9.Checked = false;
-   mToolStripMenuItem10.Checked = false;
-   hToolStripMenuItem.Checked = false;
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 5;
    validate_time = 1000 * 60 * 5;
@@ -331,13 +266,7 @@ namespace timetracker
 
   private void mToolStripMenuItem8_Click(object sender, EventArgs e)
   {
-   mToolStripMenuItem5.Checked = false;
-   mToolStripMenuItem6.Checked = false;
-   mToolStripMenuItem7.Checked = false;
-   mToolStripMenuItem8.Checked = false;
-   mToolStripMenuItem9.Checked = false;
-   mToolStripMenuItem10.Checked = false;
-   hToolStripMenuItem.Checked = false;
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 10;
    validate_time = 1000 * 60 * 10;
@@ -347,13 +276,7 @@ namespace timetracker
 
   private void mToolStripMenuItem9_Click(object sender, EventArgs e)
   {
-   mToolStripMenuItem5.Checked = false;
-   mToolStripMenuItem6.Checked = false;
-   mToolStripMenuItem7.Checked = false;
-   mToolStripMenuItem8.Checked = false;
-   mToolStripMenuItem9.Checked = false;
-   mToolStripMenuItem10.Checked = false;
-   hToolStripMenuItem.Checked = false;
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 15;
    validate_time = 1000 * 60 * 15;
@@ -363,13 +286,7 @@ namespace timetracker
 
   private void mToolStripMenuItem10_Click(object sender, EventArgs e)
   {
-   mToolStripMenuItem5.Checked = false;
-   mToolStripMenuItem6.Checked = false;
-   mToolStripMenuItem7.Checked = false;
-   mToolStripMenuItem8.Checked = false;
-   mToolStripMenuItem9.Checked = false;
-   mToolStripMenuItem10.Checked = false;
-   hToolStripMenuItem.Checked = false;
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 30;
    validate_time = 1000 * 60 * 30;
@@ -379,13 +296,7 @@ namespace timetracker
 
   private void hToolStripMenuItem_Click(object sender, EventArgs e)
   {
-   mToolStripMenuItem5.Checked = false;
-   mToolStripMenuItem6.Checked = false;
-   mToolStripMenuItem7.Checked = false;
-   mToolStripMenuItem8.Checked = false;
-   mToolStripMenuItem9.Checked = false;
-   mToolStripMenuItem10.Checked = false;
-   hToolStripMenuItem.Checked = false;
+   _clearRefreshValidRateCheckedMenu();
 
    timer_validate.Interval = 1000 * 60 * 60;
    validate_time = 1000 * 60 * 60;
@@ -396,6 +307,16 @@ namespace timetracker
   private void timer_InvalidProcessorRefresh_Tick(object sender, EventArgs e)
   {
    appDB.ProcessInvalidProcessQueue();
+  }
+
+  private void sToolStripMenuItem4_Click(object sender, EventArgs e)
+  {
+   _clearRefreshRateCheckedMenu();
+
+   timer_RefreshCurrentApplications.Interval = 1000 * 1;
+   refresh_time = 1000 * 1;
+
+   sToolStripMenuItem4.Checked = true;
   }
  }
 }

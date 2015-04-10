@@ -281,21 +281,6 @@ namespace timetracker.window
     return;
 
    _AddNewRule();
-
-   string to_add = "Compare: " + entry_currentRule_compareTo.ToString() + " to: '" + entry_currentRule_stringMatch + "' with: " + entry_currentRule_compareAlgorithm.ToString();
-
-   ApplicationDatabase.DatabaseEntryRule der = new ApplicationDatabase.DatabaseEntryRule();
-
-   der.required = entry_currentRule_isRequired;
-   der.str = entry_currentRule_stringMatch;
-   der.how = entry_currentRule_compareAlgorithm;
-   der.what = entry_currentRule_compareTo;
-
-   entry_rules_list.Add(der);
-   lbAllRules.Items.Add(to_add);
-
-   entry_currentRule_isRequired = false;
-   entry_currentRule_stringMatch = "";
   }
 
   private void btnAdd_Click(object sender, EventArgs e)

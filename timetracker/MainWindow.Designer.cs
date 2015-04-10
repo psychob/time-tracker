@@ -72,6 +72,7 @@
    this.tsslInvalidProcessQueue = new System.Windows.Forms.ToolStripStatusLabel();
    this.timer_updateTimers = new System.Windows.Forms.Timer(this.components);
    this.timer_InvalidProcessorRefresh = new System.Windows.Forms.Timer(this.components);
+   this.sToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
    this.menuStrip1.SuspendLayout();
    this.cmsNotifyStrip.SuspendLayout();
    this.statusStrip1.SuspendLayout();
@@ -162,6 +163,7 @@
    // listRefreshToolStripMenuItem
    // 
    this.listRefreshToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sToolStripMenuItem4,
             this.sToolStripMenuItem,
             this.sToolStripMenuItem1,
             this.sToolStripMenuItem2,
@@ -324,12 +326,13 @@
    this.cmsNotifyStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeToolStripMenuItem});
    this.cmsNotifyStrip.Name = "cmsNotifyStrip";
-   this.cmsNotifyStrip.Size = new System.Drawing.Size(101, 26);
+   this.cmsNotifyStrip.ShowImageMargin = false;
+   this.cmsNotifyStrip.Size = new System.Drawing.Size(76, 26);
    // 
    // closeToolStripMenuItem
    // 
    this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-   this.closeToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+   this.closeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
    this.closeToolStripMenuItem.Text = "Close";
    this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
    // 
@@ -402,6 +405,13 @@
    this.timer_InvalidProcessorRefresh.Interval = 5000;
    this.timer_InvalidProcessorRefresh.Tick += new System.EventHandler(this.timer_InvalidProcessorRefresh_Tick);
    // 
+   // sToolStripMenuItem4
+   // 
+   this.sToolStripMenuItem4.Name = "sToolStripMenuItem4";
+   this.sToolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+   this.sToolStripMenuItem4.Text = "1s";
+   this.sToolStripMenuItem4.Click += new System.EventHandler(this.sToolStripMenuItem4_Click);
+   // 
    // MainWindow
    // 
    this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -470,6 +480,7 @@
   private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
   private System.Windows.Forms.ToolStripStatusLabel tsslInvalidProcessQueue;
   private System.Windows.Forms.Timer timer_InvalidProcessorRefresh;
+  private System.Windows.Forms.ToolStripMenuItem sToolStripMenuItem4;
  }
 }
 
