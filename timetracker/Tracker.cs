@@ -3,7 +3,7 @@ using System.Management;
 
 namespace timetracker
 {
- class Tracker : IDisposable
+ public class Tracker : IDisposable
  {
   public delegate void post_event_callback( int pid, bool create );
 
@@ -72,6 +72,28 @@ namespace timetracker
   public void set_callback(post_event_callback action)
   {
    callback = action;
+  }
+
+  public void report_all()
+  {
+   {
+    const string ns = @"root\CIMV2";
+    const string q = @"SELECT * FROM Win32_Process";
+
+    using (ManagementObjectSearcher mos = new ManagementObjectSearcher(ns, q))
+    {
+     foreach (ManagementObject mo in mos.Get())
+     {
+      if (mo["ProcessId"] != null)
+      {
+       int id = (int)(UInt32)mo["ProcessId"];
+
+       if (id != 0)
+        callback(id, true);
+      }
+     }
+    }
+   }
   }
  }
 }
