@@ -69,6 +69,55 @@ namespace timetracker
 
     return lar.ToArray();
    }
+
+   set
+   {
+    foreach ( var it in value )
+    {
+     int current = last_rulesets;
+     last_rulesets++;
+
+     rulesets[current] = it;
+
+     foreach ( var jt in it.rules )
+     {
+      int cr = last_rule;
+      last_rule++;
+
+      all_rules[cr] = jt;
+      rule_to_ruleset[cr] = current;
+     }
+    }
+
+    update_tree_node();
+   }
+  }
+
+  private void update_tree_node()
+  {
+   foreach ( var it in rulesets )
+   {
+    TreeNode tn = new TreeNode();
+    tn.Tag = (object)it.Key;
+    tn.Text = "Name: " + it.Value.rules_name + " (match type: " + it.Value.kind.ToString() + ")";
+
+    foreach ( var jt in rule_to_ruleset )
+    {
+     if ( jt.Value == it.Key )
+     {
+      TreeNode tnc = new TreeNode();
+
+      tnc.Tag = (object)jt.Key;
+      tnc.Text = all_rules[jt.Key].match_to.ToString() + " == " +
+                 all_rules[jt.Key].math_what + " with: " +
+                 all_rules[jt.Key].algorithm.ToString();
+
+      tn.Nodes.Add(tnc);
+     }
+    }
+
+    treeView1.Nodes.Add(tn);
+   }
   }
 
   private void button1_Click(object sender, EventArgs e)

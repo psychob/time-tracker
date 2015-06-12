@@ -21,7 +21,7 @@ namespace timetracker
   [XmlAttribute("name")]
   public string rules_name;
 
-  [XmlElement("ruleset")]
+  [XmlElement("rule")]
   public application_rule[] rules;
  }
 
@@ -70,12 +70,22 @@ namespace timetracker
   public ulong all_time;
  }
 
+ public struct application_current_tracked_detailed
+ {
+  public int pid;
+  public ulong start_time;
+  public ulong all_time;
+  public string name;
+ }
+
+ [XmlRoot("all-apps")]
  public struct all_application_definitions
  {
   [XmlElement("apps")]
   public application_definition[] applications;
  }
 
+ [XmlRoot("all-apps")]
  public struct all_application_tracked
  {
   [XmlElement("apps")]
@@ -86,11 +96,13 @@ namespace timetracker
  {
   public int pid;
   public ulong start_time;
+  public int count;
 
-  public application_queue( int pid_, ulong st )
+  public application_queue( int pid_, ulong st, int c = 0 )
   {
    pid = pid_;
    start_time = st;
+   count = c;
   }
  }
 

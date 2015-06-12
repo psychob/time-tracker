@@ -20,11 +20,12 @@ namespace timetracker
 
   private void Win_Tracked_Load(object sender, EventArgs e)
   {
+   tracked_apps = tracked_apps.OrderByDescending(o => o.time).ToList();
+
    foreach (var it in tracked_apps)
    {
-    ListViewItem lvi = new ListViewItem();
+    ListViewItem lvi = new ListViewItem(it.name);
 
-    lvi.SubItems.Add(it.name);
     lvi.SubItems.Add(Utils.calculateTime(it.time));
 
     listView1.Items.Add(lvi);

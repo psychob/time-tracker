@@ -47,6 +47,7 @@
    // 
    // button1
    // 
+   this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
    this.button1.Location = new System.Drawing.Point(230, 12);
    this.button1.Name = "button1";
    this.button1.Size = new System.Drawing.Size(91, 23);
@@ -57,21 +58,25 @@
    // 
    // button2
    // 
+   this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
    this.button2.Location = new System.Drawing.Point(230, 41);
    this.button2.Name = "button2";
    this.button2.Size = new System.Drawing.Size(91, 23);
    this.button2.TabIndex = 2;
    this.button2.Text = "Edit";
    this.button2.UseVisualStyleBackColor = true;
+   this.button2.Click += new System.EventHandler(this.button2_Click);
    // 
    // button3
    // 
+   this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
    this.button3.Location = new System.Drawing.Point(230, 70);
    this.button3.Name = "button3";
    this.button3.Size = new System.Drawing.Size(91, 23);
    this.button3.TabIndex = 3;
    this.button3.Text = "Remove";
    this.button3.UseVisualStyleBackColor = true;
+   this.button3.Click += new System.EventHandler(this.button3_Click);
    // 
    // Win_AppDb
    // 

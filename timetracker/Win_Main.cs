@@ -28,6 +28,7 @@ namespace timetracker
 
    tracked_apps = new Tracked_Apps();
    tracked_apps.load_configs("app_def.xml", "app_track.xml");
+   tracked_apps.update_from_old_version();
    global_tracker = new Tracker();
    tracked_apps.set_tracker(global_tracker);
   }
@@ -99,6 +100,36 @@ namespace timetracker
    wad.ShowDialog();
 
    tracked_apps.set_defined_apps(wad.all_aps);
+   global_tracker.report_all();
+  }
+
+  private void timer_fetch_current_tasks_Tick(object sender, EventArgs e)
+  {
+   fetch_current_tasks();
+  }
+
+  private void fetch_current_tasks()
+  {
+   List<application_current_tracked_detailed> act = tracked_apps.get_current_apps();
+
+   lvTrackedApps.Items.Clear();
+
+   foreach (var it in act)
+   {
+    ListViewItem lvi = new ListViewItem(it.pid.ToString());
+
+    lvi.SubItems.Add(it.name);
+    lvi.SubItems.Add(Utils.calculateTime(WinAPI.GetTickCount64() - it.start_time));
+    lvi.SubItems.Add(Utils.calculateTime(it.all_time + (WinAPI.GetTickCount64() - it.start_time)));
+
+    lvTrackedApps.Items.Add(lvi);
+   }
+  }
+
+  private void Win_Main_Load(object sender, EventArgs e)
+  {
+   timer_fetch_current_tasks.Enabled = true;
+   fetch_current_tasks();
   }
  }
 }

@@ -42,5 +42,36 @@ namespace timetracker
     listBox1.Items.Add(app_def.name);
    }
   }
+
+  private void button3_Click(object sender, EventArgs e)
+  {
+   if ( listBox1.SelectedIndex != -1 )
+   {
+    all_aps.RemoveAt(listBox1.SelectedIndex);
+    listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+   }
+  }
+
+  private void button2_Click(object sender, EventArgs e)
+  {
+   Win_ItemDisplay wid = new Win_ItemDisplay();
+
+   application_definition appdef = all_aps[listBox1.SelectedIndex];
+   wid.entry_guid = appdef.guid;
+   wid.entry_name = appdef.name;
+   wid.entry_ruleset = appdef.ruleset;
+
+   wid.ShowDialog();
+
+   if (wid.entry_valid)
+   {
+    appdef.name = wid.entry_name;
+    appdef.ruleset = wid.entry_ruleset;
+
+    all_aps[listBox1.SelectedIndex] = appdef;
+
+    listBox1.Items[listBox1.SelectedIndex] = appdef.name;
+   }
+  }
  }
 }

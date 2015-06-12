@@ -8,6 +8,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using System.Timers;
 
 namespace timetracker
 {
@@ -23,6 +24,57 @@ namespace timetracker
   string all_tracks_cfg;
   object lock_object = new object();
   private Tracker t;
+  private Timer timer = new Timer();
+
+  public Tracked_Apps()
+  {
+   timer.Interval = 5000;
+   timer.Enabled = true;
+   timer.AutoReset = true;
+   timer.Elapsed += timer_Elapsed;
+  }
+
+  public void update_from_old_version()
+  {
+   string app_data_old = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "application-database.xml");
+   string app_track_old = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "track-database.xml");
+
+   if ( File.Exists(app_data_old) && File.Exists(app_track_old) )
+   {
+    TrackedLegacy.ImportData(app_defs, app_tracks);
+
+    File.Delete(app_data_old);
+    File.Delete(app_track_old);
+   }
+  }
+
+  void timer_Elapsed(object sender, ElapsedEventArgs e)
+  {
+   lock ( lock_object )
+   {
+    if (app_queue.Count > 0)
+    {
+     var old_queue = app_queue.ToList();
+     app_queue.Clear();
+
+     foreach (var it in old_queue)
+      if (it.count < 10)
+       start_process(it.pid, it.start_time);
+
+     List<application_queue> aq = new List<application_queue>();
+
+     // sprawdzmy czy w kolejce są takie same rzeczy
+     foreach (var it in old_queue)
+     {
+      // jeśli proces został dodany to ignorujemy
+      if (app_queue.Exists(o => o.pid == it.pid))
+       aq.Add(new application_queue(it.pid, it.start_time, it.count + 1));
+     }
+
+     app_queue = aq;
+    }
+   }
+  }
 
   private void load_config_app_defs( )
   {
@@ -115,8 +167,6 @@ namespace timetracker
 
   public void save_config_app_track()
   {
-   app_tracks = app_tracks.OrderBy(o => o.time).ToList();
-
    try
    {
     string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, all_tracks_cfg);
@@ -157,6 +207,9 @@ namespace timetracker
   {
    lock ( lock_object )
    {
+    if (app_current.Exists(o => o.pid == pid) || app_queue.Exists( o => o.pid == pid ))
+     return;
+
     int process_id = pid;
     string process_filename,
            process_path,
@@ -301,9 +354,22 @@ namespace timetracker
    act.pid = pid;
    act.guid = guid;
    act.start_time = time;
-   act.all_time = 0;
+   act.all_time = get_track_by_guid(guid).time;
 
    app_current.Add(act);
+  }
+
+  private application_tracked get_track_by_guid(Guid guid)
+  {
+   foreach (var it in app_tracks)
+    if (it.guid == guid)
+     return it;
+
+   application_tracked at = new application_tracked();
+   at.guid = guid;
+   at.time = 0;
+
+   return at;
   }
 
   private void finish_process(int pid, ulong p)
@@ -362,12 +428,15 @@ namespace timetracker
 
     foreach (var it in app_tracks)
     {
-     application_tracked_detailed atd = new application_tracked_detailed();
+     try
+     {
+      application_tracked_detailed atd = new application_tracked_detailed();
 
-     atd.name = get_app_by_guid(it.guid).name;
-     atd.time = it.time;
+      atd.name = get_app_by_guid(it.guid).name;
+      atd.time = it.time;
 
-     latd.Add(atd);
+      latd.Add(atd);
+     } catch (Exception) { }
     }
 
     return latd;
@@ -404,6 +473,25 @@ namespace timetracker
    t = global_tracker;
    t.set_callback(this.app_arived);
    t.report_all();
+  }
+
+  public List<application_current_tracked_detailed> get_current_apps()
+  {
+   List<application_current_tracked_detailed> lactd = new List<application_current_tracked_detailed>();
+
+   foreach ( var it in app_current )
+   {
+    application_current_tracked_detailed actd = new application_current_tracked_detailed();
+
+    actd.name = get_app_by_guid(it.guid).name;
+    actd.pid = it.pid;
+    actd.start_time = it.start_time;
+    actd.all_time = it.all_time;
+
+    lactd.Add(actd);
+   }
+
+   return lactd;
   }
  }
 }
