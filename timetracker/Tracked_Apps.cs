@@ -25,6 +25,7 @@ namespace timetracker
   object lock_object = new object();
   private Tracker t;
   private Timer timer = new Timer();
+  private Timer validate_timer = new Timer();
 
   public Tracked_Apps()
   {
@@ -32,6 +33,40 @@ namespace timetracker
    timer.Enabled = true;
    timer.AutoReset = true;
    timer.Elapsed += timer_Elapsed;
+
+   validate_timer.Interval = 15 * 60 * 1000;
+   validate_timer.AutoReset = true;
+   validate_timer.Elapsed += validate_timer_Elapsed;
+   validate_timer.Enabled = true;
+  }
+
+  void validate_timer_Elapsed(object sender, ElapsedEventArgs e)
+  {
+   lock (lock_object)
+   {
+    var c = app_current.ToList();
+    app_current.Clear();
+
+    foreach (var it in c)
+    {
+     try
+     {
+      Process p = Process.GetProcessById(it.pid);
+
+      app_current.Add(it);
+     }
+     catch (ArgumentException)
+     {
+      if (it.valid_count < 2)
+      {
+       application_current_tracked act = new application_current_tracked();
+       act = it;
+       act.valid_count++;
+       app_current.Add(act);
+      }
+     }
+    }
+   }
   }
 
   public void update_from_old_version()
@@ -355,6 +390,7 @@ namespace timetracker
    act.guid = guid;
    act.start_time = time;
    act.all_time = get_track_by_guid(guid).time;
+   act.valid_count = 0;
 
    app_current.Add(act);
   }
@@ -379,7 +415,8 @@ namespace timetracker
     foreach (var it in app_current)
      if ( it.pid == pid )
      {
-      update_tracked_record(it.guid, p - it.start_time);
+      if (it.valid_count == 0)
+       update_tracked_record(it.guid, p - it.start_time);
       app_current.Remove(it);
       break;
      }

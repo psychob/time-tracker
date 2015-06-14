@@ -68,6 +68,7 @@ namespace timetracker
   public int pid;
   public ulong start_time;
   public ulong all_time;
+  public int valid_count;
  }
 
  public struct application_current_tracked_detailed
