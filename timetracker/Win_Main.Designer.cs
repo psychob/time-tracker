@@ -140,7 +140,7 @@
    this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
    this.MainMenuStrip = this.menuStrip1;
    this.Name = "Win_Main";
-   this.Text = "Time Tracker";
+   this.Text = "Time Tracker v2";
    this.Load += new System.EventHandler(this.Win_Main_Load);
    this.menuStrip1.ResumeLayout(false);
    this.menuStrip1.PerformLayout();
