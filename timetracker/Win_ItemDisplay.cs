@@ -381,5 +381,31 @@ namespace timetracker
    tbGuid.Text = "";
    Close();
   }
+
+  private void textBox5_TextChanged(object sender, EventArgs e)
+  {
+   update_test_box();
+  }
+
+  private void update_test_box()
+  {
+   if (textBox5.Text == "" || tbMatchString.Text == "")
+    return;
+
+   if (Utils.compareStrings(tbMatchString.Text, textBox5.Text, rule_algorithm))
+    textBox5.BackColor = Color.Lime;
+   else
+    textBox5.BackColor = Color.Red;
+  }
+
+  private void tbMatchString_TextChanged(object sender, EventArgs e)
+  {
+   update_test_box();
+  }
+
+  private void cbAlgorithm_SelectedIndexChanged(object sender, EventArgs e)
+  {
+   update_test_box();
+  }
  }
 }
