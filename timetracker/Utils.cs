@@ -164,18 +164,19 @@ namespace timetracker
      switch ( str[it])
      {
       case '?':
-       out_str = ".{1}";
+       out_str += ".{1}";
        break;
 
       case '*':
-       out_str = ".*";
+       out_str += ".*";
        break;
      }
 
      it++;
     }
    }
-   return str;
+
+   return "^" + out_str + "$";
   }
 
   private static string escape_chars(string p)
