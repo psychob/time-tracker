@@ -77,6 +77,26 @@ namespace timetracker
    base.OnFormClosing(e);
   }
 
+  protected override void WndProc( ref System.Windows.Forms.Message msg )
+  {
+   switch ( msg.Msg )
+   {
+    case WinAPI.WM_QUERYENDSESSION:
+     msg.Result = (IntPtr)1;
+     break;
+
+    case WinAPI.WM_ENDSESSION:
+     allow_close = true;
+     Close();
+     msg.Result = (IntPtr)1;
+     break;
+
+    default:
+     base.WndProc(ref msg);
+     break;
+   }
+  }
+
   private void exitApplicationToolStripMenuItem_Click(object sender, EventArgs e)
   {
    allow_close = true;
