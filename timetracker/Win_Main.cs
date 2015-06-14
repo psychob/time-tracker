@@ -43,6 +43,7 @@ namespace timetracker
    {
     allow_visible = true;
     Show();
+    Activate();
    }
   }
 
@@ -111,6 +112,8 @@ namespace timetracker
   private void fetch_current_tasks()
   {
    List<application_current_tracked_detailed> act = tracked_apps.get_current_apps();
+
+   act = act.OrderByDescending(o => WinAPI.GetTickCount64() - o.start_time).ToList();
 
    lvTrackedApps.Items.Clear();
 
