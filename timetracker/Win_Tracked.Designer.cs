@@ -70,6 +70,7 @@
    this.MaximizeBox = false;
    this.MinimizeBox = false;
    this.Name = "Win_Tracked";
+   this.ShowIcon = false;
    this.Text = "Tracked Apps";
    this.Load += new System.EventHandler(this.Win_Tracked_Load);
    this.ResumeLayout(false);

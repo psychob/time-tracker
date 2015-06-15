@@ -317,6 +317,7 @@
    this.MaximizeBox = false;
    this.MinimizeBox = false;
    this.Name = "Win_ItemDisplay";
+   this.ShowIcon = false;
    this.Text = "Add New Item";
    this.Load += new System.EventHandler(this.Win_ItemDisplay_Load);
    this.groupBox1.ResumeLayout(false);

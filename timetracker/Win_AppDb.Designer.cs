@@ -88,6 +88,7 @@
    this.Controls.Add(this.button1);
    this.Controls.Add(this.listBox1);
    this.Name = "Win_AppDb";
+   this.ShowIcon = false;
    this.Text = "Application Database";
    this.Load += new System.EventHandler(this.Win_AppDb_Load);
    this.ResumeLayout(false);
