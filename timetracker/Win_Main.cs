@@ -154,5 +154,15 @@ namespace timetracker
    timer_fetch_current_tasks.Enabled = true;
    fetch_current_tasks();
   }
+
+  private void Win_Main_Resize(object sender, EventArgs e)
+  {
+   if ( this.WindowState == FormWindowState.Minimized )
+   {
+    WindowState = FormWindowState.Normal;
+    allow_visible = false;
+    Hide();
+   }
+  }
  }
 }

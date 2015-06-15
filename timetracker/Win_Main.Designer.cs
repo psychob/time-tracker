@@ -142,6 +142,7 @@
    this.Name = "Win_Main";
    this.Text = "Time Tracker v2";
    this.Load += new System.EventHandler(this.Win_Main_Load);
+   this.Resize += new System.EventHandler(this.Win_Main_Resize);
    this.menuStrip1.ResumeLayout(false);
    this.menuStrip1.PerformLayout();
    this.ResumeLayout(false);
