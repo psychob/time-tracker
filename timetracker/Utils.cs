@@ -69,39 +69,22 @@ namespace timetracker
    }
 
    if (y > 0)
-   {
     ret += y.ToString() + "y ";
-    ret += o.ToString("D2") + "mo ";
-    ret += d.ToString("D2") + "d ";
-    ret += h.ToString("D2") + "h ";
-    ret += m.ToString("D2") + "m ";
-    ret += s.ToString("D2") + "s ";
-   } else if ( o > 0 )
-   {
+
+   if (o > 0)
     ret += o.ToString() + "mo ";
-    ret += d.ToString("D2") + "d ";
-    ret += h.ToString("D2") + "h ";
-    ret += m.ToString("D2") + "m ";
-    ret += s.ToString("D2") + "s ";
-   } else if ( d > 0 )
-   {
+
+   if (d > 0)
     ret += d.ToString() + "d ";
-    ret += h.ToString("D2") + "h ";
-    ret += m.ToString("D2") + "m ";
-    ret += s.ToString("D2") + "s ";
-   } else if ( h > 0 )
-   {
+
+   if (h > 0)
     ret += h.ToString() + "h ";
-    ret += m.ToString("D2") + "m ";
-    ret += s.ToString("D2") + "s ";
-   } else if ( m > 0 )
-   {
+
+   if (m > 0)
     ret += m.ToString() + "m ";
-    ret += s.ToString("D2") + "s ";
-   } else
-   {
+
+   if (s > 0)
     ret += s.ToString() + "s ";
-   }
 
    ret = ret.Trim();
    if (ret == string.Empty)
@@ -114,6 +97,12 @@ namespace timetracker
   {
    switch ( applicationMatchType )
    {
+    case MatchAlgorithm.NearSensitive:
+     return new Regex(substitute_chars(str)).IsMatch(str2);
+
+    case MatchAlgorithm.NearInsensitive:
+     return new Regex(substitute_chars(str), RegexOptions.IgnoreCase).IsMatch(str2);
+
     case MatchAlgorithm.ExactSensitive:
      return str == str2;
 
@@ -124,8 +113,7 @@ namespace timetracker
      {
       try
       {
-       Regex regex = new Regex(str);
-       return regex.IsMatch(str2);
+       return new Regex(str).IsMatch(str2);
       } catch ( Exception )
       {
        return false;
@@ -134,6 +122,69 @@ namespace timetracker
    }
 
    return false;
+  }
+
+  private static string substitute_chars(string str)
+  {
+   // ? -> .{1}
+   // * -> .*
+
+   string out_str = "";
+   int it = 0;
+
+   while (it < str.Length)
+   {
+    int asterix = str.IndexOf("*", it);
+    int exclam = str.IndexOf("?", it);
+
+    int char_ = 0;
+
+    if (asterix != -1 && exclam != -1)
+     char_ = Math.Min(asterix, exclam);
+    else if (asterix != -1)
+     char_ = asterix;
+    else if (exclam != -1)
+     char_ = exclam;
+    else
+     char_ = -1;
+
+    if (char_ == -1)
+    {
+     out_str += escape_chars(str.Substring(it));
+     it = str.Length;
+    }
+    else
+    {
+     if ( char_ != it )
+     {
+      out_str += escape_chars(str.Substring(it, char_ - it));
+      it = char_;
+     }
+
+     switch ( str[it])
+     {
+      case '?':
+       out_str += ".{1}";
+       break;
+
+      case '*':
+       out_str += ".*";
+       break;
+     }
+
+     it++;
+    }
+   }
+
+   return "^" + out_str + "$";
+  }
+
+  private static string escape_chars(string p)
+  {
+   foreach (var it in new string[] { "\\", "[", "]", "(", ")", ".", "*", "?", "^", "$" })
+    p = p.Replace(it, "\\" + it);
+
+   return p;
   }
  }
 }
