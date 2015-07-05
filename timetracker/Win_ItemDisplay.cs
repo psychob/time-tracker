@@ -62,9 +62,11 @@ namespace timetracker
        lar_.Add(all_rules[jt.Key]);
      }
 
-     ar.rules = lar_.ToArray();
-
-     lar.Add(ar);
+     if (lar_.Count > 0)
+     {
+      ar.rules = lar_.ToArray();
+      lar.Add(ar);
+     }
     }
 
     return lar.ToArray();
@@ -129,7 +131,7 @@ namespace timetracker
    get
    {
     return tbGuid.Text != string.Empty && entry_name != string.Empty &&
-           all_rules.Count > 0;
+           all_rules.Count > 0 && rule_to_ruleset.Count > 0;
    }
   }
 
@@ -406,6 +408,22 @@ namespace timetracker
   private void cbAlgorithm_SelectedIndexChanged(object sender, EventArgs e)
   {
    update_test_box();
+  }
+
+  private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+  {
+   if (treeView1.SelectedNode == null)
+    return;
+
+   var cnode = treeView1.SelectedNode;
+
+   int rid = (int)cnode.Tag;
+   treeView1.Nodes.Remove(cnode);
+
+   if (cnode.Parent != null)
+    rule_to_ruleset.Remove(rid);
+   else
+    rulesets.Remove(rid);
   }
  }
 }

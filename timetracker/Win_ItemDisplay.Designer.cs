@@ -28,6 +28,7 @@
   /// </summary>
   private void InitializeComponent()
   {
+   this.components = new System.ComponentModel.Container();
    this.tbName = new System.Windows.Forms.TextBox();
    this.tbGuid = new System.Windows.Forms.TextBox();
    this.button1 = new System.Windows.Forms.Button();
@@ -50,10 +51,13 @@
    this.label1 = new System.Windows.Forms.Label();
    this.label2 = new System.Windows.Forms.Label();
    this.treeView1 = new System.Windows.Forms.TreeView();
+   this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+   this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
    this.button4 = new System.Windows.Forms.Button();
    this.button5 = new System.Windows.Forms.Button();
    this.groupBox1.SuspendLayout();
    this.groupBox2.SuspendLayout();
+   this.contextMenuStrip1.SuspendLayout();
    this.SuspendLayout();
    // 
    // tbName
@@ -274,10 +278,25 @@
    // 
    // treeView1
    // 
+   this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
    this.treeView1.Location = new System.Drawing.Point(12, 343);
    this.treeView1.Name = "treeView1";
    this.treeView1.Size = new System.Drawing.Size(560, 240);
    this.treeView1.TabIndex = 7;
+   // 
+   // contextMenuStrip1
+   // 
+   this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem});
+   this.contextMenuStrip1.Name = "contextMenuStrip1";
+   this.contextMenuStrip1.Size = new System.Drawing.Size(106, 26);
+   // 
+   // deleteToolStripMenuItem
+   // 
+   this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+   this.deleteToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+   this.deleteToolStripMenuItem.Text = "Delete";
+   this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
    // 
    // button4
    // 
@@ -314,6 +333,7 @@
    this.Controls.Add(this.button1);
    this.Controls.Add(this.tbGuid);
    this.Controls.Add(this.tbName);
+   this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
    this.MaximizeBox = false;
    this.MinimizeBox = false;
    this.Name = "Win_ItemDisplay";
@@ -324,6 +344,7 @@
    this.groupBox1.PerformLayout();
    this.groupBox2.ResumeLayout(false);
    this.groupBox2.PerformLayout();
+   this.contextMenuStrip1.ResumeLayout(false);
    this.ResumeLayout(false);
    this.PerformLayout();
 
@@ -355,5 +376,7 @@
   private System.Windows.Forms.TreeView treeView1;
   private System.Windows.Forms.Button button4;
   private System.Windows.Forms.Button button5;
+  private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+  private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
  }
 }
