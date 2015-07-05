@@ -34,7 +34,7 @@ namespace timetracker
    timer.AutoReset = true;
    timer.Elapsed += timer_Elapsed;
 
-   validate_timer.Interval = 15 * 60 * 1000;
+   validate_timer.Interval = 1 * 60 * 1000;
    validate_timer.AutoReset = true;
    validate_timer.Elapsed += validate_timer_Elapsed;
    validate_timer.Enabled = true;
