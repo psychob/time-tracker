@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -153,6 +155,11 @@ namespace timetracker
   {
    timer_fetch_current_tasks.Enabled = true;
    fetch_current_tasks();
+   {
+    Assembly ass = Assembly.GetExecutingAssembly();
+    FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ass.Location);
+    Text = "Time Tracker v" + fvi.ProductVersion;
+   }
   }
 
   private void Win_Main_Resize(object sender, EventArgs e)
