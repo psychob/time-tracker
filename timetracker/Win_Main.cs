@@ -17,15 +17,22 @@ namespace timetracker
   private NotifyIcon niMainNotifyIcon;
   private Tracker global_tracker;
   private Tracked_Apps tracked_apps;
+  private string current_version;
 
   public Win_Main()
   {
    InitializeComponent();
 
+   {
+    Assembly ass = Assembly.GetExecutingAssembly();
+    FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ass.Location);
+    current_version = fvi.ProductVersion.Trim('.', '0');
+   }
+
    niMainNotifyIcon = new NotifyIcon();
    niMainNotifyIcon.Visible = true;
    niMainNotifyIcon.Icon = this.Icon;
-   niMainNotifyIcon.Text = "Time Tracker v2";
+   niMainNotifyIcon.Text = "Time Tracker v" + current_version;
    niMainNotifyIcon.DoubleClick += niMainNotifyIcon_DoubleClick;
 
    tracked_apps = new Tracked_Apps();
@@ -155,11 +162,7 @@ namespace timetracker
   {
    timer_fetch_current_tasks.Enabled = true;
    fetch_current_tasks();
-   {
-    Assembly ass = Assembly.GetExecutingAssembly();
-    FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ass.Location);
-    Text = "Time Tracker v" + fvi.ProductVersion;
-   }
+   Text = "Time Tracker v" + current_version;
   }
 
   private void Win_Main_Resize(object sender, EventArgs e)
