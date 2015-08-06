@@ -185,10 +185,10 @@ namespace timetracker
    {
     switch ( cbGroupType.SelectedIndex )
     {
-     case 0:
+     case 1:
       return application_ruleset_kind.all;
 
-     case 1:
+     case 0:
       return application_ruleset_kind.any;
     }
 
@@ -199,11 +199,11 @@ namespace timetracker
     switch ( value )
     {
      case application_ruleset_kind.all:
-      cbGroupType.SelectedIndex = 0;
+      cbGroupType.SelectedIndex = 1;
       break;
 
      case application_ruleset_kind.any:
-      cbGroupType.SelectedIndex = 1;
+      cbGroupType.SelectedIndex = 0;
       break;
     }
    }
@@ -418,12 +418,13 @@ namespace timetracker
    var cnode = treeView1.SelectedNode;
 
    int rid = (int)cnode.Tag;
-   treeView1.Nodes.Remove(cnode);
 
    if (cnode.Parent != null)
     rule_to_ruleset.Remove(rid);
    else
     rulesets.Remove(rid);
+
+   treeView1.Nodes.Remove(cnode);
   }
  }
 }
