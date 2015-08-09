@@ -52,6 +52,7 @@ namespace timetracker
    {
     allow_visible = true;
     Show();
+    WindowState = FormWindowState.Normal;
     Activate();
    }
   }
