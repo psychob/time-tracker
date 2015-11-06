@@ -102,6 +102,8 @@
     <EmbeddedResource Include="Win_Tracked.resx">
       <DependentUpon>Win_Tracked.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="icons\icon-16x16.xcf" />
+    <None Include="icons\icon-32x32.xcf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -116,6 +118,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icons\icon-16x16.png" />
+    <Content Include="icons\icon-32x32.png" />
     <Content Include="ticon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
