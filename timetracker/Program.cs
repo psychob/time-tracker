@@ -16,7 +16,7 @@ namespace timetracker
   {
    Application.EnableVisualStyles();
    Application.SetCompatibleTextRenderingDefault(false);
-   Application.Run(new Win_Main());
+   Application.Run(new MainWindow());
   }
  }
 }
