@@ -11,6 +11,21 @@
     <AssemblyName>timetracker</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,38 +64,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrackedLegacy.cs" />
-    <Compile Include="Tracked_Apps.cs" />
-    <Compile Include="Tracked_Structs.cs" />
-    <Compile Include="Tracker.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="WinAPI.cs" />
-    <Compile Include="Win_AppDb.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Win_AppDb.Designer.cs">
-      <DependentUpon>Win_AppDb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Win_ItemDisplay.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Win_ItemDisplay.Designer.cs">
-      <DependentUpon>Win_ItemDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Win_Main.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Win_Main.Designer.cs">
-      <DependentUpon>Win_Main.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Win_Tracked.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Win_Tracked.Designer.cs">
-      <DependentUpon>Win_Tracked.cs</DependentUpon>
-    </Compile>
+    <Compile Include="TrackSystem.cs" />
+    <EmbeddedResource Include="MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -90,18 +85,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Win_AppDb.resx">
-      <DependentUpon>Win_AppDb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Win_ItemDisplay.resx">
-      <DependentUpon>Win_ItemDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Win_Main.resx">
-      <DependentUpon>Win_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Win_Tracked.resx">
-      <DependentUpon>Win_Tracked.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="icons\icon-16x16.xcf" />
     <None Include="icons\icon-32x32.xcf" />
     <None Include="Properties\Settings.settings">
@@ -121,6 +104,18 @@
     <Content Include="icons\icon-16x16.png" />
     <Content Include="icons\icon-32x32.png" />
     <Content Include="ticon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
