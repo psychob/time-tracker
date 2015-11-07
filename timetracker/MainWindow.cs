@@ -14,8 +14,8 @@ namespace timetracker
 	{
 		bool AllowVisible = false;
 		bool AllowClose = false;
-		TrackSystem TrackingSystem;
 		NotifyIcon OwnNotifyIcon;
+		Timer FetchTimer;
 		string CurrentVersion;
 
 		public MainWindow()
@@ -37,7 +37,7 @@ namespace timetracker
 				CurrentVersion = CurrentVersion.Trim('.');
 			}
 
-			TrackingSystem = new TrackSystem();
+			TrackSystem.TrackingSystemState = new TrackSystem();
 
 			OwnNotifyIcon = new NotifyIcon();
 			OwnNotifyIcon.Visible = true;
@@ -45,6 +45,35 @@ namespace timetracker
 			OwnNotifyIcon.Text = "TimeTracker v" + CurrentVersion;
 			OwnNotifyIcon.DoubleClick += NotifyIconDoubleClickEvent;
 			OwnNotifyIcon.ContextMenuStrip = cmsNotify;
+
+			FetchTimer = new Timer();
+			FetchTimer.Interval = 5 * 1000;
+			FetchTimer.Tick += OnFetchTickEvent;
+		}
+
+		private void OnFetchTickEvent(object sender, EventArgs e)
+		{
+			OnFetchTick();
+		}
+
+		private void OnFetchTick()
+		{
+			var tapps = TrackSystem.TrackingSystemState.GetRunningAps();
+
+			lvTrackedApps.Items.Clear();
+
+			foreach (var it in tapps)
+			{
+				ListViewItem liv = new ListViewItem(it.PID.ToString());
+
+				liv.SubItems.AddRange(new string[]{
+					it.Name,
+					TrackSystem.Utils.GetTime(TrackSystem.WinAPI.GetTickCount64() - it.StartTime),
+					TrackSystem.Utils.GetTime(it.AllTime + (TrackSystem.WinAPI.GetTickCount64() - it.StartTime))
+				});
+
+				lvTrackedApps.Items.Add(liv);
+			}
 		}
 
 		private void NotifyIconDoubleClickEvent(object sender, EventArgs e)
@@ -83,7 +112,7 @@ namespace timetracker
 				e.Cancel = true;
 			} else
 			{
-				TrackingSystem.Close();
+				TrackSystem.TrackingSystemState.Close();
 				OwnNotifyIcon.Dispose();
 			}
 
@@ -123,6 +152,9 @@ namespace timetracker
 		private void MainWindow_Load(object sender, EventArgs e)
 		{
 			Text = "TimeTracker v" + CurrentVersion;
+
+			FetchTimer.Start();
+			OnFetchTick();
 		}
 
 		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -153,6 +185,44 @@ namespace timetracker
 				cmsNotify_Open.Text = "Hide";
 			else
 				cmsNotify_Open.Text = "Open";
+		}
+
+		private void exitApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			AllowClose = true;
+			Close();
+		}
+
+		private void listToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ApplicationDefinition adef = new ApplicationDefinition();
+
+			adef.AppDefinitions = TrackSystem.TrackingSystemState.GetDefiniedApps();
+			adef.ShowDialog();
+
+			TrackSystem.TrackingSystemState.GrabAll();
+		}
+
+		private void definitionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			AddDefinition ad = new AddDefinition();
+
+			ad.ShowDialog();
+
+			if (ad.IsValid)
+			{
+				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
+					ad.ApplicationUniqueID, ad.ApplicationRules);
+
+				TrackSystem.TrackingSystemState.GrabAll();
+			}
+		}
+
+		private void fromFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+
+			ofd.ShowDialog(this);
 		}
 	}
 }
