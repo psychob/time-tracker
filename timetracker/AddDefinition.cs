@@ -497,5 +497,211 @@ namespace timetracker
 
 			Close();
 		}
+
+		private void tbUniqueName_TextChanged(object sender, EventArgs e)
+		{
+			tbUniqueName.Text = tbUniqueName.Text.ToLower();
+		}
+
+		private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				if (treeView1.SelectedNode == null)
+					return;
+
+				if (treeView1.SelectedNode.Parent == null)
+					cmsGroup.Show(Cursor.Position);
+				else
+					cmsRule.Show(Cursor.Position);
+			}
+		}
+
+		private void allToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			rs.Kind = TrackSystem.Structs.RuleSet.All;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void anyToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			rs.Kind = TrackSystem.Structs.RuleSet.Any;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void lowToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			rs.Priority = TrackSystem.Structs.RulePriority.Low;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void mediumToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			rs.Priority = TrackSystem.Structs.RulePriority.Medium;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void highToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			rs.Priority = TrackSystem.Structs.RulePriority.High;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			treeView1.Nodes.Remove(treeView1.SelectedNode);
+
+			foreach (var it in rulesets)
+			{
+				if (it.id == ruleset_id)
+				{
+					rulesets.Remove(it);
+					break;
+				}
+			}
+		}
+
+		private void exactToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Exact;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void exactCaseInsensitiveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void nearToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Near;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void nearCaseInsensitiveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.NearInvariant;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private void regularExpressionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Regex;
+
+			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
+			ReplaceRuleSetNode(rs, ruleset_id);
+		}
+
+		private TrackSystem.Structs.AppRuleSet GetRuleSet(int ruleset_id)
+		{
+			foreach (var it in rulesets)
+				if (it.id == ruleset_id)
+					return it.container;
+
+			throw new ArgumentException();
+		}
+
+		private TrackSystem.Structs.AppRule GetRule(int ruleset_id)
+		{
+			foreach (var it in rules)
+				if (it.id == ruleset_id)
+					return it.container;
+
+			throw new ArgumentException();
+		}
+
+		private void ReplaceRuleSetNode(TreeNode selectedNode,
+			TrackSystem.Structs.AppRuleSet idcnt)
+		{
+			selectedNode.Text = idcnt.UniqueId + ", " +
+				idcnt.Kind + ", " + idcnt.Priority;
+		}
+
+		private void ReplaceRuleSetNode(TrackSystem.Structs.AppRuleSet rs, int ruleset_id)
+		{
+			foreach (var it in rulesets)
+				if (it.id == ruleset_id)
+				{
+					rulesets.Remove(it);
+					break;
+				}
+
+			rulesets.Add(PackRule(ruleset_id, rs));
+		}
+
+		private void ReplaceRuleSetNode(TreeNode selectedNode,
+			TrackSystem.Structs.AppRule container)
+		{
+			selectedNode.Text = container.MatchString + " = " + container.MatchTo + ", " +
+				container.MatchAlgorithm;
+        }
+
+		private void ReplaceRuleSetNode(TrackSystem.Structs.AppRule rs, int ruleset_id)
+		{
+			foreach (var it in rules)
+				if (it.id == ruleset_id)
+				{
+					rules.Remove(it);
+					break;
+				}
+
+			rules.Add(PackRule(ruleset_id, rs));
+		}
+
+		private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			int ruleset_id = (int)treeView1.SelectedNode.Tag;
+
+			foreach (var it in rules)
+				if (it.id == ruleset_id)
+				{
+					rules.Remove(it);
+					break;
+				}
+
+			rules_to_ruleset.Remove(ruleset_id);
+
+			treeView1.Nodes.Remove(treeView1.SelectedNode);
+		}
 	}
 }

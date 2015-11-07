@@ -64,10 +64,31 @@
 			this.button6 = new System.Windows.Forms.Button();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+			this.cmsGroup = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.changeTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.allToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.anyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.changePriorityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.highToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+			this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.cmsRule = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.changeAlgorithmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exactToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.exactCaseInsensitiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.nearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.nearCaseInsensitiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.regularExpressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+			this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.cmsNaming.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
+			this.cmsGroup.SuspendLayout();
+			this.cmsRule.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -119,6 +140,7 @@
 			this.tbUniqueName.ReadOnly = true;
 			this.tbUniqueName.Size = new System.Drawing.Size(259, 20);
 			this.tbUniqueName.TabIndex = 1;
+			this.tbUniqueName.TextChanged += new System.EventHandler(this.tbUniqueName_TextChanged);
 			// 
 			// tbAppName
 			// 
@@ -136,7 +158,7 @@
             this.exactToolStripMenuItem,
             this.userDefinedToolStripMenuItem});
 			this.cmsNaming.Name = "cmsNaming";
-			this.cmsNaming.Size = new System.Drawing.Size(161, 114);
+			this.cmsNaming.Size = new System.Drawing.Size(161, 92);
 			// 
 			// intelligentNamingToolStripMenuItem
 			// 
@@ -404,6 +426,7 @@
 			this.treeView1.SelectedImageIndex = 0;
 			this.treeView1.Size = new System.Drawing.Size(454, 228);
 			this.treeView1.TabIndex = 6;
+			this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
 			// 
 			// imageList1
 			// 
@@ -412,6 +435,150 @@
 			this.imageList1.Images.SetKeyName(0, "folder.png");
 			this.imageList1.Images.SetKeyName(1, "folder-open.png");
 			this.imageList1.Images.SetKeyName(2, "file.ico");
+			// 
+			// cmsGroup
+			// 
+			this.cmsGroup.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeTypeToolStripMenuItem,
+            this.changePriorityToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.removeToolStripMenuItem});
+			this.cmsGroup.Name = "cmsGroup";
+			this.cmsGroup.Size = new System.Drawing.Size(149, 76);
+			// 
+			// changeTypeToolStripMenuItem
+			// 
+			this.changeTypeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.allToolStripMenuItem,
+            this.anyToolStripMenuItem});
+			this.changeTypeToolStripMenuItem.Name = "changeTypeToolStripMenuItem";
+			this.changeTypeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.changeTypeToolStripMenuItem.Text = "Change Type";
+			// 
+			// allToolStripMenuItem
+			// 
+			this.allToolStripMenuItem.Name = "allToolStripMenuItem";
+			this.allToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.allToolStripMenuItem.Text = "All";
+			this.allToolStripMenuItem.Click += new System.EventHandler(this.allToolStripMenuItem_Click);
+			// 
+			// anyToolStripMenuItem
+			// 
+			this.anyToolStripMenuItem.Name = "anyToolStripMenuItem";
+			this.anyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.anyToolStripMenuItem.Text = "Any";
+			this.anyToolStripMenuItem.Click += new System.EventHandler(this.anyToolStripMenuItem_Click);
+			// 
+			// changePriorityToolStripMenuItem
+			// 
+			this.changePriorityToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lowToolStripMenuItem,
+            this.mediumToolStripMenuItem,
+            this.highToolStripMenuItem});
+			this.changePriorityToolStripMenuItem.Name = "changePriorityToolStripMenuItem";
+			this.changePriorityToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.changePriorityToolStripMenuItem.Text = "Change Priority";
+			// 
+			// lowToolStripMenuItem
+			// 
+			this.lowToolStripMenuItem.Name = "lowToolStripMenuItem";
+			this.lowToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.lowToolStripMenuItem.Text = "Low";
+			this.lowToolStripMenuItem.Click += new System.EventHandler(this.lowToolStripMenuItem_Click);
+			// 
+			// mediumToolStripMenuItem
+			// 
+			this.mediumToolStripMenuItem.Name = "mediumToolStripMenuItem";
+			this.mediumToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.mediumToolStripMenuItem.Text = "Medium";
+			this.mediumToolStripMenuItem.Click += new System.EventHandler(this.mediumToolStripMenuItem_Click);
+			// 
+			// highToolStripMenuItem
+			// 
+			this.highToolStripMenuItem.Name = "highToolStripMenuItem";
+			this.highToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.highToolStripMenuItem.Text = "High";
+			this.highToolStripMenuItem.Click += new System.EventHandler(this.highToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+			// 
+			// removeToolStripMenuItem
+			// 
+			this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+			this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.removeToolStripMenuItem.Text = "Remove";
+			this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+			// 
+			// cmsRule
+			// 
+			this.cmsRule.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeAlgorithmToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.removeToolStripMenuItem1});
+			this.cmsRule.Name = "cmsRule";
+			this.cmsRule.Size = new System.Drawing.Size(160, 76);
+			// 
+			// changeAlgorithmToolStripMenuItem
+			// 
+			this.changeAlgorithmToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exactToolStripMenuItem1,
+            this.exactCaseInsensitiveToolStripMenuItem,
+            this.nearToolStripMenuItem,
+            this.nearCaseInsensitiveToolStripMenuItem,
+            this.regularExpressionToolStripMenuItem});
+			this.changeAlgorithmToolStripMenuItem.Name = "changeAlgorithmToolStripMenuItem";
+			this.changeAlgorithmToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.changeAlgorithmToolStripMenuItem.Text = "Change Algorithm";
+			// 
+			// exactToolStripMenuItem1
+			// 
+			this.exactToolStripMenuItem1.Name = "exactToolStripMenuItem1";
+			this.exactToolStripMenuItem1.Size = new System.Drawing.Size(189, 22);
+			this.exactToolStripMenuItem1.Text = "Exact";
+			this.exactToolStripMenuItem1.Click += new System.EventHandler(this.exactToolStripMenuItem1_Click);
+			// 
+			// exactCaseInsensitiveToolStripMenuItem
+			// 
+			this.exactCaseInsensitiveToolStripMenuItem.Name = "exactCaseInsensitiveToolStripMenuItem";
+			this.exactCaseInsensitiveToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.exactCaseInsensitiveToolStripMenuItem.Text = "Exact (Case insensitive)";
+			this.exactCaseInsensitiveToolStripMenuItem.Click += new System.EventHandler(this.exactCaseInsensitiveToolStripMenuItem_Click);
+			// 
+			// nearToolStripMenuItem
+			// 
+			this.nearToolStripMenuItem.Name = "nearToolStripMenuItem";
+			this.nearToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.nearToolStripMenuItem.Text = "Near";
+			this.nearToolStripMenuItem.Click += new System.EventHandler(this.nearToolStripMenuItem_Click);
+			// 
+			// nearCaseInsensitiveToolStripMenuItem
+			// 
+			this.nearCaseInsensitiveToolStripMenuItem.Name = "nearCaseInsensitiveToolStripMenuItem";
+			this.nearCaseInsensitiveToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.nearCaseInsensitiveToolStripMenuItem.Text = "Near (Case insensitive)";
+			this.nearCaseInsensitiveToolStripMenuItem.Click += new System.EventHandler(this.nearCaseInsensitiveToolStripMenuItem_Click);
+			// 
+			// regularExpressionToolStripMenuItem
+			// 
+			this.regularExpressionToolStripMenuItem.Name = "regularExpressionToolStripMenuItem";
+			this.regularExpressionToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.regularExpressionToolStripMenuItem.Text = "Regular Expression";
+			this.regularExpressionToolStripMenuItem.Click += new System.EventHandler(this.regularExpressionToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(156, 6);
+			// 
+			// removeToolStripMenuItem1
+			// 
+			this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
+			this.removeToolStripMenuItem1.Size = new System.Drawing.Size(159, 22);
+			this.removeToolStripMenuItem1.Text = "Remove";
+			this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
 			// 
 			// AddDefinition
 			// 
@@ -436,6 +603,8 @@
 			this.groupBox2.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
+			this.cmsGroup.ResumeLayout(false);
+			this.cmsRule.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -476,5 +645,24 @@
 		private System.Windows.Forms.ImageList imageList1;
 		private System.Windows.Forms.ToolStripMenuItem exactToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem userDefinedToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip cmsGroup;
+		private System.Windows.Forms.ToolStripMenuItem changeTypeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem allToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem anyToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem changePriorityToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lowToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mediumToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem highToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip cmsRule;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem changeAlgorithmToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem exactToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem exactCaseInsensitiveToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem nearToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem nearCaseInsensitiveToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem regularExpressionToolStripMenuItem;
 	}
 }
