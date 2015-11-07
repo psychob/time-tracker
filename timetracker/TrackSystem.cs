@@ -558,7 +558,7 @@ namespace timetracker
 			xws.CloseOutput = true;
 			xws.Encoding = Encoding.UTF8;
 			xws.Indent = true;
-			xws.IndentChars = " ";
+			xws.IndentChars = "\t";
 
 			string file = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff") + ".xml";
 
@@ -582,7 +582,7 @@ namespace timetracker
 				xws.CloseOutput = true;
 				xws.Encoding = Encoding.UTF8;
 				xws.Indent = true;
-				xws.IndentChars = " ";
+				xws.IndentChars = "\t";
 
 				XmlWriter xw = XmlWriter.Create(ApplicationDefinitions, xws);
 				XmlSerializer xs = new XmlSerializer(definedApps.GetType());
