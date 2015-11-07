@@ -29,7 +29,9 @@ namespace timetracker
 
 		private void AddDefinition_Load(object sender, EventArgs e)
 		{
-			tbUniqueName.Text = Guid.NewGuid().ToString();
+			if (tbUniqueName.Text == string.Empty)
+				tbUniqueName.Text = Guid.NewGuid().ToString();
+
 			tbGroupName.Text = Guid.NewGuid().ToString();
 			cbGroupType.SelectedIndex = 0;
 			cbGroupPriority.SelectedIndex = 1;
@@ -54,25 +56,21 @@ namespace timetracker
 		private void exactToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SetUniqueNameGenerator(false, false, true);
-		}
 
-		private void solidToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			SetUniqueNameGenerator(false, false, false, true);
+			tbUniqueName.Text = tbAppName.Text;
 		}
 
 		private void userDefinedToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SetUniqueNameGenerator(false, false, false, false, true);
+			SetUniqueNameGenerator(false, false, false, true);
 		}
 
 		private void SetUniqueNameGenerator(bool i = false, bool g = false,
-			bool e = false, bool s = false, bool u = false)
+			bool e = false, bool u = false)
 		{
 			intelligentNamingToolStripMenuItem.Checked = i;
 			guidToolStripMenuItem.Checked = g;
 			exactToolStripMenuItem.Checked = e;
-			solidToolStripMenuItem.Checked = s;
 			userDefinedToolStripMenuItem.Checked = u;
 
 			tbUniqueName.ReadOnly = !u;
@@ -86,7 +84,7 @@ namespace timetracker
 				tbUniqueName.Text = tbAppName.Text;
 		}
 
-		private void RunIntelligentNamer()
+		internal void RunIntelligentNamer()
 		{
 			if (tbAppName.Text == string.Empty)
 				tbUniqueName.Text = Guid.NewGuid().ToString();
@@ -175,6 +173,9 @@ namespace timetracker
 
 					var tnrs = AddToTreeView(rs);
 					rulesets.Add(rs);
+
+					if (it.Rules == null)
+						continue;
 
 					foreach (var jt in it.Rules)
 					{

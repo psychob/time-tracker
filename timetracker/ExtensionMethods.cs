@@ -42,6 +42,8 @@ namespace timetracker
 				xw.WriteAttributeString(it.Key, it.Value);
 
 			xw.WriteEndElement();
+
+			xw.Flush();
 		}
 
 		public static string ToSensibleFormat(this DateTime dt)

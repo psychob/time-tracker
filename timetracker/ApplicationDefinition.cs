@@ -54,5 +54,22 @@ namespace timetracker
 				}));
 			}
 		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			var ret = MainWindow.OpenFileTemplate();
+
+			if (ret.HasValue)
+			{
+				var appinfo = ret.Value;
+				listView1.Items.Add(new ListViewItem(new string[]
+				{
+					appinfo.UniqueID,
+					appinfo.Name,
+					TrackSystem.Utils.GetTime(appinfo.Time),
+					appinfo.StartCounter.ToString()
+				}));
+			}
+		}
 	}
 }

@@ -40,7 +40,7 @@
 			this.intelligentNamingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.guidToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.solidToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.userDefinedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.button3 = new System.Windows.Forms.Button();
 			this.label5 = new System.Windows.Forms.Label();
@@ -64,7 +64,6 @@
 			this.button6 = new System.Windows.Forms.Button();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-			this.userDefinedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.cmsNaming.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -135,10 +134,9 @@
             this.intelligentNamingToolStripMenuItem,
             this.guidToolStripMenuItem,
             this.exactToolStripMenuItem,
-            this.solidToolStripMenuItem,
             this.userDefinedToolStripMenuItem});
 			this.cmsNaming.Name = "cmsNaming";
-			this.cmsNaming.Size = new System.Drawing.Size(161, 136);
+			this.cmsNaming.Size = new System.Drawing.Size(161, 114);
 			// 
 			// intelligentNamingToolStripMenuItem
 			// 
@@ -163,12 +161,12 @@
 			this.exactToolStripMenuItem.Text = "Exact";
 			this.exactToolStripMenuItem.Click += new System.EventHandler(this.exactToolStripMenuItem_Click);
 			// 
-			// solidToolStripMenuItem
+			// userDefinedToolStripMenuItem
 			// 
-			this.solidToolStripMenuItem.Name = "solidToolStripMenuItem";
-			this.solidToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-			this.solidToolStripMenuItem.Text = "Immutable";
-			this.solidToolStripMenuItem.Click += new System.EventHandler(this.solidToolStripMenuItem_Click);
+			this.userDefinedToolStripMenuItem.Name = "userDefinedToolStripMenuItem";
+			this.userDefinedToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+			this.userDefinedToolStripMenuItem.Text = "User Defined";
+			this.userDefinedToolStripMenuItem.Click += new System.EventHandler(this.userDefinedToolStripMenuItem_Click);
 			// 
 			// groupBox2
 			// 
@@ -415,13 +413,6 @@
 			this.imageList1.Images.SetKeyName(1, "folder-open.png");
 			this.imageList1.Images.SetKeyName(2, "file.ico");
 			// 
-			// userDefinedToolStripMenuItem
-			// 
-			this.userDefinedToolStripMenuItem.Name = "userDefinedToolStripMenuItem";
-			this.userDefinedToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-			this.userDefinedToolStripMenuItem.Text = "User Defined";
-			this.userDefinedToolStripMenuItem.Click += new System.EventHandler(this.userDefinedToolStripMenuItem_Click);
-			// 
 			// AddDefinition
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -484,7 +475,6 @@
 		private System.Windows.Forms.TreeView treeView1;
 		private System.Windows.Forms.ImageList imageList1;
 		private System.Windows.Forms.ToolStripMenuItem exactToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem solidToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem userDefinedToolStripMenuItem;
 	}
 }

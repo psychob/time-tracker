@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -218,11 +219,84 @@ namespace timetracker
 			}
 		}
 
+		private delegate void _OpenCallback();
+
 		private void fromFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileTemplate();
+		}
+
+		internal static TrackSystem.Structs.App? OpenFileTemplate()
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 
-			ofd.ShowDialog(this);
+			ofd.Filter = "Exe Files (*.exe;*.com)|*.exe;*.com";
+			ofd.CheckFileExists = true;
+
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				System.Diagnostics.FileVersionInfo fvi =
+					System.Diagnostics.FileVersionInfo.GetVersionInfo(ofd.FileName);
+				string md5 = TrackSystem.Utils.GetMD5(ofd.FileName);
+				AddDefinition ad = new AddDefinition();
+
+				if (fvi.ProductName != string.Empty)
+					ad.ApplicationName = fvi.ProductName;
+				else
+					ad.ApplicationName = Path.GetFileName(ofd.FileName);
+
+				ad.RunIntelligentNamer();
+
+				TrackSystem.Structs.AppRuleSet ars = new TrackSystem.Structs.AppRuleSet();
+				ars.Kind = TrackSystem.Structs.RuleSet.All;
+				ars.Priority = TrackSystem.Structs.RulePriority.Medium;
+				ars.UniqueId = "Inherit from file";
+
+				List<TrackSystem.Structs.AppRule> rules = new List<TrackSystem.Structs.AppRule>();
+
+				rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileName,
+					Path.GetFileName(ofd.FileName),
+					TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant));
+				rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileMD5,
+					md5, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+
+				if (fvi.FileDescription != string.Empty)
+					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc,
+						fvi.FileDescription, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+
+				if (fvi.CompanyName != string.Empty)
+					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany,
+						fvi.CompanyName, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+
+				if (fvi.FileVersion != string.Empty)
+					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion,
+						fvi.FileVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+
+				if (fvi.ProductVersion != string.Empty)
+					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion,
+						fvi.ProductVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+
+				ars.Rules = rules.ToArray();
+
+				ad.ApplicationRules = new TrackSystem.Structs.AppRuleSet[]
+				{
+					ars
+				};
+
+				ad.ShowDialog();
+
+				if (ad.IsValid)
+				{
+					var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
+						ad.ApplicationUniqueID, ad.ApplicationRules);
+
+					TrackSystem.TrackingSystemState.GrabAll();
+
+					return appinfo;
+				}
+			}
+
+			return null;
 		}
 	}
 }
