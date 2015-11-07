@@ -120,6 +120,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icons\database.ico" />
+    <Content Include="icons\database.png" />
+    <Content Include="icons\file.ico" />
+    <Content Include="icons\file.png" />
+    <Content Include="icons\folder-open.png" />
+    <Content Include="icons\folder.png" />
     <Content Include="icons\icon-16x16.png" />
     <Content Include="icons\icon-32x32.png" />
     <Content Include="ticon.ico" />
