@@ -112,7 +112,7 @@ namespace timetracker
 				public string RuleSetID;
 				public RulePriority Priority;
 
-				public AppRulePair( string id, string gid, RulePriority p )
+				public AppRulePair(string id, string gid, RulePriority p)
 				{
 					UniqueID = id;
 					RuleSetID = gid;
@@ -355,7 +355,7 @@ namespace timetracker
 					return ret;
 			}
 
-			internal static string GetMD5( string path )
+			internal static string GetMD5(string path)
 			{
 				string md5_str = "";
 
@@ -566,7 +566,7 @@ namespace timetracker
 
 				XmlSerializer xs = new XmlSerializer(definedApps.GetType());
 				definedApps = (List<Structs.App>)xs.Deserialize(xr);
-			} catch ( Exception )
+			} catch (Exception)
 			{
 			}
 
@@ -830,7 +830,7 @@ namespace timetracker
 		private Structs.App GetAppByRule(Structs.AppRulePair appRulePair)
 		{
 			return GetAppById(appRulePair.UniqueID);
-        }
+		}
 
 		private void StartApp(int PID, string name, ulong processTime,
 			ulong fullTime, Structs.AppRulePair ruleselected)
