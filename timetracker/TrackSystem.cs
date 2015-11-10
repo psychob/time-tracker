@@ -525,12 +525,30 @@ namespace timetracker
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
+		System.Windows.Forms.Timer waited_timer;
 		object inOutLock = new object();
 
 		public TrackSystem()
 		{
 			LoadState();
 			BeginTracking();
+
+			waited_timer = new System.Windows.Forms.Timer();
+			waited_timer.Interval = 5 * 1000;
+			waited_timer.Tick += OnWaitTick;
+			waited_timer.Enabled = true;
+		}
+
+		private void OnWaitTick(object sender, EventArgs e)
+		{
+			lock (inOutLock)
+			{
+				var copy = waitedApps.ToList();
+				waitedApps.Clear();
+
+				foreach (var it in copy)
+					NewProcessArrived(it.PID, it.Count);
+			}
 		}
 
 		public void Close()
@@ -607,13 +625,16 @@ namespace timetracker
 
 		private void NewProcessArrived(int pid)
 		{
+			NewProcessArrived(pid, 0, WinAPI.GetTickCount64());
+		}
+
+		private void NewProcessArrived(int pid, int retire, ulong processTime)
+		{
 			if (pid == 0 || pid == 4)
 				return;
 
 			lock (inOutLock)
 			{
-				ulong processTime = WinAPI.GetTickCount64();
-
 				// podany PID już jest już śledzony
 				if (currentApps.Contains(cai => cai.PID == pid))
 					return;
@@ -625,7 +646,7 @@ namespace timetracker
 				switch (pd.Reason)
 				{
 					case Structs.ExeDataContainerReason.IncompleteInformation:
-						AddToWaitQueue(pid, processTime);
+						AddToWaitQueue(pid, processTime, retire);
 						return;
 
 					case Structs.ExeDataContainerReason.ExceptionOccured:
@@ -662,13 +683,16 @@ namespace timetracker
 			}
 		}
 
-		private void AddToWaitQueue(int pid, ulong processTime)
+		private void AddToWaitQueue(int pid, ulong processTime, int count)
 		{
-			lock ( inOutLock )
+			if (count > 5)
+				return;
+
+			lock (inOutLock)
 			{
 				Structs.WaitStruct ws = new Structs.WaitStruct();
 
-				ws.Count = 0;
+				ws.Count = count;
 				ws.PID = pid;
 				ws.StartTime = processTime;
 
