@@ -71,5 +71,40 @@ namespace timetracker
 				}));
 			}
 		}
+
+		private void editToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (listView1.SelectedItems.Count != 1)
+				return;
+
+			var sic = listView1.SelectedItems[0];
+
+			var idata = TrackSystem.TrackingSystemState.GetAppById(sic.SubItems[0].Text);
+
+			AddDefinition adef = new AddDefinition();
+			adef.ApplicationName = idata.Name;
+			adef.ApplicationUniqueID = idata.UniqueID;
+			adef.ApplicationRules = idata.Rules;
+			adef.ApplicationEditing = true;
+
+			adef.ShowDialog();
+
+			idata.Name = adef.ApplicationName;
+			idata.Rules = adef.ApplicationRules;
+
+			TrackSystem.TrackingSystemState.UpdateApp(idata.UniqueID, idata);
+		}
+
+		private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (listView1.SelectedItems.Count != 1)
+				return;
+
+			var sic = listView1.SelectedItems[0];
+
+			TrackSystem.TrackingSystemState.RemoveApp(sic.SubItems[0].Text);
+
+			listView1.Items.Remove(sic);
+		}
 	}
 }

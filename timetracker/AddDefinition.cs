@@ -484,6 +484,8 @@ namespace timetracker
 			}
 		}
 
+		public bool ApplicationEditing { get; internal set; }
+
 		private void button6_Click(object sender, EventArgs e)
 		{
 			_IsValid = false;

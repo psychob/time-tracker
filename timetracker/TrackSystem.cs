@@ -25,6 +25,7 @@ namespace timetracker
 			{
 				public string Name, UniqueID;
 				public ulong Time, StartCounter;
+				public bool IsShell;
 
 				public AppRuleSet[] Rules;
 			}
@@ -686,6 +687,9 @@ namespace timetracker
 
 				foreach (var it in definedApps)
 				{
+					if (it.Rules == null)
+						continue;
+
 					foreach (var jt in it.Rules)
 					{
 						int rules_match = 0;
@@ -748,6 +752,7 @@ namespace timetracker
 			app.Name = applicationName;
 			app.UniqueID = applicationUniqueID;
 			app.Rules = applicationRules;
+			app.IsShell = false;
 
 			app.StartCounter = 0;
 			app.Time = 0;
@@ -757,14 +762,50 @@ namespace timetracker
 			return app;
 		}
 
+		public void RemoveApp(string text)
+		{
+			foreach (var it in definedApps)
+			{
+				if (it.UniqueID == text)
+				{
+					Structs.App c = it;
+					c.IsShell = true;
+					c.Rules = null;
+
+					definedApps.Remove(it);
+					definedApps.Add(c);
+					return;
+				}
+			}
+		}
+
+		public void UpdateApp(string uniqueID, Structs.App idata)
+		{
+			foreach (var it in definedApps)
+			{
+				if (it.UniqueID == uniqueID)
+				{
+					definedApps.Remove(it);
+					definedApps.Add(idata);
+
+					return;
+				}
+			}
+		}
+
+		public Structs.App GetAppById(string AppID)
+		{
+			return (from t in definedApps where t.UniqueID == AppID select t).First();
+		}
+
 		public List<Structs.App> GetDefiniedApps()
 		{
-			return definedApps;
+			return (from t in definedApps where t.IsShell == false select t).ToList();
 		}
 
 		private Structs.App GetAppByRule(Structs.AppRulePair appRulePair)
 		{
-			return (from t in definedApps where t.UniqueID == appRulePair.UniqueID select t).First();
+			return GetAppById(appRulePair.UniqueID);
         }
 
 		private void StartApp(int PID, string name, ulong processTime,

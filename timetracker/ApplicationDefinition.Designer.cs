@@ -28,16 +28,21 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationDefinition));
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.cmsItems = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.button3 = new System.Windows.Forms.Button();
 			this.button4 = new System.Windows.Forms.Button();
+			this.cmsItems.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// listView1
@@ -50,6 +55,7 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
+			this.listView1.ContextMenuStrip = this.cmsItems;
 			this.listView1.FullRowSelect = true;
 			this.listView1.GridLines = true;
 			this.listView1.Location = new System.Drawing.Point(12, 12);
@@ -78,6 +84,28 @@
 			// 
 			this.columnHeader4.Text = "Started Count";
 			this.columnHeader4.Width = 94;
+			// 
+			// cmsItems
+			// 
+			this.cmsItems.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.removeToolStripMenuItem});
+			this.cmsItems.Name = "cmsItems";
+			this.cmsItems.Size = new System.Drawing.Size(153, 70);
+			// 
+			// editToolStripMenuItem
+			// 
+			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.editToolStripMenuItem.Text = "Edit";
+			this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+			// 
+			// removeToolStripMenuItem
+			// 
+			this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+			this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.removeToolStripMenuItem.Text = "Remove";
+			this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
 			// 
 			// button1
 			// 
@@ -134,6 +162,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ApplicationDefinition";
 			this.Text = "Application Definition Database";
+			this.cmsItems.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -149,5 +178,8 @@
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.ContextMenuStrip cmsItems;
+		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
 	}
 }
