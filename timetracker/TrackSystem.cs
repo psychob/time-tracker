@@ -461,6 +461,9 @@ namespace timetracker
 
 				eventDestroyed = new ManagementEventWatcher(NameSpace, DeleteSql);
 				eventDestroyed.EventArrived += OnDeleteProcessEvent;
+
+				eventCreated.Start();
+				eventDestroyed.Start();
 			}
 
 			private void OnCreateProcessEvent(object sender, EventArrivedEventArgs e)
@@ -527,6 +530,8 @@ namespace timetracker
 		XmlWriter xmlTracker = null;
 		System.Timers.Timer waited_timer, valid_timer;
 		object inOutLock = new object();
+		bool valid_tick_running = false;
+		bool waited_timer_running = false;
 
 		public TrackSystem()
 		{
@@ -561,6 +566,9 @@ namespace timetracker
 
 		private void OnValidTick(object sender, EventArgs e)
 		{
+			if (valid_tick_running)
+				return;
+
 			ValidTick();
 		}
 
@@ -568,15 +576,20 @@ namespace timetracker
 		{
 			lock (inOutLock)
 			{
-				foreach ( var it in currentApps)
+				valid_tick_running = true;
+
+				foreach (var it in currentApps)
 				{
 					if (PidNotRunning(it.PID))
 					{
 						StopApp(it.PID, it);
+						currentApps.Remove(it);
 						ValidTick();
 						return;
 					}
 				}
+
+				valid_tick_running = false;
 			}
 		}
 
@@ -587,6 +600,9 @@ namespace timetracker
 
 		private void OnWaitTick(object sender, EventArgs e)
 		{
+			if (waited_timer_running)
+				return;
+
 			WaitTick();
 		}
 
@@ -594,11 +610,15 @@ namespace timetracker
 		{
 			lock (inOutLock)
 			{
+				waited_timer_running = true;
+
 				var copy = waitedApps.ToList();
 				waitedApps.Clear();
 
 				foreach (var it in copy)
 					NewProcessArrived(it.PID, it.Count, it.StartTime);
+
+				waited_timer_running = false;
 			}
 		}
 

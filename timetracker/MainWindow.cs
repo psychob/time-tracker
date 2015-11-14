@@ -33,7 +33,7 @@ namespace timetracker
 					it--;
 
 				for (int kt = 0; kt <= it; ++kt)
-					CurrentVersion = str[kt] + '.';
+					CurrentVersion += str[kt] + '.';
 
 				CurrentVersion = CurrentVersion.Trim('.');
 			}
