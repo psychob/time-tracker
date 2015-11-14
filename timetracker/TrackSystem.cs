@@ -525,7 +525,7 @@ namespace timetracker
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
-		System.Windows.Forms.Timer waited_timer;
+		System.Timers.Timer waited_timer, valid_timer;
 		object inOutLock = new object();
 
 		public TrackSystem()
@@ -533,13 +533,64 @@ namespace timetracker
 			LoadState();
 			BeginTracking();
 
-			waited_timer = new System.Windows.Forms.Timer();
+			waited_timer = new System.Timers.Timer();
 			waited_timer.Interval = 5 * 1000;
-			waited_timer.Tick += OnWaitTick;
+			waited_timer.Elapsed += OnWaitTick;
+			waited_timer.AutoReset = true;
 			waited_timer.Enabled = true;
+
+			valid_timer = new System.Timers.Timer();
+			valid_timer.Interval = 1 * 60 * 1000;
+			valid_timer.Elapsed += OnValidTick;
+			valid_timer.AutoReset = true;
+			valid_timer.Enabled = true;
+		}
+
+		public void Close()
+		{
+			waited_timer.Enabled = false;
+			valid_timer.Enabled = false;
+
+			ValidTick();
+			WaitTick();
+
+			FinishTracking();
+			FinishProcess();
+			SaveState();
+		}
+
+		private void OnValidTick(object sender, EventArgs e)
+		{
+			ValidTick();
+		}
+
+		private void ValidTick()
+		{
+			lock (inOutLock)
+			{
+				foreach ( var it in currentApps)
+				{
+					if (PidNotRunning(it.PID))
+					{
+						StopApp(it.PID, it);
+						ValidTick();
+						return;
+					}
+				}
+			}
+		}
+
+		private bool PidNotRunning(int PID)
+		{
+			return GetProcessData(PID).Reason != Structs.ExeDataContainerReason.Valid;
 		}
 
 		private void OnWaitTick(object sender, EventArgs e)
+		{
+			WaitTick();
+		}
+
+		private void WaitTick()
 		{
 			lock (inOutLock)
 			{
@@ -547,15 +598,8 @@ namespace timetracker
 				waitedApps.Clear();
 
 				foreach (var it in copy)
-					NewProcessArrived(it.PID, it.Count);
+					NewProcessArrived(it.PID, it.Count, it.StartTime);
 			}
-		}
-
-		public void Close()
-		{
-			FinishTracking();
-			FinishProcess();
-			SaveState();
 		}
 
 		private void LoadState()
