@@ -17,6 +17,18 @@ namespace timetracker
 			return false;
 		}
 
+		public static void Replace<T>(this List<T> list, Predicate<T> pred, T newvalue)
+		{
+			for (var it = 0; it < list.Count; ++it)
+			{
+				if (pred(list[it]))
+				{
+					list[it] = newvalue;
+					return;
+				}
+			}
+		}
+
 		public static Dictionary<K, V> Filter<K, V>(this Dictionary<K, V> list, Func<K, V, bool> pred)
 		{
 			Dictionary<K, V> ret = new Dictionary<K, V>();

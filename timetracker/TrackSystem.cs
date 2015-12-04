@@ -869,16 +869,7 @@ namespace timetracker
 
 		public void UpdateApp(string uniqueID, Structs.App idata)
 		{
-			foreach (var it in definedApps)
-			{
-				if (it.UniqueID == uniqueID)
-				{
-					definedApps.Remove(it);
-					definedApps.Add(idata);
-
-					return;
-				}
-			}
+			definedApps.Replace(p => p.UniqueID == uniqueID, idata);
 		}
 
 		public Structs.App GetAppById(string AppID)
@@ -945,16 +936,15 @@ namespace timetracker
 				{ "elapsed", ct.ToString() }
 			});
 
-			foreach (var it in definedApps)
+			for ( var it = 0; it < definedApps.Count; ++it )
 			{
-				if (it.UniqueID == current.RuleTriggered.UniqueID)
+				if (definedApps[it].UniqueID == current.RuleTriggered.UniqueID)
 				{
-					Structs.App c = it;
+					Structs.App c = definedApps[it];
 					c.Time += ct;
 					c.StartCounter++;
 
-					definedApps.Remove(it);
-					definedApps.Add(c);
+					definedApps[it] = c;
 					return;
 				}
 			}
