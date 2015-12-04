@@ -832,8 +832,13 @@ namespace timetracker
 		public Structs.App AddNewDefinition(string applicationName,
 			string applicationUniqueID, Structs.AppRuleSet[] applicationRules)
 		{
-			if (definedApps.Contains(c => c.UniqueID == applicationUniqueID))
-				applicationUniqueID = Guid.NewGuid().ToString();
+			string application_unique_id = applicationUniqueID;
+			int counter = 2;
+
+			while (definedApps.Contains( c => c.UniqueID == application_unique_id))
+				application_unique_id = string.Format("{0}_{1}", applicationUniqueID, counter++);
+
+			applicationUniqueID = application_unique_id;
 
 			Structs.App app = new Structs.App();
 
