@@ -42,7 +42,7 @@ namespace timetracker
 
 			OwnNotifyIcon = new NotifyIcon();
 			OwnNotifyIcon.Visible = true;
-			OwnNotifyIcon.Icon = Icon;
+			OwnNotifyIcon.Icon = Properties.Resources.MainIcon;
 			OwnNotifyIcon.Text = "TimeTracker v" + CurrentVersion;
 			OwnNotifyIcon.DoubleClick += NotifyIconDoubleClickEvent;
 			OwnNotifyIcon.ContextMenuStrip = cmsNotify;
@@ -70,7 +70,8 @@ namespace timetracker
 				liv.SubItems.AddRange(new string[]{
 					it.Name,
 					TrackSystem.Utils.GetTime(TrackSystem.WinAPI.GetTickCount64() - it.StartTime),
-					TrackSystem.Utils.GetTime(it.AllTime + (TrackSystem.WinAPI.GetTickCount64() - it.StartTime))
+					TrackSystem.Utils.GetTime(it.AllTime + (TrackSystem.WinAPI.GetTickCount64() - it.StartTime)),
+					it.StartCount.ToString(),
 				});
 
 				lvTrackedApps.Items.Add(liv);

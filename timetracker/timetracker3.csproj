@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ticon.ico</ApplicationIcon>
+    <ApplicationIcon>icons\icons.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -103,9 +103,8 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="icons\icon-16x16.xcf" />
-    <None Include="icons\icon-32x32.xcf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -126,9 +125,7 @@
     <Content Include="icons\file.png" />
     <Content Include="icons\folder-open.png" />
     <Content Include="icons\folder.png" />
-    <Content Include="icons\icon-16x16.png" />
-    <Content Include="icons\icon-32x32.png" />
-    <Content Include="ticon.ico" />
+    <Content Include="icons\icons.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

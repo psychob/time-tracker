@@ -1,0 +1,4 @@
+﻿3.0.4
+ * Inteligentne nazywanie, gdy utworzy skrót z mniejszą ilością znaków niż 3,
+   ustawi skrót na wprowadzoną nazwę (bez białych znaków)
+ * Dodanie nowej ikony

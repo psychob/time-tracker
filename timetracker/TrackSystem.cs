@@ -28,6 +28,16 @@ namespace timetracker
 				public bool IsShell;
 
 				public AppRuleSet[] Rules;
+
+				public App(App copy)
+				{
+					Name = copy.Name;
+					UniqueID = copy.UniqueID;
+					Time = copy.Time;
+					StartCounter = copy.StartCounter;
+					IsShell = copy.IsShell;
+					Rules = copy.Rules;
+				}
 			}
 
 			public struct AppRuleSet
@@ -104,6 +114,7 @@ namespace timetracker
 				public AppRulePair RuleTriggered;
 				public ulong StartTime;
 				public ulong AllTime;
+				public ulong StartCount;
 			}
 
 			internal struct AppRulePair
@@ -825,7 +836,7 @@ namespace timetracker
 				qualified = qualified.OrderByDescending(x => x.Priority).ToList();
 				Structs.App chosen_app = GetAppByRule(qualified[0]);
 
-				StartApp(PID, chosen_app.Name, processTime, chosen_app.Time, qualified[0]);
+				StartApp(PID, chosen_app, processTime, chosen_app.Time, qualified[0]);
 			}
 		}
 
@@ -892,8 +903,8 @@ namespace timetracker
 			return GetAppById(appRulePair.UniqueID);
 		}
 
-		private void StartApp(int PID, string name, ulong processTime,
-			ulong fullTime, Structs.AppRulePair ruleselected)
+		private void StartApp(int PID, Structs.App chosen_app,
+			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected)
 		{
 			xmlTracker.WriteNode("begin", new Dictionary<string, string>
 			{
@@ -902,13 +913,19 @@ namespace timetracker
 				{ "time", DateTime.Now.ToSensibleFormat() },
 			});
 
+			var n = new Structs.App(chosen_app);
+			n.StartCounter++;
+
+			definedApps.Replace(p => p.UniqueID == chosen_app.UniqueID, n);
+
 			Structs.CurrentApps ca = new Structs.CurrentApps();
 
 			ca.PID = PID;
-			ca.Name = name;
+			ca.Name = n.Name;
 			ca.StartTime = processTime;
 			ca.AllTime = fullTime;
 			ca.RuleTriggered = ruleselected;
+			ca.StartCount = n.StartCounter;
 
 			currentApps.Add(ca);
 		}
@@ -947,7 +964,6 @@ namespace timetracker
 				{
 					Structs.App c = definedApps[it];
 					c.Time += ct;
-					c.StartCounter++;
 
 					definedApps[it] = c;
 					return;
@@ -969,7 +985,7 @@ namespace timetracker
 
 		internal List<Structs.CurrentApps> GetRunningAps()
 		{
-			return currentApps;
+			return currentApps.ToList();
 		}
 
 		internal void GrabAll()

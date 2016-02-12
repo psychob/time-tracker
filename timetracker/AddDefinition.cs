@@ -106,7 +106,13 @@ namespace timetracker
 					}
 				}
 
-				tbUniqueName.Text = unique_name.ToLower();
+                if (unique_name.Length < 3)
+                {
+                    tbUniqueName.Text = tbAppName.Text.ToLower().Replace(" ", "");
+                } else
+                {
+                    tbUniqueName.Text = unique_name.ToLower();
+                }
 			}
 		}
 
