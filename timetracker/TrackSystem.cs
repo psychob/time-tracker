@@ -97,6 +97,11 @@ namespace timetracker
 				Near,
 				NearInvariant,
 				Regex,
+				RegexInvariant,
+				StartsWith,
+				StartsWithInvariant,
+				EndWith,
+				EndWithInvariant,
 			}
 
 			public struct AppTrack
@@ -200,7 +205,7 @@ namespace timetracker
 						return pattern == subject;
 
 					case Structs.AppRuleAlgorithm.ExactInvariant:
-						return pattern.Equals(subject, StringComparison.InvariantCultureIgnoreCase);
+						return pattern.Equals(subject, StringComparison.CurrentCultureIgnoreCase);
 
 					case Structs.AppRuleAlgorithm.Near:
 						return new Regex(GenerateNearCharacters(pattern)).IsMatch(subject);
@@ -219,6 +224,30 @@ namespace timetracker
 								return false;
 							}
 						}
+
+					case Structs.AppRuleAlgorithm.RegexInvariant:
+						{
+							try
+							{
+								return new Regex(pattern, RegexOptions.IgnoreCase).IsMatch(subject);
+							}
+							catch (Exception)
+							{
+								return false;
+							}
+						}
+
+					case Structs.AppRuleAlgorithm.StartsWith:
+						return subject.StartsWith(pattern);
+
+					case Structs.AppRuleAlgorithm.StartsWithInvariant:
+						return subject.StartsWith(pattern, StringComparison.CurrentCultureIgnoreCase);
+
+					case Structs.AppRuleAlgorithm.EndWith:
+						return subject.EndsWith(pattern);
+
+					case Structs.AppRuleAlgorithm.EndWithInvariant:
+						return subject.EndsWith(pattern, StringComparison.CurrentCultureIgnoreCase);
 				}
 
 				throw new ArgumentException("Algorithm is not supported", nameof(algo));

@@ -388,6 +388,7 @@ namespace timetracker
 			AddToTreeView(idcont, treeView1.SelectedNode);
 
 			tbPattern.Text = "";
+			tbMatchTest.Text = "";
 		}
 
 		private TrackSystem.Structs.AppRuleAlgorithm MatchAlgorithm
@@ -406,6 +407,16 @@ namespace timetracker
 						return TrackSystem.Structs.AppRuleAlgorithm.NearInvariant;
 					case 4:
 						return TrackSystem.Structs.AppRuleAlgorithm.Regex;
+					case 5:
+						return TrackSystem.Structs.AppRuleAlgorithm.RegexInvariant;
+					case 6:
+						return TrackSystem.Structs.AppRuleAlgorithm.StartsWith;
+					case 7:
+						return TrackSystem.Structs.AppRuleAlgorithm.StartsWithInvariant;
+					case 8:
+						return TrackSystem.Structs.AppRuleAlgorithm.EndWith;
+					case 9:
+						return TrackSystem.Structs.AppRuleAlgorithm.EndWithInvariant;
 				}
 
 				throw new NotSupportedException();
