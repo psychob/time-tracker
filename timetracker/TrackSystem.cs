@@ -641,7 +641,8 @@ namespace timetracker
 
 				XmlSerializer xs = new XmlSerializer(definedApps.GetType());
 				definedApps = (List<Structs.App>)xs.Deserialize(xr);
-			} catch (Exception)
+			}
+			catch (Exception)
 			{
 			}
 
@@ -683,7 +684,8 @@ namespace timetracker
 				xs.Serialize(xw, definedApps);
 
 				xw.Close();
-			} catch (Exception)
+			}
+			catch (Exception)
 			{
 			}
 		}
@@ -749,10 +751,12 @@ namespace timetracker
 				ed.FileVersion = FileVersionInfo.GetVersionInfo(ed.Path);
 
 				return new Structs.ExeDataContainer(ed);
-			} catch (Win32Exception w32) when (w32.NativeErrorCode == 299)
+			}
+			catch (Win32Exception w32) when (w32.NativeErrorCode == 299)
 			{
 				return new Structs.ExeDataContainer(Structs.ExeDataContainerReason.IncompleteInformation);
-			} catch (Exception)
+			}
+			catch (Exception)
 			{
 				return new Structs.ExeDataContainer(Structs.ExeDataContainerReason.ExceptionOccured);
 			}
@@ -846,7 +850,7 @@ namespace timetracker
 			string application_unique_id = applicationUniqueID;
 			int counter = 2;
 
-			while (definedApps.Contains( c => c.UniqueID == application_unique_id))
+			while (definedApps.Contains(c => c.UniqueID == application_unique_id))
 				application_unique_id = string.Format("{0}_{1}", applicationUniqueID, counter++);
 
 			applicationUniqueID = application_unique_id;
@@ -958,7 +962,7 @@ namespace timetracker
 				{ "elapsed", ct.ToString() }
 			});
 
-			for ( var it = 0; it < definedApps.Count; ++it )
+			for (var it = 0; it < definedApps.Count; ++it)
 			{
 				if (definedApps[it].UniqueID == current.RuleTriggered.UniqueID)
 				{

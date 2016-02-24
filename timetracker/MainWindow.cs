@@ -112,7 +112,8 @@ namespace timetracker
 			{
 				Hide();
 				e.Cancel = true;
-			} else
+			}
+			else
 			{
 				TrackSystem.TrackingSystemState.Close();
 				OwnNotifyIcon.Dispose();

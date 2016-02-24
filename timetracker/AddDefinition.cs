@@ -106,13 +106,14 @@ namespace timetracker
 					}
 				}
 
-                if (unique_name.Length < 3)
-                {
-                    tbUniqueName.Text = tbAppName.Text.ToLower().Replace(" ", "");
-                } else
-                {
-                    tbUniqueName.Text = unique_name.ToLower();
-                }
+				if (unique_name.Length < 3)
+				{
+					tbUniqueName.Text = tbAppName.Text.ToLower().Replace(" ", "");
+				}
+				else
+				{
+					tbUniqueName.Text = unique_name.ToLower();
+				}
 			}
 		}
 
@@ -682,7 +683,7 @@ namespace timetracker
 		{
 			selectedNode.Text = container.MatchString + " = " + container.MatchTo + ", " +
 				container.MatchAlgorithm;
-        }
+		}
 
 		private void ReplaceRuleSetNode(TrackSystem.Structs.AppRule rs, int ruleset_id)
 		{
