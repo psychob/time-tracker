@@ -84,5 +84,10 @@ namespace timetracker
 		{
 			return char.IsNumber(c);
 		}
-    }
+
+		public static bool IsEmptyOrNull(this string str)
+		{
+			return str == null || str == string.Empty;
+		}
+	}
 }

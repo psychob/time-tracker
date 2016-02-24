@@ -261,19 +261,19 @@ namespace timetracker
 				rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileMD5,
 					md5, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
-				if (fvi.FileDescription != string.Empty)
+				if (!fvi.FileDescription.IsEmptyOrNull())
 					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc,
 						fvi.FileDescription, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
-				if (fvi.CompanyName != string.Empty)
+				if (!fvi.CompanyName.IsEmptyOrNull())
 					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany,
 						fvi.CompanyName, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
-				if (fvi.FileVersion != string.Empty)
+				if (!fvi.FileVersion.IsEmptyOrNull())
 					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion,
 						fvi.FileVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
-				if (fvi.ProductVersion != string.Empty)
+				if (!fvi.ProductVersion.IsEmptyOrNull())
 					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion,
 						fvi.ProductVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
