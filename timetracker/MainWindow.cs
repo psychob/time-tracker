@@ -300,5 +300,10 @@ namespace timetracker
 
 			return null;
 		}
+
+		private void saveDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			TrackSystem.TrackingSystemState.SaveDatabase();
+		}
 	}
 }
