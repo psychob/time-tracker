@@ -597,7 +597,7 @@ namespace timetracker
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
-		System.Timers.Timer waited_timer, valid_timer;
+		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
 		bool waited_timer_running = false;
@@ -618,12 +618,24 @@ namespace timetracker
 			valid_timer.Elapsed += OnValidTick;
 			valid_timer.AutoReset = true;
 			valid_timer.Enabled = true;
+
+			tick_timer = new System.Timers.Timer();
+#if DEBUG
+			tick_timer.Interval = 1000;
+#else
+			tick_timer.Interval = 15 * 60 * 1000;
+#endif
+
+			tick_timer.Elapsed += OnTickTick;
+			tick_timer.AutoReset = true;
+			tick_timer.Enabled = true;
 		}
 
 		public void Close()
 		{
 			waited_timer.Enabled = false;
 			valid_timer.Enabled = false;
+			tick_timer.Enabled = false;
 
 			ValidTick();
 			WaitTick();
@@ -659,6 +671,17 @@ namespace timetracker
 				}
 
 				valid_tick_running = false;
+			}
+		}
+
+		private void OnTickTick(object sender, EventArgs e)
+		{
+			lock (inOutLock)
+			{
+				xmlTracker.WriteNode("ping", new Dictionary<string, string>
+				{
+					{ "pong", DateTime.Now.Ticks.ToString() },
+				});
 			}
 		}
 
@@ -727,25 +750,7 @@ namespace timetracker
 			xmlTracker.WriteEndDocument();
 			xmlTracker.Close();
 
-			try
-			{
-				definedApps = definedApps.OrderBy(o => o.UniqueID).ToList();
-
-				XmlWriterSettings xws = new XmlWriterSettings();
-				xws.CloseOutput = true;
-				xws.Encoding = Encoding.UTF8;
-				xws.Indent = true;
-				xws.IndentChars = "\t";
-
-				XmlWriter xw = XmlWriter.Create(ApplicationDefinitions, xws);
-				XmlSerializer xs = new XmlSerializer(definedApps.GetType());
-				xs.Serialize(xw, definedApps);
-
-				xw.Close();
-			}
-			catch (Exception)
-			{
-			}
+			SaveDatabase();
 		}
 
 		public void BeginTracking()
@@ -971,12 +976,18 @@ namespace timetracker
 		private void StartApp(int PID, Structs.App chosen_app,
 			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected)
 		{
-			xmlTracker.WriteNode("begin", new Dictionary<string, string>
+			lock (inOutLock)
 			{
-				{ "app", ruleselected.UniqueID },
-				{ "pid", PID.ToString() },
-				{ "time", DateTime.Now.ToSensibleFormat() },
-			});
+				DateTime x = DateTime.Now;
+
+				xmlTracker.WriteNode("begin", new Dictionary<string, string>
+				{
+					{ "app", ruleselected.UniqueID },
+					{ "pid", PID.ToString() },
+					{ "time", x.ToSensibleFormat() },
+					{ "precise-time", x.Ticks.ToString() }
+				});
+			}
 
 			var n = new Structs.App(chosen_app);
 			n.StartCounter++;
@@ -1033,13 +1044,19 @@ namespace timetracker
 		{
 			ulong ct = WinAPI.GetTickCount64() - current.StartTime;
 
-			xmlTracker.WriteNode("end", new Dictionary<string, string>
+			lock (inOutLock)
 			{
-				{ "app", current.RuleTriggered.UniqueID },
-				{ "pid", pid.ToString() },
-				{ "time", DateTime.Now.ToSensibleFormat() },
-				{ "elapsed", ct.ToString() }
-			});
+				DateTime x = DateTime.Now;
+
+				xmlTracker.WriteNode("end", new Dictionary<string, string>
+				{
+					{ "app", current.RuleTriggered.UniqueID },
+					{ "pid", pid.ToString() },
+					{ "time", x.ToSensibleFormat() },
+					{ "elapsed", ct.ToString() },
+					{ "precise-time", x.Ticks.ToString() }
+				});
+			}
 
 			for (var it = 0; it < definedApps.Count; ++it)
 			{
@@ -1074,6 +1091,32 @@ namespace timetracker
 		internal void GrabAll()
 		{
 			tracker.GrabAll();
+		}
+
+		internal void SaveDatabase()
+		{
+			lock (inOutLock)
+			{
+				try
+				{
+					definedApps = definedApps.OrderBy(o => o.UniqueID).ToList();
+
+					XmlWriterSettings xws = new XmlWriterSettings();
+					xws.CloseOutput = true;
+					xws.Encoding = Encoding.UTF8;
+					xws.Indent = true;
+					xws.IndentChars = "\t";
+
+					using (XmlWriter xw = XmlWriter.Create(ApplicationDefinitions, xws))
+					{
+						XmlSerializer xs = new XmlSerializer(definedApps.GetType());
+						xs.Serialize(xw, definedApps);
+					}
+				}
+				catch (Exception)
+				{
+				}
+			}
 		}
 	}
 }
