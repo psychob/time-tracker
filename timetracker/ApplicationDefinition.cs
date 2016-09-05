@@ -43,7 +43,7 @@ namespace timetracker
 			if (ad.IsValid)
 			{
 				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-					ad.ApplicationUniqueID, ad.ApplicationRules);
+					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
 
 				listView1.Items.Add(new ListViewItem(new string[]
 				{
@@ -86,11 +86,13 @@ namespace timetracker
 			adef.ApplicationUniqueID = idata.UniqueID;
 			adef.ApplicationRules = idata.Rules;
 			adef.ApplicationEditing = true;
+			adef.ApplicationAllowOnlyOne = idata.AllowOnlyOne;
 
 			adef.ShowDialog();
 
 			idata.Name = adef.ApplicationName;
 			idata.Rules = adef.ApplicationRules;
+			idata.AllowOnlyOne = adef.ApplicationAllowOnlyOne;
 
 			TrackSystem.TrackingSystemState.UpdateApp(idata.UniqueID, idata);
 		}

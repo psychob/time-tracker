@@ -37,6 +37,8 @@ namespace timetracker
 			cbGroupPriority.SelectedIndex = 1;
 			cbMatchAlgo.SelectedIndex = 0;
 			cbRuleMatchTo.SelectedIndex = 0;
+
+			cbAllowOnlyOne.Checked = false;
 		}
 
 		private void intelligentNamingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -503,6 +505,19 @@ namespace timetracker
 		}
 
 		public bool ApplicationEditing { get; internal set; }
+
+		public bool ApplicationAllowOnlyOne
+		{
+			get
+			{
+				return cbAllowOnlyOne.Checked;
+			}
+
+			set
+			{
+				cbAllowOnlyOne.Checked = value;
+			}
+		}
 
 		private void button6_Click(object sender, EventArgs e)
 		{

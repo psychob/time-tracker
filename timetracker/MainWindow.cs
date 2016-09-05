@@ -215,7 +215,7 @@ namespace timetracker
 			if (ad.IsValid)
 			{
 				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-					ad.ApplicationUniqueID, ad.ApplicationRules);
+					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
 
 				TrackSystem.TrackingSystemState.GrabAll();
 			}
@@ -290,7 +290,7 @@ namespace timetracker
 				if (ad.IsValid)
 				{
 					var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-						ad.ApplicationUniqueID, ad.ApplicationRules);
+						ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
 
 					TrackSystem.TrackingSystemState.GrabAll();
 

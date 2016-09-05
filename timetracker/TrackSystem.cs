@@ -29,6 +29,32 @@ namespace timetracker
 
 				public AppRuleSet[] Rules;
 
+				public bool AllowOnlyOne
+				{
+					get
+					{
+						if (_AllowOnlyOne.HasValue)
+							return _AllowOnlyOne.Value;
+						else
+							return false;
+					}
+
+					set
+					{
+						_AllowOnlyOne = value;
+					}
+				}
+
+				public bool AllowOnlyOneSpecified
+				{
+					get
+					{
+						return _AllowOnlyOne.HasValue;
+					}
+				}
+
+				private bool? _AllowOnlyOne;
+
 				public App(App copy)
 				{
 					Name = copy.Name;
@@ -37,6 +63,7 @@ namespace timetracker
 					StartCounter = copy.StartCounter;
 					IsShell = copy.IsShell;
 					Rules = copy.Rules;
+					_AllowOnlyOne = copy._AllowOnlyOne;
 				}
 			}
 
@@ -116,6 +143,7 @@ namespace timetracker
 			{
 				public int PID;
 				public string Name;
+				public string UniqueId;
 				public AppRulePair RuleTriggered;
 				public ulong StartTime;
 				public ulong AllTime;
@@ -565,6 +593,7 @@ namespace timetracker
 
 		Tracker tracker = null;
 		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
+		List<Structs.CurrentApps> delayedApps = new List<Structs.CurrentApps>();
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
@@ -874,7 +903,8 @@ namespace timetracker
 		}
 
 		public Structs.App AddNewDefinition(string applicationName,
-			string applicationUniqueID, Structs.AppRuleSet[] applicationRules)
+			string applicationUniqueID, Structs.AppRuleSet[] applicationRules,
+			bool allowOnlyOne)
 		{
 			string application_unique_id = applicationUniqueID;
 			int counter = 2;
@@ -893,6 +923,8 @@ namespace timetracker
 
 			app.StartCounter = 0;
 			app.Time = 0;
+
+			app.AllowOnlyOne = allowOnlyOne;
 
 			definedApps.Add(app);
 
@@ -954,13 +986,31 @@ namespace timetracker
 			Structs.CurrentApps ca = new Structs.CurrentApps();
 
 			ca.PID = PID;
+			ca.UniqueId = chosen_app.UniqueID;
 			ca.Name = n.Name;
 			ca.StartTime = processTime;
 			ca.AllTime = fullTime;
 			ca.RuleTriggered = ruleselected;
 			ca.StartCount = n.StartCounter;
 
-			currentApps.Add(ca);
+			if (chosen_app.AllowOnlyOne)
+			{
+				// sprawdzamy czy jest już uruchomione
+				if (currentApps.Exists(p => p.UniqueId == ca.UniqueId))
+				{
+					// jest
+					delayedApps.Add(ca);
+				}
+				else
+				{
+					currentApps.Add(ca);
+				}
+			}
+			else
+			{
+				currentApps.Add(ca);
+			}
+
 		}
 
 		private void ProcessDestoryed(int pid)
