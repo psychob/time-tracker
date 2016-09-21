@@ -593,7 +593,6 @@ namespace timetracker
 
 		Tracker tracker = null;
 		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
-		List<Structs.CurrentApps> delayedApps = new List<Structs.CurrentApps>();
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
@@ -976,18 +975,7 @@ namespace timetracker
 		private void StartApp(int PID, Structs.App chosen_app,
 			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected)
 		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				xmlTracker.WriteNode("begin", new Dictionary<string, string>
-				{
-					{ "app", ruleselected.UniqueID },
-					{ "pid", PID.ToString() },
-					{ "time", x.ToSensibleFormat() },
-					{ "precise-time", x.Ticks.ToString() }
-				});
-			}
+			DateTime x = DateTime.Now;
 
 			var n = new Structs.App(chosen_app);
 			n.StartCounter++;
@@ -1004,38 +992,32 @@ namespace timetracker
 			ca.RuleTriggered = ruleselected;
 			ca.StartCount = n.StartCounter;
 
-			if (chosen_app.AllowOnlyOne)
-			{
-				// sprawdzamy czy jest już uruchomione
-				if (currentApps.Exists(p => p.UniqueId == ca.UniqueId))
-				{
-					// jest
-					delayedApps.Add(ca);
-				}
-				else
-				{
-					currentApps.Add(ca);
-				}
-			}
-			else
-			{
-				currentApps.Add(ca);
-			}
+			currentApps.Add(ca);
 
+			lock (inOutLock)
+			{
+				xmlTracker.WriteNode("begin", new Dictionary<string, string>
+				{
+					{ "app", ruleselected.UniqueID },
+					{ "pid", PID.ToString() },
+					{ "time", x.ToSensibleFormat() },
+					{ "precise-time", x.Ticks.ToString() },
+				});
+			}
 		}
 
 		private void ProcessDestoryed(int pid)
 		{
 			lock (inOutLock)
 			{
-				foreach (var it in currentApps)
+				// sprawdzamy czy podany proces istnieje w głównym oknie
+				var idx = currentApps.FindIndex(p => p.PID == pid);
+
+				if (idx >= 0)
 				{
-					if (it.PID == pid)
-					{
-						StopApp(pid, it);
-						currentApps.Remove(it);
-						break;
-					}
+					// główne okno
+					StopApp(pid, currentApps[idx]);
+					currentApps.RemoveAt(idx);
 				}
 			}
 		}
@@ -1043,11 +1025,20 @@ namespace timetracker
 		private void StopApp(int pid, Structs.CurrentApps current)
 		{
 			ulong ct = WinAPI.GetTickCount64() - current.StartTime;
+			DateTime x = DateTime.Now;
+
+			var idx = definedApps.FindIndex(p => p.UniqueID == current.RuleTriggered.UniqueID);
+
+			Debug.Assert(idx >= 0);
+
+			Structs.App c = definedApps[idx];
+			c.Time += ct;
+			definedApps[idx] = c;
+
+			// sprawdzamy czy nie dodajemy promocji
 
 			lock (inOutLock)
 			{
-				DateTime x = DateTime.Now;
-
 				xmlTracker.WriteNode("end", new Dictionary<string, string>
 				{
 					{ "app", current.RuleTriggered.UniqueID },
@@ -1056,18 +1047,6 @@ namespace timetracker
 					{ "elapsed", ct.ToString() },
 					{ "precise-time", x.Ticks.ToString() }
 				});
-			}
-
-			for (var it = 0; it < definedApps.Count; ++it)
-			{
-				if (definedApps[it].UniqueID == current.RuleTriggered.UniqueID)
-				{
-					Structs.App c = definedApps[it];
-					c.Time += ct;
-
-					definedApps[it] = c;
-					return;
-				}
 			}
 		}
 

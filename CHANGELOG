@@ -1,7 +1,11 @@
+3.0.6
+ * Dodanie nowego atrybutu do pliku definicji: AllowOnlyOne, który pozwala
+   śledzić tylko jedną instancje procesu
+
 3.0.5.1
    * Dodanie nowego atrybutu do tracków: precise-time
    * Dodanie nowego tagu do tracków: ping
-   
+
 3.0.5
  * Dodawanie nowych aplikacji z pliku nie dodaje pustych reguł.
  * Dodanie nowych algorytmów
