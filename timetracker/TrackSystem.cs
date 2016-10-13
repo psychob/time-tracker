@@ -1002,6 +1002,8 @@ namespace timetracker
 					{ "pid", PID.ToString() },
 					{ "time", x.ToSensibleFormat() },
 					{ "precise-time", x.Ticks.ToString() },
+					{ "rule-set", ruleselected.RuleSetID },
+					{ "rule-id", ruleselected.UniqueID },
 				});
 			}
 		}

@@ -37,8 +37,6 @@ namespace timetracker
 			cbGroupPriority.SelectedIndex = 1;
 			cbMatchAlgo.SelectedIndex = 0;
 			cbRuleMatchTo.SelectedIndex = 0;
-
-			cbAllowOnlyOne.Checked = false;
 		}
 
 		private void intelligentNamingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -461,6 +459,51 @@ namespace timetracker
 
 				throw new NotSupportedException();
 			}
+
+			set
+			{
+				switch (value)
+				{
+					case TrackSystem.Structs.AppRuleMatchTo.FileName:
+						cbRuleMatchTo.SelectedIndex = 0;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileNamePath:
+						cbRuleMatchTo.SelectedIndex = 1;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FilePath:
+						cbRuleMatchTo.SelectedIndex = 2;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileVersionName:
+						cbRuleMatchTo.SelectedIndex = 3;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc:
+						cbRuleMatchTo.SelectedIndex = 4;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany:
+						cbRuleMatchTo.SelectedIndex = 5;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion:
+						cbRuleMatchTo.SelectedIndex = 6;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion:
+						cbRuleMatchTo.SelectedIndex = 7;
+						break;
+
+					case TrackSystem.Structs.AppRuleMatchTo.FileMD5:
+						cbRuleMatchTo.SelectedIndex = 8;
+						break;
+
+					default:
+						throw new NotSupportedException();
+				}
+			}
 		}
 
 		private void tbMatchTest_TextChanged(object sender, EventArgs e)
@@ -476,6 +519,12 @@ namespace timetracker
 		private void tbPattern_TextChanged(object sender, EventArgs e)
 		{
 			TextTestChanged();
+
+			if (tbPattern.Text.IndexOf('\\') > -1 &&
+				MatchTo == TrackSystem.Structs.AppRuleMatchTo.FileName)
+			{
+				MatchTo = TrackSystem.Structs.AppRuleMatchTo.FileNamePath;
+			}
 		}
 
 		private void TextTestChanged()
