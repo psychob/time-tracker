@@ -252,7 +252,7 @@ namespace timetracker
 				TrackSystem.Structs.AppRuleSet ars = new TrackSystem.Structs.AppRuleSet();
 				ars.Kind = TrackSystem.Structs.RuleSet.All;
 				ars.Priority = TrackSystem.Structs.RulePriority.Medium;
-				ars.UniqueId = "Inherit from file";
+				ars.UniqueId = "Inherit from file: " + Path.GetFileName(ofd.FileName);
 
 				List<TrackSystem.Structs.AppRule> rules = new List<TrackSystem.Structs.AppRule>();
 

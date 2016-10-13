@@ -1,3 +1,10 @@
+3.0.7
+	* Fixed a bug which caused application to show as multi-instance where
+	  they were one instance only
+	* If you enter '\' character in pattern it will switch match to, to
+	  file & path
+	* If you inherit rules from file, its name is now in ruleset name
+
 3.0.6
  * Dodanie nowego atrybutu do pliku definicji: AllowOnlyOne, który pozwala
    śledzić tylko jedną instancje procesu
