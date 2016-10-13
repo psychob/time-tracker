@@ -1003,7 +1003,6 @@ namespace timetracker
 					{ "time", x.ToSensibleFormat() },
 					{ "precise-time", x.Ticks.ToString() },
 					{ "rule-set", ruleselected.RuleSetID },
-					{ "rule-id", ruleselected.UniqueID },
 				});
 			}
 		}
