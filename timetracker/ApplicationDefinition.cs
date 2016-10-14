@@ -21,15 +21,22 @@ namespace timetracker
 		{
 			set
 			{
+				listView1.Items.Clear();
+
 				foreach (var it in value)
 				{
-					listView1.Items.Add(new ListViewItem(new string[]
+					var lvi = new ListViewItem(new string[]
 					{
 						it.UniqueID,
 						it.Name,
 						TrackSystem.Utils.GetTime(it.Time),
 						it.StartCounter.ToString()
-					}));
+					});
+
+					if (it.AllowOnlyOne)
+						lvi.BackColor = Color.PaleGreen;
+
+					listView1.Items.Add(lvi);
 				}
 			}
 		}
@@ -45,13 +52,18 @@ namespace timetracker
 				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
 					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
 
-				listView1.Items.Add(new ListViewItem(new string[]
+				var lvi = new ListViewItem(new string[]
 				{
 					appinfo.UniqueID,
 					appinfo.Name,
 					TrackSystem.Utils.GetTime(appinfo.Time),
 					appinfo.StartCounter.ToString()
-				}));
+				});
+
+				if (ad.ApplicationAllowOnlyOne)
+					lvi.BackColor = Color.PaleGreen;
+
+				listView1.Items.Add(lvi);
 			}
 		}
 
@@ -62,13 +74,18 @@ namespace timetracker
 			if (ret.HasValue)
 			{
 				var appinfo = ret.Value;
-				listView1.Items.Add(new ListViewItem(new string[]
+				var lvi = new ListViewItem(new string[]
 				{
 					appinfo.UniqueID,
 					appinfo.Name,
 					TrackSystem.Utils.GetTime(appinfo.Time),
 					appinfo.StartCounter.ToString()
-				}));
+				});
+
+				if (appinfo.AllowOnlyOne)
+					lvi.BackColor = Color.PaleGreen;
+
+				listView1.Items.Add(lvi);
 			}
 		}
 
@@ -93,6 +110,11 @@ namespace timetracker
 			idata.Name = adef.ApplicationName;
 			idata.Rules = adef.ApplicationRules;
 			idata.AllowOnlyOne = adef.ApplicationAllowOnlyOne;
+
+			if (adef.ApplicationAllowOnlyOne)
+				sic.BackColor = Color.PaleGreen;
+			else
+				sic.BackColor = Color.White;
 
 			TrackSystem.TrackingSystemState.UpdateApp(idata.UniqueID, idata);
 		}

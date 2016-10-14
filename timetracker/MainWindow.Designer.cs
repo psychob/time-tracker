@@ -47,6 +47,7 @@
 			this.definitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+			this.saveDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lvTrackedApps = new System.Windows.Forms.ListView();
@@ -55,7 +56,6 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.saveDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cmsNotify.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -98,7 +98,7 @@
             this.toolStripProgressBar3});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 283);
 			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(530, 22);
+			this.statusStrip1.Size = new System.Drawing.Size(553, 22);
 			this.statusStrip1.TabIndex = 1;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -124,7 +124,7 @@
             this.exitApplicationToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(530, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(553, 24);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -145,7 +145,7 @@
             this.toolStripMenuItem2,
             this.saveDatabaseToolStripMenuItem});
 			this.definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
-			this.definitionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.definitionsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
 			this.definitionsToolStripMenuItem.Text = "Definitions";
 			// 
 			// addToolStripMenuItem
@@ -155,7 +155,7 @@
             this.toolStripMenuItem3,
             this.definitionToolStripMenuItem});
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.addToolStripMenuItem.Text = "Add";
 			// 
 			// fromFileToolStripMenuItem
@@ -183,19 +183,26 @@
 			// 
 			this.listToolStripMenuItem.Name = "listToolStripMenuItem";
 			this.listToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-			this.listToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.listToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.listToolStripMenuItem.Text = "List";
 			this.listToolStripMenuItem.Click += new System.EventHandler(this.listToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(143, 6);
+			// 
+			// saveDatabaseToolStripMenuItem
+			// 
+			this.saveDatabaseToolStripMenuItem.Name = "saveDatabaseToolStripMenuItem";
+			this.saveDatabaseToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.saveDatabaseToolStripMenuItem.Text = "Save database";
+			this.saveDatabaseToolStripMenuItem.Click += new System.EventHandler(this.saveDatabaseToolStripMenuItem_Click);
 			// 
 			// trackedToolStripMenuItem
 			// 
 			this.trackedToolStripMenuItem.Name = "trackedToolStripMenuItem";
-			this.trackedToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.trackedToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
 			this.trackedToolStripMenuItem.Text = "Tracked";
 			// 
 			// exitApplicationToolStripMenuItem
@@ -220,7 +227,7 @@
 			this.lvTrackedApps.GridLines = true;
 			this.lvTrackedApps.Location = new System.Drawing.Point(12, 27);
 			this.lvTrackedApps.Name = "lvTrackedApps";
-			this.lvTrackedApps.Size = new System.Drawing.Size(506, 253);
+			this.lvTrackedApps.Size = new System.Drawing.Size(529, 253);
 			this.lvTrackedApps.TabIndex = 3;
 			this.lvTrackedApps.UseCompatibleStateImageBehavior = false;
 			this.lvTrackedApps.View = System.Windows.Forms.View.Details;
@@ -254,18 +261,11 @@
 			this.columnHeader5.Text = "Started";
 			this.columnHeader5.Width = 46;
 			// 
-			// saveDatabaseToolStripMenuItem
-			// 
-			this.saveDatabaseToolStripMenuItem.Name = "saveDatabaseToolStripMenuItem";
-			this.saveDatabaseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.saveDatabaseToolStripMenuItem.Text = "Save database";
-			this.saveDatabaseToolStripMenuItem.Click += new System.EventHandler(this.saveDatabaseToolStripMenuItem_Click);
-			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(530, 305);
+			this.ClientSize = new System.Drawing.Size(553, 305);
 			this.Controls.Add(this.lvTrackedApps);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);

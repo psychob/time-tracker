@@ -142,12 +142,12 @@ namespace timetracker
 			internal struct CurrentApps
 			{
 				public int PID;
-				public string Name;
 				public string UniqueId;
 				public AppRulePair RuleTriggered;
 				public ulong StartTime;
 				public ulong AllTime;
 				public ulong StartCount;
+				public App App;
 			}
 
 			internal struct AppRulePair
@@ -592,7 +592,7 @@ namespace timetracker
 		internal static TrackSystem TrackingSystemState = null;
 
 		Tracker tracker = null;
-		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
+		List<Structs.CurrentApps> currentApps { get; set; } = new List<Structs.CurrentApps>();
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
@@ -986,7 +986,6 @@ namespace timetracker
 
 			ca.PID = PID;
 			ca.UniqueId = chosen_app.UniqueID;
-			ca.Name = n.Name;
 			ca.StartTime = processTime;
 			ca.AllTime = fullTime;
 			ca.RuleTriggered = ruleselected;
@@ -1065,7 +1064,18 @@ namespace timetracker
 
 		internal List<Structs.CurrentApps> GetRunningAps()
 		{
-			return currentApps.ToList();
+			List<Structs.CurrentApps> ret = new List<Structs.CurrentApps>(currentApps.Count);
+
+			for (var it = 0; it < currentApps.Count; ++it)
+			{
+				Structs.CurrentApps copy = currentApps[it];
+				copy.App = (from da in definedApps
+							where da.UniqueID == copy.UniqueId
+							select da).First();
+				ret.Add(copy);
+			}
+
+			return ret;
 		}
 
 		internal void GrabAll()

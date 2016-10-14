@@ -67,8 +67,11 @@ namespace timetracker
 			{
 				ListViewItem liv = new ListViewItem(it.PID.ToString());
 
+				if (it.App.AllowOnlyOne)
+					liv.BackColor = Color.PaleGreen;
+
 				liv.SubItems.AddRange(new string[]{
-					it.Name,
+					it.App.Name,
 					TrackSystem.Utils.GetTime(TrackSystem.WinAPI.GetTickCount64() - it.StartTime),
 					TrackSystem.Utils.GetTime(it.AllTime + (TrackSystem.WinAPI.GetTickCount64() - it.StartTime)),
 					it.StartCount.ToString(),
