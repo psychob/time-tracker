@@ -498,18 +498,39 @@ namespace timetracker
 
 			[System.Runtime.InteropServices.DllImport("kernel32.dll")]
 			public static extern ulong GetTickCount64();
+
+			public enum NetConnectionStatus : UInt16
+			{
+				Disconnected = (0),
+				Connecting = (1),
+				Connected = (2),
+				Disconnecting = (3),
+				HardwareNotPresent = (4),
+				HardwareDisabled = (5),
+				HardwareMalfunction = (6),
+				MediaDisconnected = (7),
+				Authenticating = (8),
+				AuthenticationSucceeded = (9),
+				AuthenticationFailed = (10),
+				InvalidAddress = (11),
+				CredentialsRequired = (12),
+				Other,
+			}
 		}
 
 		internal class Tracker : IDisposable
 		{
 			internal delegate void ProcesSpawnedType(int pid);
 			internal delegate void ProcesEndedType(int pid);
+			internal delegate void InternetChangeStateType(Guid guid, string Name, WinAPI.NetConnectionStatus state);
 
 			internal ProcesSpawnedType OnCreate;
 			internal ProcesEndedType OnDelete;
+			internal InternetChangeStateType OnInternetEvent;
 
 			ManagementEventWatcher eventCreated;
 			ManagementEventWatcher eventDestroyed;
+			ManagementEventWatcher eventInternet;
 
 			public void Start()
 			{
@@ -523,6 +544,7 @@ namespace timetracker
 				const string NameSpace = @"\\.\root\CIMV2";
 				const string CreateSql = @"SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
+				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
 
 				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
 				eventCreated.EventArrived += OnCreateProcessEvent;
@@ -530,8 +552,14 @@ namespace timetracker
 				eventDestroyed = new ManagementEventWatcher(NameSpace, DeleteSql);
 				eventDestroyed.EventArrived += OnDeleteProcessEvent;
 
+				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
+				eventInternet.EventArrived += OnModificationInternetEvent;
+
+				PullAllInternet();
+
 				eventCreated.Start();
 				eventDestroyed.Start();
+				eventInternet.Start();
 			}
 
 			private void OnCreateProcessEvent(object sender, EventArrivedEventArgs e)
@@ -550,6 +578,18 @@ namespace timetracker
 				int pid = (int)(UInt32)mbo.Properties["ProcessId"].Value;
 
 				OnDelete(pid);
+			}
+
+			private void OnModificationInternetEvent(object sender, EventArrivedEventArgs e)
+			{
+				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
+
+				string name = (string)mbo.Properties["Name"].Value;
+				int status = (int)(UInt16)mbo.Properties["NetConnectionStatus"].Value;
+				Guid g = Guid.Parse((string)mbo.Properties["GUID"].Value);
+				WinAPI.NetConnectionStatus n = status.ToNet();
+
+				OnInternetEvent(g, name, n);
 			}
 
 			public void GrabAll()
@@ -572,15 +612,36 @@ namespace timetracker
 				}
 			}
 
+			public void PullAllInternet()
+			{
+				const string NameSpace = @"root\CIMV2";
+				const string Query = @"SELECT Name,NetConnectionStatus,GUID FROM Win32_NetworkAdapter WHERE PhysicalAdapter = True";
+
+				using (ManagementObjectSearcher mos = new ManagementObjectSearcher(NameSpace, Query))
+				{
+					foreach (ManagementObject mbo in mos.Get())
+					{
+						string name = (string)mbo.Properties["Name"].Value;
+						int status = (int)(UInt16)mbo.Properties["NetConnectionStatus"].Value;
+						Guid g = Guid.Parse((string)mbo.Properties["GUID"].Value);
+						WinAPI.NetConnectionStatus n = status.ToNet();
+
+						OnInternetEvent(g, name, n);
+					}
+				}
+			}
+
 			public void Finish()
 			{
 				eventCreated.Stop();
 				eventDestroyed.Stop();
+				eventInternet.Stop();
 
 				eventCreated.Dispose();
 				eventDestroyed.Dispose();
+				eventInternet.Dispose();
 
-				eventCreated = eventDestroyed = null;
+				eventInternet = eventCreated = eventDestroyed = null;
 			}
 
 			public void Dispose()
@@ -758,8 +819,26 @@ namespace timetracker
 
 			tracker.OnCreate = NewProcessArrived;
 			tracker.OnDelete = ProcessDestoryed;
+			tracker.OnInternetEvent = InternetEvent;
 
 			tracker.Start();
+		}
+
+		private void InternetEvent(Guid g, string Name, WinAPI.NetConnectionStatus state)
+		{
+			lock (inOutLock)
+			{
+				DateTime x = DateTime.Now;
+
+				xmlTracker.WriteNode("event-internet-change", new Dictionary<string, string>
+				{
+					{ "name", Name },
+					{ "device", g.ToString() },
+					{ "status", state.ToString() },
+					{ "time", x.ToSensibleFormat() },
+					{ "precise-time", x.Ticks.ToString() },
+				});
+			}
 		}
 
 		private void NewProcessArrived(int pid)
@@ -932,6 +1011,18 @@ namespace timetracker
 
 			definedApps.Add(app);
 
+			lock (inOutLock)
+			{
+				DateTime x = DateTime.Now;
+
+				xmlTracker.WriteNode("event-definition-added", new Dictionary<string, string>
+				{
+					{ "app", applicationUniqueID },
+					{ "time", x.ToSensibleFormat() },
+					{ "precise-time", x.Ticks.ToString() },
+				});
+			}
+
 			return app;
 		}
 
@@ -944,6 +1035,18 @@ namespace timetracker
 					Structs.App c = it;
 					c.IsShell = true;
 					c.Rules = null;
+
+					lock (inOutLock)
+					{
+						DateTime x = DateTime.Now;
+
+						xmlTracker.WriteNode("event-definition-removed", new Dictionary<string, string>
+						{
+							{ "app", c.UniqueID },
+							{ "time", x.ToSensibleFormat() },
+							{ "precise-time", x.Ticks.ToString() },
+						});
+					}
 
 					definedApps.Remove(it);
 					definedApps.Add(c);
