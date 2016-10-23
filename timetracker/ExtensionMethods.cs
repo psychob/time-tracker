@@ -47,7 +47,7 @@ namespace timetracker
 		}
 
 		public static void WriteNode(this System.Xml.XmlWriter xw, string node,
-			Dictionary<string, string> attributes)
+			Dictionary<string, string> attributes, bool flush = true)
 		{
 			xw.WriteStartElement(node);
 
@@ -56,7 +56,8 @@ namespace timetracker
 
 			xw.WriteEndElement();
 
-			xw.Flush();
+			if (flush)
+				xw.Flush();
 		}
 
 		public static string ToSensibleFormat(this DateTime dt)

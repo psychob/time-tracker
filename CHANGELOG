@@ -1,3 +1,6 @@
+3.0.7.6
+	* Added tracking of memory
+
 3.0.7.3
 	* Added tracking of Network Connections
 	* Added tracking when you added Application, and when you removed them

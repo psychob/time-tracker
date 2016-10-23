@@ -523,14 +523,17 @@ namespace timetracker
 			internal delegate void ProcesSpawnedType(int pid);
 			internal delegate void ProcesEndedType(int pid);
 			internal delegate void InternetChangeStateType(Guid guid, string Name, WinAPI.NetConnectionStatus state);
+			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
 
 			internal ProcesSpawnedType OnCreate;
 			internal ProcesEndedType OnDelete;
 			internal InternetChangeStateType OnInternetEvent;
+			internal OSChangeType OnOsEvent;
 
 			ManagementEventWatcher eventCreated;
 			ManagementEventWatcher eventDestroyed;
 			ManagementEventWatcher eventInternet;
+			ManagementEventWatcher eventOS;
 
 			public void Start()
 			{
@@ -545,6 +548,7 @@ namespace timetracker
 				const string CreateSql = @"SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
+				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
 
 				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
 				eventCreated.EventArrived += OnCreateProcessEvent;
@@ -555,11 +559,15 @@ namespace timetracker
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
 
+				eventOS = new ManagementEventWatcher(NameSpace, OperatingSystem);
+				eventOS.EventArrived += OnOSEvent;
+
 				PullAllInternet();
 
 				eventCreated.Start();
 				eventDestroyed.Start();
 				eventInternet.Start();
+				eventOS.Start();
 			}
 
 			private void OnCreateProcessEvent(object sender, EventArrivedEventArgs e)
@@ -590,6 +598,18 @@ namespace timetracker
 				WinAPI.NetConnectionStatus n = status.ToNet();
 
 				OnInternetEvent(g, name, n);
+			}
+
+			private void OnOSEvent(object sender, EventArrivedEventArgs e)
+			{
+				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
+
+				ulong FreePhysicialMemory = (ulong)(UInt64)mbo.Properties["FreePhysicalMemory"].Value;
+				ulong TotalVisibleMemorySize = (ulong)(UInt64)mbo.Properties["TotalVisibleMemorySize"].Value;
+				ulong FreeVirtualMemory = (ulong)(UInt64)mbo.Properties["FreeVirtualMemory"].Value;
+				ulong TotalVirtualMemorySize = (ulong)(UInt64)mbo.Properties["TotalVirtualMemorySize"].Value;
+
+				OnOsEvent(FreePhysicialMemory, TotalVisibleMemorySize, FreeVirtualMemory, TotalVirtualMemorySize);
 			}
 
 			public void GrabAll()
@@ -636,10 +656,12 @@ namespace timetracker
 				eventCreated.Stop();
 				eventDestroyed.Stop();
 				eventInternet.Stop();
+				eventOS.Stop();
 
 				eventCreated.Dispose();
 				eventDestroyed.Dispose();
 				eventInternet.Dispose();
+				eventOS.Dispose();
 
 				eventInternet = eventCreated = eventDestroyed = null;
 			}
@@ -743,6 +765,8 @@ namespace timetracker
 					{ "pong", DateTime.Now.Ticks.ToString() },
 				});
 			}
+
+			tracker.PullAllInternet();
 		}
 
 		private bool PidNotRunning(int PID)
@@ -820,8 +844,60 @@ namespace timetracker
 			tracker.OnCreate = NewProcessArrived;
 			tracker.OnDelete = ProcessDestoryed;
 			tracker.OnInternetEvent = InternetEvent;
+			tracker.OnOsEvent = MemoryEvent;
 
 			tracker.Start();
+		}
+
+		private string lastround = "";
+
+		private void MemoryEvent(ulong free, ulong all, ulong vfree, ulong vall)
+		{
+			lock (inOutLock)
+			{
+				DateTime x = DateTime.Now;
+
+				// physicial
+				double ptotal = all;
+				double pfree = free;
+				string pround = (Math.Round(((ptotal - pfree) / ptotal * 100), 2)).ToString();
+
+				// virtual
+				double vtotal = vall;
+				double vfrre = vfree;
+				string vround = (Math.Round(((vtotal - vfrre) / vtotal * 100), 2)).ToString();
+
+				// all
+				double atotal = ptotal + vtotal;
+				double afree = pfree + vfree;
+				string round = (Math.Round(((atotal - afree) / atotal * 100), 2)).ToString();
+
+				ulong pvtotal = all + vall;
+				ulong pvfree = free + vfree;
+
+				if (lastround != round)
+				{
+					xmlTracker.WriteNode("memory-info", new Dictionary<string, string>
+					{
+						{ "p-free", free.ToString() },
+						{ "p-total", all.ToString() },
+						{ "p-proc", pround.ToString() },
+
+						{ "v-free", vfree.ToString() },
+						{ "v-total", vall.ToString() },
+						{ "v-proc", vround.ToString() },
+
+						{ "a-free", pvfree.ToString() },
+						{ "a-total", pvtotal.ToString() },
+						{ "a-proc", round.ToString() },
+
+						{ "time", x.ToSensibleFormat() },
+						{ "precise-time", x.Ticks.ToString() },
+					}, false);
+
+					lastround = round;
+				}
+			}
 		}
 
 		private void InternetEvent(Guid g, string Name, WinAPI.NetConnectionStatus state)
