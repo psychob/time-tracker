@@ -60,6 +60,24 @@ namespace timetracker
 				xw.Flush();
 		}
 
+		public static void WriteNode(this System.Xml.XmlWriter xw, string node,
+			Dictionary<string, string> attributes, bool flush,
+			string nodeText)
+		{
+			xw.WriteStartElement(node);
+
+			foreach (var it in attributes)
+				xw.WriteAttributeString(it.Key, it.Value);
+
+			if (!nodeText.IsEmptyOrNull())
+				xw.WriteValue(nodeText);
+
+			xw.WriteEndElement();
+
+			if (flush)
+				xw.Flush();
+		}
+
 		public static string ToSensibleFormat(this DateTime dt)
 		{
 			return dt.ToString("HH:mm:ss.ffff dd-MM-yyyy");
@@ -138,6 +156,25 @@ namespace timetracker
 				default:
 					return WinAPI.NetConnectionStatus.Other;
 			}
+		}
+
+		public static void Fill<T>(this T[] arr, T value)
+		{
+			for (var it = 0; it < arr.Length; ++it)
+				arr[it] = value;
+		}
+
+		public static string Flatten<T>(this T[] arr)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			foreach (var it in arr)
+			{
+				sb.Append(it);
+				sb.Append(',');
+			}
+
+			return sb.ToString();
 		}
 	}
 }
