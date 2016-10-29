@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -548,6 +549,22 @@ namespace timetracker
 			/// </summary>
 			public const int WH_KEYBOARD_LL = 13;
 
+			public const int WM_MOUSEMOVE = 0x0200;
+			public const int WM_MOUSEWHEEL = 0x020A;
+			public const int WM_MOUSEHWHEEL = 0x020E;
+
+			public const int WM_LBUTTONDOWN = 0x0201;
+			public const int WM_LBUTTONUP = 0x0202;
+
+			public const int WM_RBUTTONDOWN = 0x0204;
+			public const int WM_RBUTTONUP = 0x0205;
+
+			public const int WM_MBUTTONDOWN = 0x0207;
+			public const int WM_MBUTTONUP = 0x0208;
+
+			public const int WM_XBUTTONDOWN = 0x020B;
+			public const int WM_XBUTTONUP = 0x020C;
+
 			public const uint EVENT_MIN = 0;
 			public const uint EVENT_SYSTEM_FOREGROUND = 0x03;
 			public const uint EVENT_OBJECT_NAMECHANGE = 0x800C;
@@ -560,6 +577,8 @@ namespace timetracker
 
 			public const int OBJID_WINDOW = 0x00000000;
 			public const int CHILDID_SELF = 0x00000000;
+
+			public const int WHEEL_DELTA = 120;
 
 			public enum NetConnectionStatus : UInt16
 			{
@@ -596,6 +615,58 @@ namespace timetracker
 				LLKHF_INJECTED = 0x10,
 				LLKHF_ALTDOWN = 0x20,
 				LLKHF_UP = 0x80,
+			}
+
+			[StructLayout(LayoutKind.Sequential)]
+			public struct MSLLHOOKSTRUCT
+			{
+				public POINT pt;
+				public uint mouseData;
+				public MSLLHOOKSTRUCTFlags flags;
+				public uint time;
+				public UIntPtr dwExtraInfo;
+			}
+
+			public static int LOWORD(uint md)
+			{
+				return (short)(md & 0xFFFF);
+			}
+
+			public static int HIWORD(uint md)
+			{
+				return (short)(((int)md & 0xFFFF0000) >> 16);
+			}
+
+			[Flags]
+			public enum MSLLHOOKSTRUCTFlags
+			{
+				LLMHF_INJECTED = 0x00000001,
+				LLMHF_LOWER_IL_INJECTED = 0x00000002,
+			}
+
+			[StructLayout(LayoutKind.Sequential)]
+			public struct POINT
+			{
+				public int X;
+				public int Y;
+
+				public POINT(int x, int y)
+				{
+					X = x;
+					Y = y;
+				}
+
+				public POINT(System.Drawing.Point pt) : this(pt.X, pt.Y) { }
+
+				public static implicit operator System.Drawing.Point(POINT p)
+				{
+					return new System.Drawing.Point(p.X, p.Y);
+				}
+
+				public static implicit operator POINT(System.Drawing.Point p)
+				{
+					return new POINT(p.X, p.Y);
+				}
 			}
 
 			public enum GetAncestorFlags
@@ -836,6 +907,9 @@ namespace timetracker
 			/// <returns>The return value is the handle to the ancestor window.</returns>
 			[DllImport("user32.dll", ExactSpelling = true)]
 			public static extern IntPtr GetAncestor(IntPtr hwnd, GetAncestorFlags flags);
+
+			[DllImport("user32")]
+			public static extern int GetDoubleClickTime();
 		}
 
 		internal class Tracker : IDisposable
@@ -858,6 +932,7 @@ namespace timetracker
 			internal KeyboardHook kHook = new KeyboardHook();
 			internal ForegroundHook fHook = new ForegroundHook();
 			internal NamechangeHook nHook = new NamechangeHook();
+			internal MouseHook mHook = new MouseHook();
 
 			public void Start()
 			{
@@ -889,6 +964,7 @@ namespace timetracker
 				kHook.Init();
 				fHook.Init();
 				nHook.Init();
+				mHook.Init();
 
 				PullAllInternet();
 
@@ -989,6 +1065,7 @@ namespace timetracker
 				kHook.DeInit();
 				fHook.DeInit();
 				nHook.DeInit();
+				mHook.DeInit();
 
 				eventCreated.Dispose();
 				eventDestroyed.Dispose();
@@ -1015,9 +1092,11 @@ namespace timetracker
 		object inOutLock = new object();
 		bool valid_tick_running = false;
 		bool waited_timer_running = false;
+		TimeSpan mouseDoubleClick;
 
 		public TrackSystem()
 		{
+			mouseDoubleClick = new TimeSpan(0, 0, 0, 0, WinAPI.GetDoubleClickTime());
 			LoadState();
 			BeginTracking();
 
@@ -1178,9 +1257,13 @@ namespace timetracker
 			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
 
+			tracker.mHook.mouseClickEvent = MouseClickEvent;
+			tracker.mHook.mouseMoveEvent = MouseMoveEvent;
+			tracker.mHook.mouseWheelMoveEvent = MouseWheelEvent;
 
 			var x = System.Windows.Forms.Screen.PrimaryScreen;
 			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);
+
 			tracker.Start();
 		}
 
@@ -1193,8 +1276,59 @@ namespace timetracker
 				xmlTracker.Node_ResolutionChanged(x, width, height);
 			}
 		}
-		private uint nPid = 0;
-		private string sWinTitle = "";
+
+		int LastMousePosX, LastMousePosY;
+		DateTime LastMouseAction;
+
+		private void MouseClickEvent(MouseHook.MouseButton btn, bool pressed,
+			int x, int y)
+		{
+			DateTime dt = DateTime.Now;
+
+			lock (inOutLock)
+			{
+				xmlTracker.Node_MouseClick(dt, LastMousePosX != x,
+					LastMousePosY != y, pressed, x, y, btn);
+			}
+
+			LastMousePosX = x;
+			LastMousePosY = y;
+			LastMouseAction = dt;
+		}
+
+		private void MouseMoveEvent(int x, int y)
+		{
+			DateTime dt = DateTime.Now;
+
+			if (LastMouseAction.AddMilliseconds(16) >= dt)
+				return;
+
+			lock (inOutLock)
+			{
+				xmlTracker.Node_MouseMove(dt, LastMousePosX != x,
+					LastMousePosY != y, x, y);
+			}
+
+			LastMousePosX = x;
+			LastMousePosY = y;
+			LastMouseAction = dt;
+		}
+
+		private void MouseWheelEvent(MouseHook.MouseAxis axis, int value,
+			int x, int y)
+		{
+			DateTime dt = DateTime.Now;
+
+			lock (inOutLock)
+			{
+				xmlTracker.Node_MouseWheel(dt, LastMousePosX != x,
+					LastMousePosY != y, axis, x, y, value);
+			}
+
+			LastMousePosX = x;
+			LastMousePosY = y;
+			LastMouseAction = dt;
+		}
 
 		uint LastNameChangePID = 0;
 		string LastNameChangeTitle = "";

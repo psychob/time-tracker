@@ -25,6 +25,10 @@ namespace timetracker
 		const string NodeName_ResolutionChange        = "res-chn";
 		const string NodeName_NewDefinition           = "new-app";
 		const string NodeName_RemoveDefinition        = "rem-app";
+		const string NodeName_MouseMove               = "mouse-m";
+		const string NodeName_MouseClickPressed       = "mouse-i";
+		const string NodeName_MouseClickUnpressed     = "mouse-u";
+		const string NodeName_MouseWheel              = "mouse-w";
 
 		private static void Node_Prologue(this XmlWriter xml, string node,
 			DateTime dt)
@@ -216,6 +220,67 @@ namespace timetracker
 			xml.Node_DebugFlush();
 		}
 
+		public static void Node_MouseClick(this XmlWriter xml, DateTime dt,
+			bool showX, bool showY, bool pressed, int x, int y,
+			MouseHook.MouseButton btn)
+		{
+			if (pressed)
+				xml.Node_Prologue(NodeName_MouseClickPressed, dt);
+			else
+				xml.Node_Prologue(NodeName_MouseClickUnpressed, dt);
+
+			if (showX)
+				xml.WriteAttributeString("X", x.ToString());
+			if (showY)
+				xml.WriteAttributeString("Y", x.ToString());
+
+			xml.WriteAttributeString("Button", btn.ToString());
+
+			xml.Node_Epilogue();
+			xml.Node_Close();
+
+			xml.Node_DebugFlush();
+		}
+
+		public static void Node_MouseMove(this XmlWriter xml, DateTime dt,
+			bool showX, bool showY, int x, int y)
+		{
+			if (!showX && !showY)
+				return;
+
+			xml.Node_Prologue(NodeName_MouseMove, dt);
+
+			if (showX)
+				xml.WriteAttributeString("X", x.ToString());
+
+			if (showY)
+				xml.WriteAttributeString("Y", y.ToString());
+
+			xml.Node_Epilogue();
+			xml.Node_Close();
+
+			xml.Node_DebugFlush();
+		}
+
+		public static void Node_MouseWheel(this XmlWriter xml, DateTime dt,
+			bool showX, bool showY, MouseHook.MouseAxis axis, int x, int y, int value)
+		{
+			xml.Node_Prologue(NodeName_MouseWheel, dt);
+
+			if (showX)
+				xml.WriteAttributeString("X", x.ToString());
+
+			if (showY)
+				xml.WriteAttributeString("Y", y.ToString());
+
+			xml.WriteAttributeString("Axis", axis.ToString());
+			xml.WriteAttributeString("Value", value.ToString());
+
+			xml.Node_Epilogue();
+			xml.Node_Close();
+
+			xml.Node_DebugFlush();
+		}
 
 		public static void Node_Ping(this XmlWriter xml, DateTime dt)
 		{

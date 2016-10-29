@@ -1,3 +1,8 @@
+3.0.9
+	* Fixed tracking keys
+	* Outputing xml now requires no heap allocation
+	* Added tracking mouse and resolution
+
 3.0.8
 	* Changed query time of memory tracker (from 1s to 5s)
 	* Added tracking of key strokes
