@@ -50,19 +50,19 @@ namespace timetracker
 				{
 					case WinAPI.WM_KEYDOWN:
 					case WinAPI.WM_SYSKEYDOWN:
-						if (KeyState[kInfo.vkCode] == true)
+						if (KeyState[kInfo.vkCode] == false)
 						{
-							keyEvent(kInfo.vkCode, kInfo.scanCode, false);
-							KeyState[kInfo.vkCode] = false;
+							keyEvent(kInfo.vkCode, kInfo.scanCode, true);
+							KeyState[kInfo.vkCode] = true;
 						}
 						break;
 
 					case WinAPI.WM_KEYUP:
 					case WinAPI.WM_SYSKEYUP:
-						if (KeyState[kInfo.vkCode] == false)
+						if (KeyState[kInfo.vkCode] == true)
 						{
-							keyEvent(kInfo.vkCode, kInfo.scanCode, true);
-							KeyState[kInfo.vkCode] = true;
+							keyEvent(kInfo.vkCode, kInfo.scanCode, false);
+							KeyState[kInfo.vkCode] = false;
 						}
 						break;
 				}

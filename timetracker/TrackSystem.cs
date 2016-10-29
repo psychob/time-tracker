@@ -1229,20 +1229,14 @@ namespace timetracker
 			lock (inOutLock)
 			{
 				DateTime x = DateTime.Now;
-				string key = "key-event-";
+				string key = "key-";
 
 				if (up)
-					key += "up";
+					key += "pressed";
 				else
-					key += "down";
+					key += "unpress";
 
-				xmlTracker.WriteNode(key, new Dictionary<string, string>
-				{
-					{ "virtual-code", virtualKode.ToString() },
-					{ "scan-code", scanKode.ToString() },
-
-					{ "precise-time", x.Ticks.ToString() },
-				}, false);
+				xmlTracker.WriteNode(key, x, virtualKode, scanKode);
 			}
 		}
 
