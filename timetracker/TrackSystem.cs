@@ -1092,10 +1092,7 @@ namespace timetracker
 		{
 			lock (inOutLock)
 			{
-				xmlTracker.WriteNode("ping", new Dictionary<string, string>
-				{
-					{ "pong", DateTime.Now.Ticks.ToString() },
-				});
+				xmlTracker.Node_Ping(DateTime.Now);
 			}
 
 			tracker.PullAllInternet();
@@ -1181,11 +1178,26 @@ namespace timetracker
 			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
 
+
+			var x = System.Windows.Forms.Screen.PrimaryScreen;
+			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);
 			tracker.Start();
 		}
 
+		private void ResolutionChangeEvent(int width, int height)
+		{
+			lock (inOutLock)
+			{
+				DateTime x = DateTime.Now;
+
+				xmlTracker.Node_ResolutionChanged(x, width, height);
+			}
+		}
 		private uint nPid = 0;
 		private string sWinTitle = "";
+
+		uint LastNameChangePID = 0;
+		string LastNameChangeTitle = "";
 
 		private void NamechangeEvent(uint PID, string winTitle)
 		{
@@ -1193,35 +1205,31 @@ namespace timetracker
 			{
 				DateTime x = DateTime.Now;
 
-				if (PID == nPid && winTitle == sWinTitle)
+				if (PID == LastNameChangePID && winTitle == LastNameChangeTitle)
 					return;
 
-				nPid = PID;
-				sWinTitle = winTitle;
+				LastNameChangePID = PID;
+				LastNameChangeTitle = winTitle;
 
-				xmlTracker.WriteNode("name-change", new Dictionary<string, string>
-				{
-					{ "pid", PID.ToString() },
-
-					{ "precise-time", x.Ticks.ToString() },
-				}, false, winTitle);
+				xmlTracker.Node_NameChange(x, PID, winTitle);
 			}
 		}
 
+		uint LastForegroundProcessID = 0;
+
 		private void ForegroundEvent(uint ThreadId, uint ProcessID)
 		{
+			if (LastForegroundProcessID == ProcessID)
+				return;
+
 			lock (inOutLock)
 			{
 				DateTime x = DateTime.Now;
 
-				xmlTracker.WriteNode("foreground-changed", new Dictionary<string, string>
-				{
-					{ "pid", ProcessID.ToString() },
-					{ "tid", ThreadId.ToString() },
-
-					{ "precise-time", x.Ticks.ToString() },
-				}, false);
+				xmlTracker.Node_WindowForegroundChanged(x, ProcessID);
 			}
+
+			LastForegroundProcessID = ProcessID;
 		}
 
 		private void KeyEvent(uint virtualKode, uint scanKode, bool up)
@@ -1229,18 +1237,12 @@ namespace timetracker
 			lock (inOutLock)
 			{
 				DateTime x = DateTime.Now;
-				string key = "key-";
 
-				if (up)
-					key += "pressed";
-				else
-					key += "unpress";
-
-				xmlTracker.WriteNode(key, x, virtualKode, scanKode);
+				xmlTracker.Node_KeyPressed(x, virtualKode, scanKode, up);
 			}
 		}
 
-		private int allMemLast = 0;
+		int LastAllMemoryRecorded = 0;
 
 		private void MemoryEvent(ulong free, ulong all, ulong vfree, ulong vall)
 		{
@@ -1265,30 +1267,17 @@ namespace timetracker
 
 				int allMemCurrent = (int)Math.Round(((atotal - afree) / atotal * 100), 2);
 
-				if (allMemLast == allMemCurrent)
+				if (LastAllMemoryRecorded == allMemCurrent)
 					return;
 
-				allMemLast = allMemCurrent;
+				LastAllMemoryRecorded = allMemCurrent;
 
 				ulong pvtotal = all + vall;
 				ulong pvfree = free + vfree;
 
-				xmlTracker.WriteNode("memory-info", new Dictionary<string, string>
-				{
-					{ "p-free", free.ToString() },
-					{ "p-total", all.ToString() },
-					{ "p-proc", pround.ToString() },
-
-					{ "v-free", vfree.ToString() },
-					{ "v-total", vall.ToString() },
-					{ "v-proc", vround.ToString() },
-
-					{ "a-free", pvfree.ToString() },
-					{ "a-total", pvtotal.ToString() },
-					{ "a-proc", round.ToString() },
-
-					{ "precise-time", x.Ticks.ToString() },
-				}, false);
+				xmlTracker.Node_MemoryInfo(x, free, all, pround,
+					vfree, vall, vround,
+					pvfree, pvtotal, round);
 			}
 		}
 
@@ -1298,13 +1287,7 @@ namespace timetracker
 			{
 				DateTime x = DateTime.Now;
 
-				xmlTracker.WriteNode("event-internet-change", new Dictionary<string, string>
-				{
-					{ "name", Name },
-					{ "device", g.ToString() },
-					{ "status", state.ToString() },
-					{ "precise-time", x.Ticks.ToString() },
-				});
+				xmlTracker.Node_NetworkAdapterEvent(x, Name, g, state);
 			}
 		}
 
@@ -1482,12 +1465,7 @@ namespace timetracker
 			{
 				DateTime x = DateTime.Now;
 
-				xmlTracker.WriteNode("event-definition-added", new Dictionary<string, string>
-				{
-					{ "app", applicationUniqueID },
-					{ "time", x.ToSensibleFormat() },
-					{ "precise-time", x.Ticks.ToString() },
-				});
+				xmlTracker.Node_NewDefinition(x, applicationUniqueID, app.Name);
 			}
 
 			return app;
@@ -1507,12 +1485,7 @@ namespace timetracker
 					{
 						DateTime x = DateTime.Now;
 
-						xmlTracker.WriteNode("event-definition-removed", new Dictionary<string, string>
-						{
-							{ "app", c.UniqueID },
-							{ "time", x.ToSensibleFormat() },
-							{ "precise-time", x.Ticks.ToString() },
-						});
+						xmlTracker.Node_RemoveDefinition(x, c.UniqueID);
 					}
 
 					definedApps.Remove(it);
@@ -1565,14 +1538,8 @@ namespace timetracker
 
 			lock (inOutLock)
 			{
-				xmlTracker.WriteNode("begin", new Dictionary<string, string>
-				{
-					{ "app", ruleselected.UniqueID },
-					{ "pid", PID.ToString() },
-					{ "time", x.ToSensibleFormat() },
-					{ "precise-time", x.Ticks.ToString() },
-					{ "rule-set", ruleselected.RuleSetID },
-				});
+				xmlTracker.Node_Begin(x, PID, ruleselected.UniqueID,
+					ruleselected.RuleSetID);
 			}
 
 			// rejestrujemy nazwe głównego okna
@@ -1580,11 +1547,10 @@ namespace timetracker
 			{
 				Process p = Process.GetProcessById(PID);
 
-				xmlTracker.WriteNode("name-change", new Dictionary<string, string>
+				lock (inOutLock)
 				{
-					{ "pid", PID.ToString() },
-					{ "precise-time", x.Ticks.ToString() },
-				}, false, p.MainWindowTitle);
+					xmlTracker.Node_NameChange(x, (uint)PID, p.MainWindowTitle);
+				}
 			} catch (Exception)
 			{
 			}
@@ -1623,14 +1589,7 @@ namespace timetracker
 
 			lock (inOutLock)
 			{
-				xmlTracker.WriteNode("end", new Dictionary<string, string>
-				{
-					{ "app", current.RuleTriggered.UniqueID },
-					{ "pid", pid.ToString() },
-					{ "time", x.ToSensibleFormat() },
-					{ "elapsed", ct.ToString() },
-					{ "precise-time", x.Ticks.ToString() }
-				});
+				xmlTracker.Node_End(x, pid, current.RuleTriggered.UniqueID, ct);
 			}
 		}
 

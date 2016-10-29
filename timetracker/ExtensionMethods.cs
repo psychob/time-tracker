@@ -46,54 +46,6 @@ namespace timetracker
 			dict.Add(pair.Key, pair.Value);
 		}
 
-		public static void WriteNode(this System.Xml.XmlWriter xw, string node,
-			Dictionary<string, string> attributes, bool flush = true)
-		{
-			xw.WriteStartElement(node);
-
-			foreach (var it in attributes)
-				xw.WriteAttributeString(it.Key, it.Value);
-
-			xw.WriteEndElement();
-
-			if (flush)
-				xw.Flush();
-		}
-
-		public static void WriteNode(this System.Xml.XmlWriter xw, string node,
-			Dictionary<string, string> attributes, bool flush,
-			string nodeText)
-		{
-			xw.WriteStartElement(node);
-
-			foreach (var it in attributes)
-				xw.WriteAttributeString(it.Key, it.Value);
-
-			if (!nodeText.IsEmptyOrNull())
-				xw.WriteValue(nodeText);
-
-			xw.WriteEndElement();
-
-			if (flush)
-				xw.Flush();
-		}
-
-		public static void WriteNode(this System.Xml.XmlWriter xw,
-			string node, DateTime dt, uint vk, uint sc)
-		{
-			xw.WriteStartElement(node);
-
-			xw.WriteAttributeString("precise-time", dt.Ticks.ToString());
-
-			xw.WriteAttributeString("vk", vk.ToString());
-			xw.WriteAttributeString("sc", sc.ToString());
-
-			xw.WriteEndElement();
-
-#if DEBUG
-			xw.Flush();
-#endif
-		}
 		public static string ToSensibleFormat(this DateTime dt)
 		{
 			return dt.ToString("HH:mm:ss.ffff dd-MM-yyyy");
