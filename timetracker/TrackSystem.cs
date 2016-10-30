@@ -1106,6 +1106,7 @@ namespace timetracker
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
 		FileStream mouseData = null;
+		FileStream keyData = null;
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
@@ -1249,6 +1250,7 @@ namespace timetracker
 			string baseName = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
 			string xmlFileName =  baseName + ".xml";
 			string mdFileName = baseName + ".mousedata";
+			string kdFileName = baseName + ".keydata";
 
 			xmlTracker = XmlWriter.Create(Path.Combine(TrackedTimesCatalogue, xmlFileName), xws);
 			xmlTracker.WriteStartDocument(true);
@@ -1275,9 +1277,15 @@ namespace timetracker
 			mouseData = File.Open(Path.Combine(TrackedTimesCatalogue, mdFileName),
 				FileMode.Create, FileAccess.Write, FileShare.Read);
 
+			keyData = File.Open(Path.Combine(TrackedTimesCatalogue, kdFileName),
+				FileMode.Create, FileAccess.Write, FileShare.Read);
+
 			{
 				byte[] HEADER = "MOUSE DATA LOG 1".GetBytes();
 				mouseData.Write(HEADER, 0, HEADER.Length);
+
+				HEADER = "KEYBOARD DATA  1".GetBytes();
+				keyData.Write(HEADER, 0, HEADER.Length);
 			}
 		}
 
@@ -1288,6 +1296,7 @@ namespace timetracker
 			xmlTracker.Close();
 
 			mouseData.Close();
+			keyData.Close();
 
 			SaveDatabase();
 		}
@@ -1388,7 +1397,7 @@ namespace timetracker
 		{
 			DateTime dt = DateTime.Now; byte[] arr;
 
-			if (LastMouseAction.AddMilliseconds(16) >= dt)
+			if (LastMouseAction.AddMilliseconds(100) >= dt)
 				return;
 
 			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
@@ -1484,14 +1493,36 @@ namespace timetracker
 			LastForegroundProcessID = ProcessID;
 		}
 
+		const byte KeyboardPress = (byte)'P';
+		const byte KeyboardUnpress = (byte)'U';
+
+		byte[] KeyboardBuffer = new byte[1 + 8 + 8];
+
 		private void KeyEvent(uint virtualKode, uint scanKode, bool up)
 		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
+			DateTime dt = DateTime.Now; byte[] arr;
 
-				xmlTracker.Node_KeyPressed(x, virtualKode, scanKode, up);
-			}
+			Array.Clear(KeyboardBuffer, 0, KeyboardBuffer.Length);
+
+			// id
+			if (up)
+				KeyboardBuffer[0] = KeyboardPress;
+			else
+				KeyboardBuffer[0] = KeyboardUnpress;
+
+			// time
+			arr = BitConverter.GetBytes(dt.Ticks);
+			arr.CopyTo(KeyboardBuffer, 1);
+
+			// X
+			arr = BitConverter.GetBytes(virtualKode);
+			arr.CopyTo(KeyboardBuffer, 8 + 1);
+
+			// Y
+			arr = BitConverter.GetBytes(scanKode);
+			arr.CopyTo(KeyboardBuffer, 8 + 1 + 4);
+
+			keyData.Write(KeyboardBuffer, 0, KeyboardBuffer.Length);
 		}
 
 		int LastAllMemoryRecorded = 0;
