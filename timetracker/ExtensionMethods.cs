@@ -144,5 +144,10 @@ namespace timetracker
 
 			return sb.ToString();
 		}
+
+		public static byte[] GetBytes(this string str)
+		{
+			return Encoding.ASCII.GetBytes(str);
+		}
 	}
 }

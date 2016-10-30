@@ -1105,6 +1105,7 @@ namespace timetracker
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
+		FileStream mouseData = null;
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
@@ -1245,12 +1246,39 @@ namespace timetracker
 			xws.Indent = true;
 			xws.IndentChars = "\t";
 
-			string file = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff") + ".xml";
+			string baseName = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
+			string xmlFileName =  baseName + ".xml";
+			string mdFileName = baseName + ".mousedata";
 
-			xmlTracker = XmlWriter.Create(Path.Combine(TrackedTimesCatalogue, file), xws);
+			xmlTracker = XmlWriter.Create(Path.Combine(TrackedTimesCatalogue, xmlFileName), xws);
 			xmlTracker.WriteStartDocument(true);
 			xmlTracker.WriteStartElement("root");
 			xmlTracker.WriteAttributeString("start-date", DateTime.Now.ToSensibleFormat());
+
+			string CurrentVersion = "";
+			{
+				var ass = System.Reflection.Assembly.GetExecutingAssembly();
+				var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(ass.Location);
+				var str = fvi.ProductVersion.Split('.');
+				int it = str.Length - 1;
+
+				while (it >= 0 && str[it] == "0")
+					it--;
+
+				for (int kt = 0; kt <= it; ++kt)
+					CurrentVersion += str[kt] + '.';
+
+				CurrentVersion = CurrentVersion.Trim('.');
+			}
+			xmlTracker.WriteAttributeString("version", CurrentVersion);
+
+			mouseData = File.Open(Path.Combine(TrackedTimesCatalogue, mdFileName),
+				FileMode.Create, FileAccess.Write, FileShare.Read);
+
+			{
+				byte[] HEADER = "MOUSE DATA LOG 1".GetBytes();
+				mouseData.Write(HEADER, 0, HEADER.Length);
+			}
 		}
 
 		private void SaveState()
@@ -1258,6 +1286,8 @@ namespace timetracker
 			xmlTracker.WriteEndElement();
 			xmlTracker.WriteEndDocument();
 			xmlTracker.Close();
+
+			mouseData.Close();
 
 			SaveDatabase();
 		}
@@ -1306,56 +1336,115 @@ namespace timetracker
 			}
 		}
 
-		int LastMousePosX, LastMousePosY;
+		const byte MouseClick = (byte)'C';
+		const byte MouseMove = (byte)'M';
+		const byte MouseWheel = (byte)'W';
+
+#if DEBUG
+		byte[] MouseBuffer = new byte[32];
+#else
+		byte[] MouseBuffer = new byte[1 + 8 + 4 + 4 + 4 + 4];
+#endif
+
 		DateTime LastMouseAction;
 
 		private void MouseClickEvent(MouseHook.MouseButton btn, bool pressed,
 			int x, int y)
 		{
 			DateTime dt = DateTime.Now;
+			byte[] arr;
 
-			lock (inOutLock)
-			{
-				xmlTracker.Node_MouseClick(dt, LastMousePosX != x,
-					LastMousePosY != y, pressed, x, y, btn);
-			}
+			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
 
-			LastMousePosX = x;
-			LastMousePosY = y;
+			// id
+			MouseBuffer[0] = MouseClick;
+
+			// time
+			arr = BitConverter.GetBytes(dt.Ticks);
+			arr.CopyTo(MouseBuffer, 1);
+
+			// X
+			arr = BitConverter.GetBytes(x);
+			arr.CopyTo(MouseBuffer, 8 + 1);
+
+			// Y
+			arr = BitConverter.GetBytes(y);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4);
+
+			// button
+			arr = BitConverter.GetBytes((int)btn);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4);
+
+			// pressed
+			arr = BitConverter.GetBytes(pressed);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4 + 4);
+
+			mouseData.Write(MouseBuffer, 0, MouseBuffer.Length);
+
 			LastMouseAction = dt;
 		}
 
 		private void MouseMoveEvent(int x, int y)
 		{
-			DateTime dt = DateTime.Now;
+			DateTime dt = DateTime.Now; byte[] arr;
 
 			if (LastMouseAction.AddMilliseconds(16) >= dt)
 				return;
 
-			lock (inOutLock)
-			{
-				xmlTracker.Node_MouseMove(dt, LastMousePosX != x,
-					LastMousePosY != y, x, y);
-			}
+			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
 
-			LastMousePosX = x;
-			LastMousePosY = y;
+			// id
+			MouseBuffer[0] = MouseMove;
+
+			// time
+			arr = BitConverter.GetBytes(dt.Ticks);
+			arr.CopyTo(MouseBuffer, 1);
+
+			// X
+			arr = BitConverter.GetBytes(x);
+			arr.CopyTo(MouseBuffer, 8 + 1);
+
+			// Y
+			arr = BitConverter.GetBytes(y);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4);
+
+			mouseData.Write(MouseBuffer, 0, MouseBuffer.Length);
+
 			LastMouseAction = dt;
 		}
 
 		private void MouseWheelEvent(MouseHook.MouseAxis axis, int value,
 			int x, int y)
 		{
-			DateTime dt = DateTime.Now;
+			DateTime dt = DateTime.Now; byte[] arr;
 
-			lock (inOutLock)
-			{
-				xmlTracker.Node_MouseWheel(dt, LastMousePosX != x,
-					LastMousePosY != y, axis, x, y, value);
-			}
+			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
 
-			LastMousePosX = x;
-			LastMousePosY = y;
+			// id
+			MouseBuffer[0] = MouseWheel;
+
+			// time
+			arr = BitConverter.GetBytes(dt.Ticks);
+			arr.CopyTo(MouseBuffer, 1);
+
+			// X
+			arr = BitConverter.GetBytes(x);
+			arr.CopyTo(MouseBuffer, 8 + 1);
+
+			// Y
+			arr = BitConverter.GetBytes(y);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4);
+
+			// button
+			arr = BitConverter.GetBytes((int)axis);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4);
+
+			// pressed
+			arr = BitConverter.GetBytes(value);
+			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4 + 4);
+
+			mouseData.Write(MouseBuffer, 0, MouseBuffer.Length);
+
 			LastMouseAction = dt;
 		}
 

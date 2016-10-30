@@ -12,12 +12,19 @@ namespace timetracker
 {
 	public class MouseHook
 	{
-		public enum MouseButton
+		public enum MouseButton : int
 		{
-			Right, Left, Middle, X1, X2, X3, X4, X5
+			Right = 'R',
+			Left = 'L',
+			Middle = 'M',
+			X1 = 'X',
+			X2 = 'Y',
+			X3 = 'Z',
+			X4 = 'A',
+			X5 = 'B',
 		}
 
-		public enum MouseAxis
+		public enum MouseAxis : int
 		{
 			Vertical, Horizontal
 		}

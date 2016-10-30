@@ -1,3 +1,8 @@
+3.0.11
+	* Changed mouse tracking to use binary format *.mousedata
+	* Added version attribute in xml tracking to identify what version wrote 
+	  tracking file
+    
 3.0.10
 	* Added processor tracking
 

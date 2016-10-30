@@ -205,7 +205,7 @@ namespace timetracker
 			xml.Node_Epilogue();
 			xml.Node_Close();
 
-			xml.Node_DebugFlush();
+			xml.Node_Flush();
 		}
 
 		public static void Node_End(this XmlWriter xml, DateTime dt,
@@ -220,69 +220,7 @@ namespace timetracker
 			xml.Node_Epilogue();
 			xml.Node_Close();
 
-			xml.Node_DebugFlush();
-		}
-
-		public static void Node_MouseClick(this XmlWriter xml, DateTime dt,
-			bool showX, bool showY, bool pressed, int x, int y,
-			MouseHook.MouseButton btn)
-		{
-			if (pressed)
-				xml.Node_Prologue(NodeName_MouseClickPressed, dt);
-			else
-				xml.Node_Prologue(NodeName_MouseClickUnpressed, dt);
-
-			if (showX)
-				xml.WriteAttributeString("X", x.ToString());
-			if (showY)
-				xml.WriteAttributeString("Y", x.ToString());
-
-			xml.WriteAttributeString("Button", btn.ToString());
-
-			xml.Node_Epilogue();
-			xml.Node_Close();
-
-			xml.Node_DebugFlush();
-		}
-
-		public static void Node_MouseMove(this XmlWriter xml, DateTime dt,
-			bool showX, bool showY, int x, int y)
-		{
-			if (!showX && !showY)
-				return;
-
-			xml.Node_Prologue(NodeName_MouseMove, dt);
-
-			if (showX)
-				xml.WriteAttributeString("X", x.ToString());
-
-			if (showY)
-				xml.WriteAttributeString("Y", y.ToString());
-
-			xml.Node_Epilogue();
-			xml.Node_Close();
-
-			xml.Node_DebugFlush();
-		}
-
-		public static void Node_MouseWheel(this XmlWriter xml, DateTime dt,
-			bool showX, bool showY, MouseHook.MouseAxis axis, int x, int y, int value)
-		{
-			xml.Node_Prologue(NodeName_MouseWheel, dt);
-
-			if (showX)
-				xml.WriteAttributeString("X", x.ToString());
-
-			if (showY)
-				xml.WriteAttributeString("Y", y.ToString());
-
-			xml.WriteAttributeString("Axis", axis.ToString());
-			xml.WriteAttributeString("Value", value.ToString());
-
-			xml.Node_Epilogue();
-			xml.Node_Close();
-
-			xml.Node_DebugFlush();
+			xml.Node_Flush();
 		}
 
 		public static void Node_Ping(this XmlWriter xml, DateTime dt)
@@ -292,7 +230,7 @@ namespace timetracker
 			xml.Node_Epilogue();
 			xml.Node_Close();
 
-			xml.Node_DebugFlush();
+			xml.Node_Flush();
 		}
 
 		public static void Node_ProcessorLoad(this XmlWriter xml, DateTime dt,
