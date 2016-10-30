@@ -918,16 +918,19 @@ namespace timetracker
 			internal delegate void ProcesEndedType(int pid);
 			internal delegate void InternetChangeStateType(Guid guid, string Name, WinAPI.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
+			internal delegate void ProcessorLoad(int proc);
 
 			internal ProcesSpawnedType OnCreate;
 			internal ProcesEndedType OnDelete;
 			internal InternetChangeStateType OnInternetEvent;
 			internal OSChangeType OnOsEvent;
+			internal ProcessorLoad OnProcessorLoad;
 
 			ManagementEventWatcher eventCreated;
 			ManagementEventWatcher eventDestroyed;
 			ManagementEventWatcher eventInternet;
 			ManagementEventWatcher eventOS;
+			ManagementEventWatcher eventProcessor;
 
 			internal KeyboardHook kHook = new KeyboardHook();
 			internal ForegroundHook fHook = new ForegroundHook();
@@ -948,6 +951,7 @@ namespace timetracker
 				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
 				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
+				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_Processor'";
 
 				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
 				eventCreated.EventArrived += OnCreateProcessEvent;
@@ -961,6 +965,9 @@ namespace timetracker
 				eventOS = new ManagementEventWatcher(NameSpace, OperatingSystem);
 				eventOS.EventArrived += OnOSEvent;
 
+				eventProcessor = new ManagementEventWatcher(NameSpace, ProcesSql);
+				eventProcessor.EventArrived += ProcessorEvent;
+
 				kHook.Init();
 				fHook.Init();
 				nHook.Init();
@@ -972,6 +979,7 @@ namespace timetracker
 				eventDestroyed.Start();
 				eventInternet.Start();
 				eventOS.Start();
+				eventProcessor.Start();
 			}
 
 			private void OnCreateProcessEvent(object sender, EventArrivedEventArgs e)
@@ -1014,6 +1022,15 @@ namespace timetracker
 				ulong TotalVirtualMemorySize = (ulong)(UInt64)mbo.Properties["TotalVirtualMemorySize"].Value;
 
 				OnOsEvent(FreePhysicialMemory, TotalVisibleMemorySize, FreeVirtualMemory, TotalVirtualMemorySize);
+			}
+
+			private void ProcessorEvent(object sender, EventArrivedEventArgs e)
+			{
+				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
+
+				int LoadPrecentage = (int)(UInt16)mbo.Properties["LoadPercentage"].Value;
+
+				OnProcessorLoad(LoadPrecentage);
 			}
 
 			public void GrabAll()
@@ -1253,6 +1270,8 @@ namespace timetracker
 			tracker.OnDelete = ProcessDestoryed;
 			tracker.OnInternetEvent = InternetEvent;
 			tracker.OnOsEvent = MemoryEvent;
+			tracker.OnProcessorLoad = ProcessorLoad;
+
 			tracker.kHook.keyEvent = KeyEvent;
 			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
@@ -1265,6 +1284,16 @@ namespace timetracker
 			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);
 
 			tracker.Start();
+		}
+
+		private void ProcessorLoad(int proc)
+		{
+			lock (inOutLock)
+			{
+				DateTime x = DateTime.Now;
+
+				xmlTracker.Node_ProcessorLoad(x, proc);
+			}
 		}
 
 		private void ResolutionChangeEvent(int width, int height)

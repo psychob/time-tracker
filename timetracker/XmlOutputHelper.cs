@@ -30,6 +30,9 @@ namespace timetracker
 		const string NodeName_MouseClickUnpressed     = "mouse-u";
 		const string NodeName_MouseWheel              = "mouse-w";
 
+		// released in 3.0.10
+		const string NodeName_ProcessorLoad = "proc-lod";
+
 		private static void Node_Prologue(this XmlWriter xml, string node,
 			DateTime dt)
 		{
@@ -285,6 +288,18 @@ namespace timetracker
 		public static void Node_Ping(this XmlWriter xml, DateTime dt)
 		{
 			xml.Node_Prologue(NodeName_Ping, dt);
+
+			xml.Node_Epilogue();
+			xml.Node_Close();
+
+			xml.Node_DebugFlush();
+		}
+
+		public static void Node_ProcessorLoad(this XmlWriter xml, DateTime dt,
+			int p)
+		{
+			xml.Node_Prologue(NodeName_ProcessorLoad, dt);
+			xml.WriteAttributeString("Proc", p.ToString());
 
 			xml.Node_Epilogue();
 			xml.Node_Close();
