@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,13 +11,14 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace timetracker
 {
-	public class TrackSystem
+	public partial class TrackSystem
 	{
 		const string ApplicationDefinitions = "appdefinition3.xml";
 		const string TrackedTimesCatalogue = "tracks3";
@@ -947,11 +949,11 @@ namespace timetracker
 			private void InitializeTracking()
 			{
 				const string NameSpace = @"\\.\root\CIMV2";
-				const string CreateSql = @"SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
-				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'";
-				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
-				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
-				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_Processor'";
+				const string CreateSql = @"SELECT * FROM __InstanceCreationEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
+				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
+				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
+				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
+				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_Processor'";
 
 				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
 				eventCreated.EventArrived += OnCreateProcessEvent;
@@ -1078,6 +1080,7 @@ namespace timetracker
 				eventDestroyed.Stop();
 				eventInternet.Stop();
 				eventOS.Stop();
+				eventProcessor.Stop();
 
 				kHook.DeInit();
 				fHook.DeInit();
@@ -1088,6 +1091,7 @@ namespace timetracker
 				eventDestroyed.Dispose();
 				eventInternet.Dispose();
 				eventOS.Dispose();
+				eventProcessor.Dispose();
 
 				eventInternet = eventCreated = eventDestroyed = null;
 			}
@@ -1101,17 +1105,17 @@ namespace timetracker
 		internal static TrackSystem TrackingSystemState = null;
 
 		Tracker tracker = null;
-		List<Structs.CurrentApps> currentApps { get; set; } = new List<Structs.CurrentApps>();
+		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
-		FileStream mouseData = null;
 		FileStream keyData = null;
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
 		bool waited_timer_running = false;
 		TimeSpan mouseDoubleClick;
+		bool StopTracking = false;
 
 		public TrackSystem()
 		{
@@ -1274,7 +1278,7 @@ namespace timetracker
 			}
 			xmlTracker.WriteAttributeString("version", CurrentVersion);
 
-			mouseData = File.Open(Path.Combine(TrackedTimesCatalogue, mdFileName),
+			FileMouseData = File.Open(Path.Combine(TrackedTimesCatalogue, mdFileName),
 				FileMode.Create, FileAccess.Write, FileShare.Read);
 
 			keyData = File.Open(Path.Combine(TrackedTimesCatalogue, kdFileName),
@@ -1282,7 +1286,7 @@ namespace timetracker
 
 			{
 				byte[] HEADER = "MOUSE DATA LOG 1".GetBytes();
-				mouseData.Write(HEADER, 0, HEADER.Length);
+				FileMouseData.Write(HEADER, 0, HEADER.Length);
 
 				HEADER = "KEYBOARD DATA  1".GetBytes();
 				keyData.Write(HEADER, 0, HEADER.Length);
@@ -1295,7 +1299,7 @@ namespace timetracker
 			xmlTracker.WriteEndDocument();
 			xmlTracker.Close();
 
-			mouseData.Close();
+			FileMouseData.Close();
 			keyData.Close();
 
 			SaveDatabase();
@@ -1303,6 +1307,11 @@ namespace timetracker
 
 		public void BeginTracking()
 		{
+			ThreadMouseProcess = new Thread(MouseThreadLoop);
+			ThreadMouseProcess.Name = "Mouse Data Saved";
+			ThreadMouseProcess.Priority = ThreadPriority.BelowNormal;
+			ThreadMouseProcess.Start();
+
 			tracker = new Tracker();
 
 			tracker.OnCreate = NewProcessArrived;
@@ -1343,118 +1352,6 @@ namespace timetracker
 
 				xmlTracker.Node_ResolutionChanged(x, width, height);
 			}
-		}
-
-		const byte MouseClick = (byte)'C';
-		const byte MouseMove = (byte)'M';
-		const byte MouseWheel = (byte)'W';
-
-#if DEBUG
-		byte[] MouseBuffer = new byte[32];
-#else
-		byte[] MouseBuffer = new byte[1 + 8 + 4 + 4 + 4 + 4];
-#endif
-
-		DateTime LastMouseAction;
-
-		private void MouseClickEvent(MouseHook.MouseButton btn, bool pressed,
-			int x, int y)
-		{
-			DateTime dt = DateTime.Now;
-			byte[] arr;
-
-			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
-
-			// id
-			MouseBuffer[0] = MouseClick;
-
-			// time
-			arr = BitConverter.GetBytes(dt.Ticks);
-			arr.CopyTo(MouseBuffer, 1);
-
-			// X
-			arr = BitConverter.GetBytes(x);
-			arr.CopyTo(MouseBuffer, 8 + 1);
-
-			// Y
-			arr = BitConverter.GetBytes(y);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4);
-
-			// button
-			arr = BitConverter.GetBytes((int)btn);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4);
-
-			// pressed
-			arr = BitConverter.GetBytes(pressed);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4 + 4);
-
-			mouseData.Write(MouseBuffer, 0, MouseBuffer.Length);
-
-			LastMouseAction = dt;
-		}
-
-		private void MouseMoveEvent(int x, int y)
-		{
-			DateTime dt = DateTime.Now; byte[] arr;
-
-			if (LastMouseAction.AddMilliseconds(100) >= dt)
-				return;
-
-			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
-
-			// id
-			MouseBuffer[0] = MouseMove;
-
-			// time
-			arr = BitConverter.GetBytes(dt.Ticks);
-			arr.CopyTo(MouseBuffer, 1);
-
-			// X
-			arr = BitConverter.GetBytes(x);
-			arr.CopyTo(MouseBuffer, 8 + 1);
-
-			// Y
-			arr = BitConverter.GetBytes(y);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4);
-
-			mouseData.Write(MouseBuffer, 0, MouseBuffer.Length);
-
-			LastMouseAction = dt;
-		}
-
-		private void MouseWheelEvent(MouseHook.MouseAxis axis, int value,
-			int x, int y)
-		{
-			DateTime dt = DateTime.Now; byte[] arr;
-
-			Array.Clear(MouseBuffer, 0, MouseBuffer.Length);
-
-			// id
-			MouseBuffer[0] = MouseWheel;
-
-			// time
-			arr = BitConverter.GetBytes(dt.Ticks);
-			arr.CopyTo(MouseBuffer, 1);
-
-			// X
-			arr = BitConverter.GetBytes(x);
-			arr.CopyTo(MouseBuffer, 8 + 1);
-
-			// Y
-			arr = BitConverter.GetBytes(y);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4);
-
-			// button
-			arr = BitConverter.GetBytes((int)axis);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4);
-
-			// pressed
-			arr = BitConverter.GetBytes(value);
-			arr.CopyTo(MouseBuffer, 8 + 1 + 4 + 4 + 4);
-
-			mouseData.Write(MouseBuffer, 0, MouseBuffer.Length);
-
-			LastMouseAction = dt;
 		}
 
 		uint LastNameChangePID = 0;
@@ -1880,6 +1777,9 @@ namespace timetracker
 		{
 			tracker.Dispose();
 			tracker = null;
+
+			StopTracking = true;
+			ThreadMouseProcess.Join();
 		}
 
 		private void FinishProcess()

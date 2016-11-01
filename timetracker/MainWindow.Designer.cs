@@ -35,9 +35,6 @@
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-			this.toolStripProgressBar2 = new System.Windows.Forms.ToolStripProgressBar();
-			this.toolStripProgressBar3 = new System.Windows.Forms.ToolStripProgressBar();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.definitionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,6 +53,8 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.tsslPixelDistance = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslPixelDistanceRaw = new System.Windows.Forms.ToolStripStatusLabel();
 			this.cmsNotify.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -93,29 +92,13 @@
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1,
-            this.toolStripProgressBar2,
-            this.toolStripProgressBar3});
+            this.tsslPixelDistance,
+            this.tsslPixelDistanceRaw});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 283);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(553, 22);
 			this.statusStrip1.TabIndex = 1;
 			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// toolStripProgressBar1
-			// 
-			this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-			this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-			// 
-			// toolStripProgressBar2
-			// 
-			this.toolStripProgressBar2.Name = "toolStripProgressBar2";
-			this.toolStripProgressBar2.Size = new System.Drawing.Size(100, 16);
-			// 
-			// toolStripProgressBar3
-			// 
-			this.toolStripProgressBar3.Name = "toolStripProgressBar3";
-			this.toolStripProgressBar3.Size = new System.Drawing.Size(100, 16);
 			// 
 			// menuStrip1
 			// 
@@ -261,6 +244,18 @@
 			this.columnHeader5.Text = "Started";
 			this.columnHeader5.Width = 46;
 			// 
+			// tsslPixelDistance
+			// 
+			this.tsslPixelDistance.Name = "tsslPixelDistance";
+			this.tsslPixelDistance.Size = new System.Drawing.Size(109, 17);
+			this.tsslPixelDistance.Text = "toolStripStatusLabel1";
+			// 
+			// tsslPixelDistanceRaw
+			// 
+			this.tsslPixelDistanceRaw.Name = "tsslPixelDistanceRaw";
+			this.tsslPixelDistanceRaw.Size = new System.Drawing.Size(109, 17);
+			this.tsslPixelDistanceRaw.Text = "toolStripStatusLabel1";
+			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -307,11 +302,10 @@
 		private System.Windows.Forms.ToolStripMenuItem fromFileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
 		private System.Windows.Forms.ToolStripMenuItem definitionToolStripMenuItem;
-		private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-		private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar2;
-		private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar3;
 		private System.Windows.Forms.ColumnHeader columnHeader4;
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.ToolStripMenuItem saveDatabaseToolStripMenuItem;
+		private System.Windows.Forms.ToolStripStatusLabel tsslPixelDistance;
+		private System.Windows.Forms.ToolStripStatusLabel tsslPixelDistanceRaw;
 	}
 }

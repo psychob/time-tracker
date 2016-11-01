@@ -1,3 +1,8 @@
+3.0.13
+	* Changed method of saving mouse data, so it's more efficient
+	* Adjusted time of quering WMI service, so it wont eat so much CPU
+	* Program now shows distance traveled of mouse
+
 3.0.12
 	* Changed key tracking to use binary format *.keydata similar to
 	  *.mousedata

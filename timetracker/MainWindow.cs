@@ -79,6 +79,21 @@ namespace timetracker
 
 				lvTrackedApps.Items.Add(liv);
 			}
+
+			long pixels = TrackSystem.TrackingSystemState.MouseDistance;
+
+			if (pixels > 1000000000000)
+				tsslPixelDistance.Text = string.Format("{0:F2} Tpx", TrackSystem.TrackingSystemState.MouseDistance / 1000000000000.0);
+			else if (pixels > 1000000000)
+				tsslPixelDistance.Text = string.Format("{0:F2} Gpx", TrackSystem.TrackingSystemState.MouseDistance / 1000000000.0);
+			else if (pixels > 1000000)
+				tsslPixelDistance.Text = string.Format("{0:F2} Mpx", TrackSystem.TrackingSystemState.MouseDistance / 1000000.0);
+			else if (pixels > 1000)
+				tsslPixelDistance.Text = string.Format("{0:F2} Kpx", TrackSystem.TrackingSystemState.MouseDistance / 1000.0);
+			else
+				tsslPixelDistance.Text = string.Format("{0} px", TrackSystem.TrackingSystemState.MouseDistance);
+
+			tsslPixelDistanceRaw.Text = pixels.ToString();
 		}
 
 		private void NotifyIconDoubleClickEvent(object sender, EventArgs e)
