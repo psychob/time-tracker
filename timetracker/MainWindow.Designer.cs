@@ -35,6 +35,8 @@
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.tsslPixelDistance = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslPixelDistanceRaw = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.definitionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,8 +55,7 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.tsslPixelDistance = new System.Windows.Forms.ToolStripStatusLabel();
-			this.tsslPixelDistanceRaw = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslKeyStrokes = new System.Windows.Forms.ToolStripStatusLabel();
 			this.cmsNotify.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -93,12 +94,25 @@
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsslPixelDistance,
-            this.tsslPixelDistanceRaw});
+            this.tsslPixelDistanceRaw,
+            this.tsslKeyStrokes});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 283);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(553, 22);
 			this.statusStrip1.TabIndex = 1;
 			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// tsslPixelDistance
+			// 
+			this.tsslPixelDistance.Name = "tsslPixelDistance";
+			this.tsslPixelDistance.Size = new System.Drawing.Size(109, 17);
+			this.tsslPixelDistance.Text = "toolStripStatusLabel1";
+			// 
+			// tsslPixelDistanceRaw
+			// 
+			this.tsslPixelDistanceRaw.Name = "tsslPixelDistanceRaw";
+			this.tsslPixelDistanceRaw.Size = new System.Drawing.Size(109, 17);
+			this.tsslPixelDistanceRaw.Text = "toolStripStatusLabel1";
 			// 
 			// menuStrip1
 			// 
@@ -244,17 +258,11 @@
 			this.columnHeader5.Text = "Started";
 			this.columnHeader5.Width = 46;
 			// 
-			// tsslPixelDistance
+			// tsslKeyStrokes
 			// 
-			this.tsslPixelDistance.Name = "tsslPixelDistance";
-			this.tsslPixelDistance.Size = new System.Drawing.Size(109, 17);
-			this.tsslPixelDistance.Text = "toolStripStatusLabel1";
-			// 
-			// tsslPixelDistanceRaw
-			// 
-			this.tsslPixelDistanceRaw.Name = "tsslPixelDistanceRaw";
-			this.tsslPixelDistanceRaw.Size = new System.Drawing.Size(109, 17);
-			this.tsslPixelDistanceRaw.Text = "toolStripStatusLabel1";
+			this.tsslKeyStrokes.Name = "tsslKeyStrokes";
+			this.tsslKeyStrokes.Size = new System.Drawing.Size(109, 17);
+			this.tsslKeyStrokes.Text = "toolStripStatusLabel1";
 			// 
 			// MainWindow
 			// 
@@ -307,5 +315,6 @@
 		private System.Windows.Forms.ToolStripMenuItem saveDatabaseToolStripMenuItem;
 		private System.Windows.Forms.ToolStripStatusLabel tsslPixelDistance;
 		private System.Windows.Forms.ToolStripStatusLabel tsslPixelDistanceRaw;
+		private System.Windows.Forms.ToolStripStatusLabel tsslKeyStrokes;
 	}
 }

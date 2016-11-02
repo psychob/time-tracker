@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using static WinAPI.WinUser;
+using static WinAPI.Kernel32;
+
 namespace timetracker
 {
 	public partial class MainWindow : Form
@@ -72,8 +75,8 @@ namespace timetracker
 
 				liv.SubItems.AddRange(new string[]{
 					it.App.Name,
-					TrackSystem.Utils.GetTime(TrackSystem.WinAPI.GetTickCount64() - it.StartTime),
-					TrackSystem.Utils.GetTime(it.AllTime + (TrackSystem.WinAPI.GetTickCount64() - it.StartTime)),
+					TrackSystem.Utils.GetTime(GetTickCount64() - it.StartTime),
+					TrackSystem.Utils.GetTime(it.AllTime + (GetTickCount64() - it.StartTime)),
 					it.StartCount.ToString(),
 				});
 
@@ -94,6 +97,8 @@ namespace timetracker
 				tsslPixelDistance.Text = string.Format("{0} px", TrackSystem.TrackingSystemState.MouseDistance);
 
 			tsslPixelDistanceRaw.Text = pixels.ToString();
+
+			tsslKeyStrokes.Text = TrackSystem.TrackingSystemState.KeyboardStrokes.ToString();
 		}
 
 		private void NotifyIconDoubleClickEvent(object sender, EventArgs e)
@@ -142,13 +147,13 @@ namespace timetracker
 
 		protected override void WndProc(ref Message m)
 		{
-			switch (m.Msg)
+			switch ((WindowMessage)m.Msg)
 			{
-				case TrackSystem.WinAPI.WM_QUERYENDSESSION:
+				case WindowMessage.WM_QUERYENDSESSION:
 					m.Result = (IntPtr)1;
 					break;
 
-				case TrackSystem.WinAPI.WM_ENDSESSION:
+				case WindowMessage.WM_ENDSESSION:
 					AllowClose = true;
 					Close();
 					m.Result = (IntPtr)1;

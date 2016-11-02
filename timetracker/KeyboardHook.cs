@@ -6,7 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using static timetracker.TrackSystem;
+using static WinAPI.User32;
+using static WinAPI.WinDef;
+using static WinAPI.WinUser;
 
 namespace timetracker
 {
@@ -17,25 +19,26 @@ namespace timetracker
 		internal KeyEventType keyEvent;
 
 		private bool[] KeyState = new bool[255];
-		private WinAPI.HookProc keyDelegate;
-		private int hHook = 0;
+		private SetWindowsHookProc keyDelegate;
+		private IntPtr hHook = IntPtr.Zero;
 
 		public bool Init()
 		{
 			KeyState.Fill(false);
 
-			keyDelegate = new WinAPI.HookProc(KeyHook);
-			hHook = WinAPI.SetWindowsHookEx(WinAPI.WH_KEYBOARD_LL, keyDelegate, IntPtr.Zero, 0);
+			keyDelegate = new SetWindowsHookProc(KeyHook);
+			hHook = SetWindowsHookEx(SetWindowsHookType.WH_KEYBOARD_LL, keyDelegate,
+				IntPtr.Zero, 0);
 
-			return hHook != 0;
+			return hHook != IntPtr.Zero;
 		}
 
 		public void DeInit()
 		{
-			if (hHook != 0)
+			if (hHook != IntPtr.Zero)
 			{
-				WinAPI.UnhookWindowsHookEx(hHook);
-				hHook = 0;
+				UnhookWindowsHookEx(hHook);
+				hHook = IntPtr.Zero;
 			}
 		}
 
@@ -43,13 +46,13 @@ namespace timetracker
 		{
 			if (code >= 0)
 			{
-				var kInfo = (WinAPI.KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(WinAPI.KBDLLHOOKSTRUCT));
-				var kMsg = (int)wParam;
+				var kInfo = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+				var kMsg = (WindowMessage)wParam;
 
 				switch (kMsg)
 				{
-					case WinAPI.WM_KEYDOWN:
-					case WinAPI.WM_SYSKEYDOWN:
+					case WindowMessage.WM_KEYDOWN:
+					case WindowMessage.WM_SYSKEYDOWN:
 						if (KeyState[kInfo.vkCode] == false)
 						{
 							keyEvent(kInfo.vkCode, kInfo.scanCode, true);
@@ -57,8 +60,8 @@ namespace timetracker
 						}
 						break;
 
-					case WinAPI.WM_KEYUP:
-					case WinAPI.WM_SYSKEYUP:
+					case WindowMessage.WM_KEYUP:
+					case WindowMessage.WM_SYSKEYUP:
 						if (KeyState[kInfo.vkCode] == true)
 						{
 							keyEvent(kInfo.vkCode, kInfo.scanCode, false);
@@ -68,7 +71,7 @@ namespace timetracker
 				}
 			}
 
-			return WinAPI.CallNextHookEx(hHook, code, wParam, lParam);
+			return CallNextHookEx(hHook, code, wParam, lParam);
 		}
 	}
 }

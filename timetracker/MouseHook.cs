@@ -6,7 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using static timetracker.TrackSystem;
+using static WinAPI.User32;
+using static WinAPI.WinDef;
+using static WinAPI.WinUser;
 
 namespace timetracker
 {
@@ -37,44 +39,44 @@ namespace timetracker
 		public MouseWheelMoveEventType mouseWheelMoveEvent;
 		public MouseMoveEventType mouseMoveEvent;
 
-		private WinAPI.HookProc mouseDelegate;
-		private int hHook = 0;
+		private SetWindowsHookProc mouseDelegate;
+		private IntPtr hHook = IntPtr.Zero;
 
 		public bool Init()
 		{
-			mouseDelegate = new WinAPI.HookProc(ProcessMouseHookEvent);
-			hHook = WinAPI.SetWindowsHookEx(WinAPI.WH_MOUSE_LL, mouseDelegate, IntPtr.Zero, 0);
+			mouseDelegate = new SetWindowsHookProc(ProcessMouseHookEvent);
+			hHook = SetWindowsHookEx(SetWindowsHookType.WH_MOUSE_LL, mouseDelegate, IntPtr.Zero, 0);
 
-			return hHook != 0;
+			return hHook != IntPtr.Zero;
 		}
 
 		public void DeInit()
 		{
-			if (hHook != 0)
+			if (hHook != IntPtr.Zero)
 			{
-				WinAPI.UnhookWindowsHookEx(hHook);
-				hHook = 0;
+				UnhookWindowsHookEx(hHook);
+				hHook = IntPtr.Zero;
 			}
 		}
 
-		private MouseButton EventToButton(int mMsg, int edata)
+		private MouseButton EventToButton(WindowMessage mMsg, int edata)
 		{
 			switch (mMsg)
 			{
-				case WinAPI.WM_LBUTTONUP:
-				case WinAPI.WM_LBUTTONDOWN:
+				case WindowMessage.WM_LBUTTONUP:
+				case WindowMessage.WM_LBUTTONDOWN:
 					return MouseButton.Left;
 
-				case WinAPI.WM_RBUTTONUP:
-				case WinAPI.WM_RBUTTONDOWN:
+				case WindowMessage.WM_RBUTTONUP:
+				case WindowMessage.WM_RBUTTONDOWN:
 					return MouseButton.Right;
 
-				case WinAPI.WM_MBUTTONDOWN:
-				case WinAPI.WM_MBUTTONUP:
+				case WindowMessage.WM_MBUTTONDOWN:
+				case WindowMessage.WM_MBUTTONUP:
 					return MouseButton.Middle;
 
-				case WinAPI.WM_XBUTTONDOWN:
-				case WinAPI.WM_XBUTTONUP:
+				case WindowMessage.WM_XBUTTONDOWN:
+				case WindowMessage.WM_XBUTTONUP:
 					switch (edata)
 					{
 						case 1:
@@ -102,46 +104,40 @@ namespace timetracker
 		{
 			if (code >= 0)
 			{
-				var kInfo = (WinAPI.MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(WinAPI.MSLLHOOKSTRUCT));
-				var kMsg = (int)wParam;
+				var kInfo = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+				var kMsg = (WindowMessage)wParam;
 
 				switch (kMsg)
 				{
-					case WinAPI.WM_LBUTTONDOWN:
-					case WinAPI.WM_RBUTTONDOWN:
-					case WinAPI.WM_MBUTTONDOWN:
-					case WinAPI.WM_XBUTTONDOWN:
-						mouseClickEvent(EventToButton(kMsg, WinAPI.HIWORD(kInfo.mouseData)), true, kInfo.pt.X, kInfo.pt.Y);
+					case WindowMessage.WM_LBUTTONDOWN:
+					case WindowMessage.WM_RBUTTONDOWN:
+					case WindowMessage.WM_MBUTTONDOWN:
+					case WindowMessage.WM_XBUTTONDOWN:
+						mouseClickEvent(EventToButton(kMsg, HIWORD(kInfo.mouseData)), true, kInfo.pt.X, kInfo.pt.Y);
 						break;
 
-					case WinAPI.WM_LBUTTONUP:
-					case WinAPI.WM_RBUTTONUP:
-					case WinAPI.WM_MBUTTONUP:
-					case WinAPI.WM_XBUTTONUP:
-						mouseClickEvent(EventToButton(kMsg, WinAPI.HIWORD(kInfo.mouseData)), false, kInfo.pt.X, kInfo.pt.Y);
+					case WindowMessage.WM_LBUTTONUP:
+					case WindowMessage.WM_RBUTTONUP:
+					case WindowMessage.WM_MBUTTONUP:
+					case WindowMessage.WM_XBUTTONUP:
+						mouseClickEvent(EventToButton(kMsg, HIWORD(kInfo.mouseData)), false, kInfo.pt.X, kInfo.pt.Y);
 						break;
 
-					case WinAPI.WM_MOUSEWHEEL:
-						mouseWheelMoveEvent(MouseAxis.Vertical, WinAPI.HIWORD(kInfo.mouseData), kInfo.pt.X, kInfo.pt.Y);
+					case WindowMessage.WM_MOUSEWHEEL:
+						mouseWheelMoveEvent(MouseAxis.Vertical, HIWORD(kInfo.mouseData), kInfo.pt.X, kInfo.pt.Y);
 						break;
 
-					case WinAPI.WM_MOUSEHWHEEL:
-						mouseWheelMoveEvent(MouseAxis.Horizontal, WinAPI.HIWORD(kInfo.mouseData), kInfo.pt.X, kInfo.pt.Y);
+					case WindowMessage.WM_MOUSEHWHEEL:
+						mouseWheelMoveEvent(MouseAxis.Horizontal, HIWORD(kInfo.mouseData), kInfo.pt.X, kInfo.pt.Y);
 						break;
 
-					case WinAPI.WM_MOUSEMOVE:
+					case WindowMessage.WM_MOUSEMOVE:
 						mouseMoveEvent(kInfo.pt.X, kInfo.pt.Y);
 						break;
-
-					//default:
-					//	Debug.WriteLine("{0}: ({1}, {2}) ({3}, {4}) {5} {6}",
-					//		kMsg, kInfo.pt.X, kInfo.pt.Y, WinAPI.HIWORD(kInfo.mouseData),
-					//		WinAPI.LOWORD(kInfo.mouseData),	kInfo.flags, kInfo.dwExtraInfo);
-					//	break;
 				}
 			}
 
-			return WinAPI.CallNextHookEx(hHook, code, wParam, lParam);
+			return CallNextHookEx(hHook, code, wParam, lParam);
 		}
 	}
 }

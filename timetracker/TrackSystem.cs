@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
+using WinAPI.WMI;
+using static WinAPI.Kernel32;
+
 namespace timetracker
 {
 	public partial class TrackSystem
@@ -495,430 +498,11 @@ namespace timetracker
 			}
 		}
 
-		public static class WinAPI
-		{
-			public const int WM_QUERYENDSESSION = 0x0011;
-			public const int WM_ENDSESSION = 0x0016;
-
-			/// <summary>
-			/// The WM_KEYDOWN message is posted to the window with the
-			/// keyboard focus when a nonsystem key is pressed. A nonsystem
-			/// key is a key that is pressed when the ALT key is not pressed.
-			/// </summary>
-			public const int WM_KEYDOWN = 0x100;
-
-			/// <summary>
-			/// The WM_KEYUP message is posted to the window with the keyboard
-			/// focus when a nonsystem key is released. A nonsystem key is a
-			/// key that is pressed when the ALT key is not pressed, or a
-			/// keyboard key that is pressed when a window has the keyboard
-			/// focus.
-			/// </summary>
-			public const int WM_KEYUP = 0x101;
-
-			/// <summary>
-			/// The WM_SYSKEYDOWN message is posted to the window with the
-			/// keyboard focus when the user presses the F10 key (which
-			/// activates the menu bar) or holds down the ALT key and then
-			/// presses another key. It also occurs when no window currently
-			/// has the keyboard focus; in this case, the WM_SYSKEYDOWN message
-			/// is sent to the active window. The window that receives the
-			/// message can distinguish between these two contexts by checking
-			/// the context code in the lParam parameter.
-			/// </summary>
-			public const int WM_SYSKEYDOWN = 0x104;
-
-			/// <summary>
-			/// The WM_SYSKEYUP message is posted to the window with the
-			/// keyboard focus when the user releases a key that was pressed
-			/// while the ALT key was held down. It also occurs when no window
-			/// currently has the keyboard focus; in this case, the WM_SYSKEYUP
-			/// message is sent to the active window. The window that receives
-			/// the message can distinguish between these two contexts by
-			/// checking the context code in the lParam parameter.
-			/// </summary>
-			public const int WM_SYSKEYUP = 0x105;
-
-			/// <summary>
-			/// Installs a hook procedure that monitors low-level mouse
-			/// input events.
-			/// </summary>
-			public const int WH_MOUSE_LL = 14;
-
-			/// <summary>
-			/// Installs a hook procedure that monitors low-level keyboard
-			/// input events.
-			/// </summary>
-			public const int WH_KEYBOARD_LL = 13;
-
-			public const int WM_MOUSEMOVE = 0x0200;
-			public const int WM_MOUSEWHEEL = 0x020A;
-			public const int WM_MOUSEHWHEEL = 0x020E;
-
-			public const int WM_LBUTTONDOWN = 0x0201;
-			public const int WM_LBUTTONUP = 0x0202;
-
-			public const int WM_RBUTTONDOWN = 0x0204;
-			public const int WM_RBUTTONUP = 0x0205;
-
-			public const int WM_MBUTTONDOWN = 0x0207;
-			public const int WM_MBUTTONUP = 0x0208;
-
-			public const int WM_XBUTTONDOWN = 0x020B;
-			public const int WM_XBUTTONUP = 0x020C;
-
-			public const uint EVENT_MIN = 0;
-			public const uint EVENT_SYSTEM_FOREGROUND = 0x03;
-			public const uint EVENT_OBJECT_NAMECHANGE = 0x800C;
-			public const uint EVENT_MAX = 0x7fffffff;
-
-			public const uint WINEVENT_INCONTEXT = 0x4;
-			public const uint WINEVENT_OUTOFCONTEXT = 0x1;
-			public const uint WINEVENT_SKIPOWNPROCESS = 0x2;
-			public const uint WINEVENT_SKIPOWNTHREAD = 0x0;
-
-			public const int OBJID_WINDOW = 0x00000000;
-			public const int CHILDID_SELF = 0x00000000;
-
-			public const int WHEEL_DELTA = 120;
-
-			public enum NetConnectionStatus : UInt16
-			{
-				Disconnected = (0),
-				Connecting = (1),
-				Connected = (2),
-				Disconnecting = (3),
-				HardwareNotPresent = (4),
-				HardwareDisabled = (5),
-				HardwareMalfunction = (6),
-				MediaDisconnected = (7),
-				Authenticating = (8),
-				AuthenticationSucceeded = (9),
-				AuthenticationFailed = (10),
-				InvalidAddress = (11),
-				CredentialsRequired = (12),
-				Other,
-			}
-
-			[StructLayout(LayoutKind.Sequential)]
-			public struct KBDLLHOOKSTRUCT
-			{
-				public uint vkCode;
-				public uint scanCode;
-				public KBDLLHOOKSTRUCTFlags flags;
-				public uint time;
-				public UIntPtr dwExtraInfo;
-			}
-
-			[Flags]
-			public enum KBDLLHOOKSTRUCTFlags
-			{
-				LLKHF_EXTENDED = 0x01,
-				LLKHF_INJECTED = 0x10,
-				LLKHF_ALTDOWN = 0x20,
-				LLKHF_UP = 0x80,
-			}
-
-			[StructLayout(LayoutKind.Sequential)]
-			public struct MSLLHOOKSTRUCT
-			{
-				public POINT pt;
-				public uint mouseData;
-				public MSLLHOOKSTRUCTFlags flags;
-				public uint time;
-				public UIntPtr dwExtraInfo;
-			}
-
-			public static int LOWORD(uint md)
-			{
-				return (short)(md & 0xFFFF);
-			}
-
-			public static int HIWORD(uint md)
-			{
-				return (short)(((int)md & 0xFFFF0000) >> 16);
-			}
-
-			[Flags]
-			public enum MSLLHOOKSTRUCTFlags
-			{
-				LLMHF_INJECTED = 0x00000001,
-				LLMHF_LOWER_IL_INJECTED = 0x00000002,
-			}
-
-			[StructLayout(LayoutKind.Sequential)]
-			public struct POINT
-			{
-				public int X;
-				public int Y;
-
-				public POINT(int x, int y)
-				{
-					X = x;
-					Y = y;
-				}
-
-				public POINT(System.Drawing.Point pt) : this(pt.X, pt.Y) { }
-
-				public static implicit operator System.Drawing.Point(POINT p)
-				{
-					return new System.Drawing.Point(p.X, p.Y);
-				}
-
-				public static implicit operator POINT(System.Drawing.Point p)
-				{
-					return new POINT(p.X, p.Y);
-				}
-			}
-
-			public enum GetAncestorFlags
-			{
-				/// <summary>
-				/// Retrieves the parent window. This does not include the owner, as it does with the GetParent function.
-				/// </summary>
-				GetParent = 1,
-				/// <summary>
-				/// Retrieves the root window by walking the chain of parent windows.
-				/// </summary>
-				GetRoot = 2,
-				/// <summary>
-				/// Retrieves the owned root window by walking the chain of parent and owner windows returned by GetParent.
-				/// </summary>
-				GetRootOwner = 3
-			}
-
-			public delegate int HookProc(int code, IntPtr wParam, IntPtr lParam);
-			public delegate void WinEventProc(IntPtr hWinEventHook,
-				uint eventType, IntPtr hwnd, int idObject, int idChild,
-				uint dwEventThread, uint dwmsEventTime);
-
-			[DllImport("kernel32.dll")]
-			public static extern ulong GetTickCount64();
-
-			/// <summary>
-			/// The CallNextHookEx function passes the hook information to the
-			/// next hook procedure in the current hook chain. A hook procedure
-			/// can call this function either before or after processing the
-			/// hook information.
-			/// </summary>
-			/// <param name="idHook">
-			/// Ignored.
-			/// </param>
-			/// <param name="nCode">
-			/// Specifies the hook code passed to the current hook procedure.
-			/// The next hook procedure uses this code to determine how to
-			/// process the hook information.
-			/// </param>
-			/// <param name="wParam">
-			/// Specifies the wParam value passed to the current hook procedure.
-			/// The meaning of this parameter depends on the type of hook
-			/// associated with the current hook chain.
-			/// </param>
-			/// <param name="lParam">
-			/// Specifies the lParam value passed to the current hook procedure.
-			/// The meaning of this parameter depends on the type of hook
-			/// associated with the current hook chain.
-			/// </param>
-			/// <returns>
-			/// This value is returned by the next hook procedure in the chain.
-			/// The current hook procedure must also return this value. The
-			/// meaning of the return value depends on the hook type. For more
-			/// information, see the descriptions of the individual hook
-			/// procedures.
-			/// </returns>
-			/// <remarks>
-			/// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
-			/// </remarks>
-			[DllImport("user32.dll", CharSet = CharSet.Auto,
-				CallingConvention = CallingConvention.StdCall)]
-			public static extern int CallNextHookEx(
-				int idHook,
-				int nCode,
-				IntPtr wParam,
-				IntPtr lParam);
-
-			/// <summary>
-			/// Installs an application-defined hook procedure into a hook
-			/// chain. You would install a hook procedure to monitor the
-			/// system for certain types of events. These events are associated
-			/// either with a specific thread or with all threads in the same
-			/// desktop as the calling thread.
-			/// </summary>
-			/// <param name="idHook">
-			/// The type of hook procedure to be installed
-			/// </param>
-			/// <param name="lpfn">
-			/// A pointer to the hook procedure. If the dwThreadId parameter
-			/// is zero or specifies the identifier of a thread created by a
-			/// different process, the lpfn parameter must point to a hook
-			/// procedure in a DLL. Otherwise, lpfn can point to a hook
-			/// procedure in the code associated with the current process.
-			/// </param>
-			/// <param name="hMod">
-			/// A handle to the DLL containing the hook procedure pointed to
-			/// by the lpfn parameter. The hMod parameter must be set to NULL
-			/// if the dwThreadId parameter specifies a thread created by the
-			/// current process and if the hook procedure is within the code
-			/// associated with the current process.
-			/// </param>
-			/// <param name="dwThreadId">
-			/// The identifier of the thread with which the hook procedure is
-			/// to be associated. For desktop apps, if this parameter is zero,
-			/// the hook procedure is associated with all existing threads
-			/// running in the same desktop as the calling thread. For Windows
-			/// Store apps, see the Remarks section.
-			/// </param>
-			/// <returns>
-			/// If the function succeeds, the return value is the handle to the hook procedure.
-			/// If the function fails, the return value is NULL. To get extended error information, call GetLastError.
-			/// </returns>
-			/// <remarks>
-			/// https://msdn.microsoft.com/pl-pl/library/windows/desktop/ms644990(v=vs.85).aspx
-			/// </remarks>
-			[DllImport("user32.dll", EntryPoint = "SetWindowsHookEx",
-				CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall,
-				SetLastError = true)]
-			public static extern int SetWindowsHookEx(int idHook, HookProc lpfn,
-				IntPtr hMod, uint dwThreadId);
-
-			/// <summary>
-			/// The UnhookWindowsHookEx function removes a hook procedure
-			/// installed in a hook chain by the SetWindowsHookEx function.
-			/// </summary>
-			/// <param name="idHook">
-			/// Handle to the hook to be removed. This parameter is a hook
-			/// handle obtained by a previous call to SetWindowsHookEx.
-			/// </param>
-			/// <returns>
-			/// If the function succeeds, the return value is nonzero.
-			/// If the function fails, the return value is zero. To get
-			/// extended error information, call GetLastError.
-			/// </returns>
-			/// <remarks>
-			/// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
-			/// </remarks>
-			[DllImport("user32.dll", CharSet = CharSet.Auto,
-				CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-			public static extern int UnhookWindowsHookEx(int idHook);
-
-
-			/// <summary>
-			/// The ToAscii function translates the specified virtual-key
-			/// code and keyboard state to the corresponding character or
-			/// characters. The function translates the code using the input
-			/// language and physical keyboard layout identified by the
-			/// keyboard layout handle.
-			/// </summary>
-			/// <param name="uVirtKey">
-			/// Specifies the virtual-key code to be translated.
-			/// </param>
-			/// <param name="uScanCode">
-			/// Specifies the hardware scan code of the key to be translated.
-			/// The high-order bit of this value is set if the key is up
-			/// (not pressed).
-			/// </param>
-			/// <param name="lpbKeyState">
-			/// Pointer to a 256-byte array that contains the current
-			/// keyboard state. Each element (byte) in the array contains the
-			/// state of one key. If the high-order bit of a byte is set, the
-			/// key is down (pressed). The low bit, if set, indicates that the
-			/// key is toggled on. In this function, only the toggle bit of
-			/// the CAPS LOCK key is relevant. The toggle state of the NUM LOCK
-			/// and SCROLL LOCK keys is ignored.
-			/// </param>
-			/// <param name="lpwTransKey">
-			/// Pointer to the buffer that receives the translated character
-			/// or characters.
-			/// </param>
-			/// <param name="fuState">
-			/// Specifies whether a menu is active. This parameter must be 1
-			/// if a menu is active, or 0 otherwise.
-			/// </param>
-			/// <returns>
-			/// If the specified key is a dead key, the return value is
-			/// negative. Otherwise, it is one of the following values.
-			/// Value Meaning
-			/// 0 The specified virtual key has no translation for the current
-			/// state of the keyboard.
-			/// 1 One character was copied to the buffer.
-			/// 2 Two characters were copied to the buffer. This usually
-			/// happens when a dead-key character (accent or diacritic) stored
-			/// in the keyboard layout cannot be composed with the specified
-			/// virtual key to form a single character.
-			/// </returns>
-			/// <remarks>
-			/// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/toascii.asp
-			/// </remarks>
-			[DllImport("user32")]
-			public static extern int ToAscii(
-				uint uVirtKey,
-				uint uScanCode,
-				byte[] lpbKeyState,
-				byte[] lpwTransKey,
-				int fuState);
-
-			/// <summary>
-			/// The GetKeyboardState function copies the status of the 256
-			/// virtual keys to the specified buffer.
-			/// </summary>
-			/// <param name="pbKeyState">
-			/// Pointer to a 256-byte array that contains keyboard key states.
-			/// </param>
-			/// <returns>
-			/// If the function succeeds, the return value is nonzero.
-			/// If the function fails, the return value is zero. To get
-			/// extended error information, call GetLastError.
-			/// </returns>
-			/// <remarks>
-			/// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/toascii.asp
-			/// </remarks>
-			[DllImport("user32")]
-			public static extern int GetKeyboardState(byte[] pbKeyState);
-
-			[DllImport("user32")]
-			public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax,
-				IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess,
-				int idThread, uint dwFlags);
-
-			[DllImport("user32")]
-			public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
-
-			[DllImport("kernel32")]
-			public static extern int GetProcessId(IntPtr hwndl);
-
-			[DllImport("user32.dll", SetLastError = true)]
-			public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
-
-			[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-			public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-			[DllImport("user32.dll")]
-			[return: MarshalAs(UnmanagedType.Bool)]
-			public static extern bool IsWindow(IntPtr hWnd);
-
-			[DllImport("user32.dll", ExactSpelling = true,
-				CharSet = CharSet.Auto, SetLastError = true)]
-			public static extern IntPtr GetParent(IntPtr hWnd);
-
-			/// <summary>
-			/// Retrieves the handle to the ancestor of the specified window.
-			/// </summary>
-			/// <param name="hwnd">A handle to the window whose ancestor is to be retrieved.
-			/// If this parameter is the desktop window, the function returns NULL. </param>
-			/// <param name="flags">The ancestor to be retrieved.</param>
-			/// <returns>The return value is the handle to the ancestor window.</returns>
-			[DllImport("user32.dll", ExactSpelling = true)]
-			public static extern IntPtr GetAncestor(IntPtr hwnd, GetAncestorFlags flags);
-
-			[DllImport("user32")]
-			public static extern int GetDoubleClickTime();
-		}
-
 		internal class Tracker : IDisposable
 		{
 			internal delegate void ProcesSpawnedType(int pid);
 			internal delegate void ProcesEndedType(int pid);
-			internal delegate void InternetChangeStateType(Guid guid, string Name, WinAPI.NetConnectionStatus state);
+			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
 			internal delegate void ProcessorLoad(int proc);
 
@@ -1007,9 +591,9 @@ namespace timetracker
 				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
 
 				string name = (string)mbo.Properties["Name"].Value;
-				int status = (int)(UInt16)mbo.Properties["NetConnectionStatus"].Value;
+				UInt16 status = (UInt16)mbo.Properties["NetConnectionStatus"].Value;
 				Guid g = Guid.Parse((string)mbo.Properties["GUID"].Value);
-				WinAPI.NetConnectionStatus n = status.ToNet();
+				var n = Win32_NetworkAdapter.Convert(status);
 
 				OnInternetEvent(g, name, n);
 			}
@@ -1065,9 +649,9 @@ namespace timetracker
 					foreach (ManagementObject mbo in mos.Get())
 					{
 						string name = (string)mbo.Properties["Name"].Value;
-						int status = (int)(UInt16)mbo.Properties["NetConnectionStatus"].Value;
+						var status = (UInt16)mbo.Properties["NetConnectionStatus"].Value;
 						Guid g = Guid.Parse((string)mbo.Properties["GUID"].Value);
-						WinAPI.NetConnectionStatus n = status.ToNet();
+						var n = Win32_NetworkAdapter.Convert(status);
 
 						OnInternetEvent(g, name, n);
 					}
@@ -1109,17 +693,14 @@ namespace timetracker
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		XmlWriter xmlTracker = null;
-		FileStream keyData = null;
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
 		bool waited_timer_running = false;
-		TimeSpan mouseDoubleClick;
 		bool StopTracking = false;
 
 		public TrackSystem()
 		{
-			mouseDoubleClick = new TimeSpan(0, 0, 0, 0, WinAPI.GetDoubleClickTime());
 			LoadState();
 			BeginTracking();
 
@@ -1281,7 +862,7 @@ namespace timetracker
 			FileMouseData = File.Open(Path.Combine(TrackedTimesCatalogue, mdFileName),
 				FileMode.Create, FileAccess.Write, FileShare.Read);
 
-			keyData = File.Open(Path.Combine(TrackedTimesCatalogue, kdFileName),
+			FileKeyboard = File.Open(Path.Combine(TrackedTimesCatalogue, kdFileName),
 				FileMode.Create, FileAccess.Write, FileShare.Read);
 
 			{
@@ -1289,7 +870,7 @@ namespace timetracker
 				FileMouseData.Write(HEADER, 0, HEADER.Length);
 
 				HEADER = "KEYBOARD DATA  1".GetBytes();
-				keyData.Write(HEADER, 0, HEADER.Length);
+				FileKeyboard.Write(HEADER, 0, HEADER.Length);
 			}
 		}
 
@@ -1300,7 +881,7 @@ namespace timetracker
 			xmlTracker.Close();
 
 			FileMouseData.Close();
-			keyData.Close();
+			FileKeyboard.Close();
 
 			SaveDatabase();
 		}
@@ -1308,9 +889,14 @@ namespace timetracker
 		public void BeginTracking()
 		{
 			ThreadMouseProcess = new Thread(MouseThreadLoop);
-			ThreadMouseProcess.Name = "Mouse Data Saved";
+			ThreadMouseProcess.Name = "Mouse Data Saver";
 			ThreadMouseProcess.Priority = ThreadPriority.BelowNormal;
 			ThreadMouseProcess.Start();
+
+			ThreadKeyboard = new Thread(KeyboardThreadLoop);
+			ThreadKeyboard.Name = "Keyboard Data Saver";
+			ThreadKeyboard.Priority = ThreadPriority.BelowNormal;
+			ThreadKeyboard.Start();
 
 			tracker = new Tracker();
 
@@ -1390,38 +976,6 @@ namespace timetracker
 			LastForegroundProcessID = ProcessID;
 		}
 
-		const byte KeyboardPress = (byte)'P';
-		const byte KeyboardUnpress = (byte)'U';
-
-		byte[] KeyboardBuffer = new byte[1 + 8 + 8];
-
-		private void KeyEvent(uint virtualKode, uint scanKode, bool up)
-		{
-			DateTime dt = DateTime.Now; byte[] arr;
-
-			Array.Clear(KeyboardBuffer, 0, KeyboardBuffer.Length);
-
-			// id
-			if (up)
-				KeyboardBuffer[0] = KeyboardPress;
-			else
-				KeyboardBuffer[0] = KeyboardUnpress;
-
-			// time
-			arr = BitConverter.GetBytes(dt.Ticks);
-			arr.CopyTo(KeyboardBuffer, 1);
-
-			// X
-			arr = BitConverter.GetBytes(virtualKode);
-			arr.CopyTo(KeyboardBuffer, 8 + 1);
-
-			// Y
-			arr = BitConverter.GetBytes(scanKode);
-			arr.CopyTo(KeyboardBuffer, 8 + 1 + 4);
-
-			keyData.Write(KeyboardBuffer, 0, KeyboardBuffer.Length);
-		}
-
 		int LastAllMemoryRecorded = 0;
 
 		private void MemoryEvent(ulong free, ulong all, ulong vfree, ulong vall)
@@ -1461,7 +1015,7 @@ namespace timetracker
 			}
 		}
 
-		private void InternetEvent(Guid g, string Name, WinAPI.NetConnectionStatus state)
+		private void InternetEvent(Guid g, string Name, Win32_NetworkAdapter.NetConnectionStatus state)
 		{
 			lock (inOutLock)
 			{
@@ -1473,7 +1027,7 @@ namespace timetracker
 
 		private void NewProcessArrived(int pid)
 		{
-			NewProcessArrived(pid, 0, WinAPI.GetTickCount64());
+			NewProcessArrived(pid, 0, GetTickCount64());
 		}
 
 		private void NewProcessArrived(int pid, int retire, ulong processTime)
@@ -1754,7 +1308,7 @@ namespace timetracker
 
 		private void StopApp(int pid, Structs.CurrentApps current)
 		{
-			ulong ct = WinAPI.GetTickCount64() - current.StartTime;
+			ulong ct = GetTickCount64() - current.StartTime;
 			DateTime x = DateTime.Now;
 
 			var idx = definedApps.FindIndex(p => p.UniqueID == current.RuleTriggered.UniqueID);
@@ -1780,6 +1334,7 @@ namespace timetracker
 
 			StopTracking = true;
 			ThreadMouseProcess.Join();
+			ThreadKeyboard.Join();
 		}
 
 		private void FinishProcess()

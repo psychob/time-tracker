@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static timetracker.TrackSystem;
+using static WinAPI.User32;
+using static WinAPI.WinDef;
+using static WinAPI.WinUser;
 
 namespace timetracker
 {
@@ -14,24 +16,24 @@ namespace timetracker
 		public delegate void ForegroundChangedType(uint threadId, uint processID);
 
 		private IntPtr hHook;
-		private WinAPI.WinEventProc wpDel;
+		private SetWinEventHookProc wpDel;
 
 		internal ForegroundChangedType foregroundChanged;
 
 		public bool Init()
 		{
-			wpDel = new WinAPI.WinEventProc(eventArrived);
+			wpDel = new SetWinEventHookProc(eventArrived);
 
-			hHook = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND,
-				WinAPI.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero,
-				wpDel, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
+			hHook = SetWinEventHook(SetWinEventHookType.EVENT_SYSTEM_FOREGROUND,
+				SetWinEventHookType.EVENT_SYSTEM_FOREGROUND, IntPtr.Zero,
+				wpDel, 0, 0, SetWinEventHookFlags.WINEVENT_OUTOFCONTEXT);
 
 			return hHook == IntPtr.Zero;
 		}
 
 		public void DeInit()
 		{
-			WinAPI.UnhookWinEvent(hHook);
+			UnhookWinEvent(hHook);
 
 			hHook = IntPtr.Zero;
 		}
@@ -41,7 +43,7 @@ namespace timetracker
 				uint dwEventThread, uint dwmsEventTime)
 		{
 			uint ProcessId;
-			uint threadID = WinAPI.GetWindowThreadProcessId(hwnd, out ProcessId);
+			uint threadID = GetWindowThreadProcessId(hwnd, out ProcessId);
 
 			foregroundChanged(threadID, ProcessId);
 		}

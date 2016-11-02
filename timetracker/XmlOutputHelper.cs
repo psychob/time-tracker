@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using WinAPI.WMI;
 using static timetracker.TrackSystem;
 
 namespace timetracker
@@ -122,7 +123,7 @@ namespace timetracker
 		}
 
 		public static void Node_NetworkAdapterEvent(this XmlWriter xml, DateTime dt,
-			string name, Guid guid, WinAPI.NetConnectionStatus status)
+			string name, Guid guid, Win32_NetworkAdapter.NetConnectionStatus status)
 		{
 			xml.Node_Prologue(NodeName_NetworkAdapterEvent, dt);
 

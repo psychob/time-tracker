@@ -90,6 +90,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrackSystem.cs" />
+    <Compile Include="TrackSystem_Keyboard.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="XmlOutputHelper.cs" />
     <EmbeddedResource Include="AddDefinition.resx">
@@ -144,6 +145,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\WinAPI-Wrapper\WinAPI-Wrapper\WinAPI-Wrapper.csproj">
+      <Project>{82b570f1-f4d9-4305-8520-9d24fcb3a7fd}</Project>
+      <Name>WinAPI-Wrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
