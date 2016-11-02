@@ -89,7 +89,9 @@
     <Compile Include="NameChangeHook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RingBuffer.cs" />
     <Compile Include="TrackSystem.cs" />
+    <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Keyboard.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="XmlOutputHelper.cs" />

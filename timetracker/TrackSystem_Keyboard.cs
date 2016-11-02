@@ -12,97 +12,78 @@ namespace timetracker
 {
 	public partial class TrackSystem
 	{
-		Thread ThreadKeyboard;
-		FileStream FileKeyboard = null;
-		const int KEYBOARD_FIELD_SIZE = 1 + 8 + 4 + 4;
-		BlockingCollection<KeyboardDataLine> QueueKeyboard = new BlockingCollection<KeyboardDataLine>(10 * 1024);
-		byte[] BufferKeyboard = new byte[KEYBOARD_FIELD_SIZE * 1024];
-
 		const byte KeyboardPress = (byte)'P';
 		const byte KeyboardUnpress = (byte)'U';
 
-		public long KeyboardStrokes
+		class KeyboardTokenPress : TokenValue
+		{
+			public byte Type;
+			public uint VirtualKey;
+			public uint ScanCode;
+
+			public KeyboardTokenPress(bool pressed, uint vk, uint sc)
+			{
+				Type = pressed ? KeyboardPress : KeyboardUnpress;
+				VirtualKey = vk;
+				ScanCode = sc;
+			}
+
+			public int AsByteStream(ref byte[] str, int start, int length)
+			{
+				int Written = 0;
+				byte[] buff;
+
+				str[start + Written++] = Type;
+
+				// vk
+				buff = BitConverter.GetBytes(VirtualKey);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				// sc
+				buff = BitConverter.GetBytes(ScanCode);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				return Written;
+			}
+		}
+
+		internal long KeyboardStrokes
 		{
 			get;
 			private set;
 		}
 
-		struct KeyboardDataLine
+		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(512);
+
+		internal double KeyboardSpeed
 		{
-			public byte Type;
-			public long Ticks;
-			public uint VK;
-			public uint SC;
-
-			public KeyboardDataLine(byte T, DateTime dt, uint vk, uint sc)
+			get
 			{
-				Type = T;
-				Ticks = dt.Ticks;
-				VK = vk;
-				SC = sc;
-			}
-		}
+				DateTime min, max;
+				TimeSpan span;
+				int count;
+				double time;
 
-		private void KeyboardThreadLoop()
-		{
-			int LastLength = 0;
+				if (!KeyboardSpeedData.Bottom(out min))
+					return 0;
 
-			while (true)
-			{
-				Debug.WriteLine("Keyboard Data: {0}", QueueKeyboard.Count);
+				if (!KeyboardSpeedData.Top(out max))
+					return 0;
 
-				if (LastLength > 0)
-					Array.Clear(BufferKeyboard, 0, KEYBOARD_FIELD_SIZE * LastLength);
+				span = max - min;
 
-				int Processed = 0;
+				if (span == TimeSpan.Zero)
+					return 0;
 
-				KeyboardDataLine item;
-				for (var it = 0; it < 1024 || StopTracking; ++it)
-				{
-					if (QueueKeyboard.TryTake(out item))
-					{
-						if (item.Type == KeyboardPress)
-							KeyboardStrokes++;
+				count = KeyboardSpeedData.Count;
+				time = span.TotalMinutes;
 
-						byte[] arr;
+				Debug.WriteLine("{0} - {1}", span.TotalMinutes,
+					KeyboardSpeedData.Count);
 
-						// id
-						BufferKeyboard[(Processed * KEYBOARD_FIELD_SIZE) + 0] = item.Type;
-
-						// time
-						arr = BitConverter.GetBytes(item.Ticks);
-						arr.CopyTo(BufferKeyboard, (Processed * KEYBOARD_FIELD_SIZE) + 1);
-
-						// X
-						arr = BitConverter.GetBytes(item.VK);
-						arr.CopyTo(BufferKeyboard, (Processed * MOUSE_FIELD_SIZE) + 8 + 1);
-
-						// Y
-						arr = BitConverter.GetBytes(item.SC);
-						arr.CopyTo(BufferKeyboard, (Processed * MOUSE_FIELD_SIZE) + 8 + 1 + 4);
-
-						Processed++;
-
-						if (StopTracking && Processed == 1024)
-						{
-							FileKeyboard.Write(BufferKeyboard, 0, Processed * KEYBOARD_FIELD_SIZE);
-							Array.Clear(BufferKeyboard, 0, KEYBOARD_FIELD_SIZE * Processed);
-
-							Processed = 0;
-						}
-					} else
-						break;
-				}
-
-				if (Processed > 0)
-					FileKeyboard.Write(BufferKeyboard, 0, Processed * KEYBOARD_FIELD_SIZE);
-
-				LastLength = Processed;
-
-				if (StopTracking)
-					break;
-
-				Thread.Sleep(4500);
+				return count / time;
 			}
 		}
 
@@ -110,13 +91,13 @@ namespace timetracker
 		{
 			DateTime dt = DateTime.Now;
 
-			KeyEventAppend(new KeyboardDataLine(up ? KeyboardPress : KeyboardUnpress,
-				dt, virtualKode, scanKode));
-		}
+			if (!up)
+			{
+				KeyboardStrokes++;
+				KeyboardSpeedData.Add(dt);
+			}
 
-		private void KeyEventAppend(KeyboardDataLine keyboardDataLine)
-		{
-			QueueKeyboard.Add(keyboardDataLine);
+			AppendBinary(new KeyboardTokenPress(up, virtualKode, scanKode), dt);
 		}
 	}
 }

@@ -697,7 +697,6 @@ namespace timetracker
 		object inOutLock = new object();
 		bool valid_tick_running = false;
 		bool waited_timer_running = false;
-		bool StopTracking = false;
 
 		public TrackSystem()
 		{
@@ -834,8 +833,7 @@ namespace timetracker
 
 			string baseName = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
 			string xmlFileName =  baseName + ".xml";
-			string mdFileName = baseName + ".mousedata";
-			string kdFileName = baseName + ".keydata";
+			string bdFileName = baseName + ".bxml";
 
 			xmlTracker = XmlWriter.Create(Path.Combine(TrackedTimesCatalogue, xmlFileName), xws);
 			xmlTracker.WriteStartDocument(true);
@@ -859,18 +857,12 @@ namespace timetracker
 			}
 			xmlTracker.WriteAttributeString("version", CurrentVersion);
 
-			FileMouseData = File.Open(Path.Combine(TrackedTimesCatalogue, mdFileName),
-				FileMode.Create, FileAccess.Write, FileShare.Read);
-
-			FileKeyboard = File.Open(Path.Combine(TrackedTimesCatalogue, kdFileName),
+			StreamBinary = File.Open(Path.Combine(TrackedTimesCatalogue, bdFileName),
 				FileMode.Create, FileAccess.Write, FileShare.Read);
 
 			{
-				byte[] HEADER = "MOUSE DATA LOG 1".GetBytes();
-				FileMouseData.Write(HEADER, 0, HEADER.Length);
-
-				HEADER = "KEYBOARD DATA  1".GetBytes();
-				FileKeyboard.Write(HEADER, 0, HEADER.Length);
+				byte[] HEADER = "BINARY DATA FIL1".GetBytes();
+				StreamBinary.Write(HEADER, 0, HEADER.Length);
 			}
 		}
 
@@ -880,23 +872,17 @@ namespace timetracker
 			xmlTracker.WriteEndDocument();
 			xmlTracker.Close();
 
-			FileMouseData.Close();
-			FileKeyboard.Close();
+			StreamBinary.Close();
 
 			SaveDatabase();
 		}
 
 		public void BeginTracking()
 		{
-			ThreadMouseProcess = new Thread(MouseThreadLoop);
-			ThreadMouseProcess.Name = "Mouse Data Saver";
-			ThreadMouseProcess.Priority = ThreadPriority.BelowNormal;
-			ThreadMouseProcess.Start();
-
-			ThreadKeyboard = new Thread(KeyboardThreadLoop);
-			ThreadKeyboard.Name = "Keyboard Data Saver";
-			ThreadKeyboard.Priority = ThreadPriority.BelowNormal;
-			ThreadKeyboard.Start();
+			ThreadBinary = new Thread(ThreadBinaryLoop);
+			ThreadBinary.Name = "Binary Data Saver";
+			ThreadBinary.Priority = ThreadPriority.BelowNormal;
+			ThreadBinary.Start();
 
 			tracker = new Tracker();
 
@@ -1332,9 +1318,9 @@ namespace timetracker
 			tracker.Dispose();
 			tracker = null;
 
-			StopTracking = true;
-			ThreadMouseProcess.Join();
-			ThreadKeyboard.Join();
+			BinaryStop = true;
+
+			ThreadBinary.Join();
 		}
 
 		private void FinishProcess()

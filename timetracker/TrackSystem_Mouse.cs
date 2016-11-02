@@ -12,11 +12,115 @@ namespace timetracker
 {
 	public partial class TrackSystem
 	{
-		Thread ThreadMouseProcess;
-		FileStream FileMouseData = null;
-		const int MOUSE_FIELD_SIZE = 25;
-		BlockingCollection<MouseDataLine> QueueMouse = new BlockingCollection<MouseDataLine>(10 * 1024);
-		byte[] BufferMouseData = new byte[MOUSE_FIELD_SIZE * 1024];
+		const byte MessageHeader_MouseClick = (byte)'C';
+		const byte MessageHeader_MouseMove = (byte)'M';
+		const byte MessageHeader_MouseWheel = (byte)'W';
+
+		abstract class MouseBaseEvent : TokenValue
+		{
+			public byte Type;
+			public int X;
+			public int Y;
+
+			public MouseBaseEvent(byte t, int x, int y)
+			{
+				Type = t;
+				X = x;
+				Y = y;
+			}
+
+			public virtual int AsByteStream(ref byte[] str, int start, int length)
+			{
+				int Written = 0;
+				byte[] buff;
+
+				str[start + Written++] = Type;
+
+				// vk
+				buff = BitConverter.GetBytes(X);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				// sc
+				buff = BitConverter.GetBytes(Y);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				return Written;
+			}
+		}
+
+		class MouseClickEventType : MouseBaseEvent
+		{
+			public MouseHook.MouseButton Button;
+			public bool Pressed;
+
+			public MouseClickEventType(int x, int y, MouseHook.MouseButton btn,
+				bool press)
+				: base(MessageHeader_MouseClick, x, y)
+			{
+				Button = btn;
+				Pressed = press;
+			}
+
+			public override int AsByteStream(ref byte[] str, int start, int length)
+			{
+				int Written = base.AsByteStream(ref str, start, length);
+				byte[] buff;
+
+				// vk
+				buff = BitConverter.GetBytes((int)Button);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				// sc
+				buff = BitConverter.GetBytes(Pressed);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				return Written;
+			}
+		}
+
+		class MouseWheelEventType : MouseBaseEvent
+		{
+			public MouseHook.MouseAxis Axis;
+			public int Value;
+
+			public MouseWheelEventType(int x, int y, MouseHook.MouseAxis a,
+				int value)
+				: base(MessageHeader_MouseWheel, x, y)
+			{
+				Axis = a;
+				Value = value;
+			}
+
+			public override int AsByteStream(ref byte[] str, int start, int length)
+			{
+				int Written = base.AsByteStream(ref str, start, length);
+				byte[] buff;
+
+				// vk
+				buff = BitConverter.GetBytes((int)Axis);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				// sc
+				buff = BitConverter.GetBytes(Value);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				return Written;
+			}
+		}
+
+		class MouseMoveEventType : MouseBaseEvent
+		{
+			public MouseMoveEventType(int x, int y)
+				: base(MessageHeader_MouseMove, x, y)
+			{
+			}
+		}
 
 		public long MouseDistance
 		{
@@ -24,153 +128,42 @@ namespace timetracker
 			private set;
 		}
 
-		const byte MouseClick = (byte)'C';
-		const byte MouseMove = (byte)'M';
-		const byte MouseWheel = (byte)'W';
-
-		MouseDataLine LastMDL = new MouseDataLine();
-
-		public struct MouseDataLine
+		public long MouseClickCount
 		{
-			public byte Type;
-			public long Ticks;
-			public int X;
-			public int Y;
-			public MouseHook.MouseButton Btn;
-			public MouseHook.MouseAxis Axis;
-			public bool Pressed;
-			public int Value;
-
-			public MouseDataLine(DateTime dt, int x, int y)
-			{
-				Type = MouseMove;
-				Ticks = dt.Ticks;
-				X = x;
-				Y = y;
-				Btn = MouseHook.MouseButton.Left;
-				Axis = MouseHook.MouseAxis.Horizontal;
-				Pressed = false;
-				Value = 0;
-			}
-
-			public MouseDataLine(DateTime dt, int x, int y,
-				MouseHook.MouseButton btn, bool pressed)
-			{
-				Type = MouseClick;
-				Ticks = dt.Ticks;
-				X = x;
-				Y = y;
-				Btn = btn;
-				Axis = MouseHook.MouseAxis.Horizontal;
-				Pressed = pressed;
-				Value = 0;
-			}
-
-			public MouseDataLine(DateTime dt, int x, int y,
-				MouseHook.MouseAxis axe, int value)
-			{
-				Type = MouseClick;
-				Ticks = dt.Ticks;
-				X = x;
-				Y = y;
-				Btn = MouseHook.MouseButton.Left;
-				Axis = axe;
-				Pressed = false;
-				Value = value;
-			}
+			get;
+			private set;
 		}
 
-		private void MouseThreadLoop()
-		{
-			int LastLength = 0;
+		RingBuffer<DateTime> MouseClickSpeedData = new RingBuffer<DateTime>(128);
 
-			while (true)
+		public double MouseClickSpeed
+		{
+			get
 			{
-				Debug.WriteLine("Mouse Data: {0}", QueueMouse.Count);
+				DateTime min, max;
+				TimeSpan span;
+				int count;
+				double time;
 
-				if (LastLength > 0)
-					Array.Clear(BufferMouseData, 0, MOUSE_FIELD_SIZE * LastLength);
+				if (!MouseClickSpeedData.Bottom(out min))
+					return 0;
 
-				int Processed = 0;
+				if (!MouseClickSpeedData.Top(out max))
+					return 0;
 
-				MouseDataLine item;
-				for (var it = 0; it < 1024 || StopTracking; ++it)
-				{
-					if (QueueMouse.TryTake(out item))
-					{
-						MouseDistance += (int)Math.Sqrt((LastMDL.X - item.X) * (LastMDL.X - item.X) + (LastMDL.Y - item.Y) * (LastMDL.Y - item.Y));
-						LastMDL = item;
+				span = max - min;
 
-						byte[] arr;
+				if (span == TimeSpan.Zero)
+					return 0;
 
-						// id
-						BufferMouseData[(Processed * MOUSE_FIELD_SIZE) + 0] = item.Type;
+				count = MouseClickSpeedData.Count;
+				time = span.TotalMinutes;
 
-						// time
-						arr = BitConverter.GetBytes(item.Ticks);
-						arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 1);
+				Debug.WriteLine("{0} - {1}", span.TotalMinutes,
+					MouseClickSpeedData.Count);
 
-						// X
-						arr = BitConverter.GetBytes(item.X);
-						arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 8 + 1);
-
-						// Y
-						arr = BitConverter.GetBytes(item.Y);
-						arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 8 + 1 + 4);
-
-						switch (item.Type)
-						{
-							case MouseClick:
-								// button
-								arr = BitConverter.GetBytes((int)item.Btn);
-								arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 8 + 1 + 4 + 4);
-
-								// pressed
-								arr = BitConverter.GetBytes(item.Pressed);
-								arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 8 + 1 + 4 + 4 + 4);
-								break;
-
-							case MouseWheel:
-								// button
-								arr = BitConverter.GetBytes((int)item.Axis);
-								arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 8 + 1 + 4 + 4);
-
-								// pressed
-								arr = BitConverter.GetBytes(item.Value);
-								arr.CopyTo(BufferMouseData, (Processed * MOUSE_FIELD_SIZE) + 8 + 1 + 4 + 4 + 4);
-								break;
-						}
-
-						Processed++;
-
-						if (StopTracking && Processed == 1024)
-						{
-							FileMouseData.Write(BufferMouseData, 0, Processed * MOUSE_FIELD_SIZE);
-							Array.Clear(BufferMouseData, 0, MOUSE_FIELD_SIZE * Processed);
-
-							Processed = 0;
-						}
-					} else
-						break;
-				}
-
-				if (Processed > 0)
-				{
-					FileMouseData.Write(BufferMouseData, 0, Processed * MOUSE_FIELD_SIZE);
-				}
-
-				LastLength = Processed;
-
-				if (StopTracking)
-					break;
-
-				Thread.Sleep(4500);
+				return count / time;
 			}
-		}
-
-		private void MouseAppendDataLog(MouseDataLine s)
-		{
-			QueueMouse.Add(s);
 		}
 
 		DateTime LastMouseAction;
@@ -180,7 +173,13 @@ namespace timetracker
 		{
 			DateTime dt = DateTime.Now;
 
-			MouseAppendDataLog(new MouseDataLine(dt, x, y, btn, pressed));
+			if (!pressed)
+			{
+				MouseClickCount++;
+				MouseClickSpeedData.Add(dt);
+			}
+
+			AppendBinary(new MouseClickEventType(x, y, btn, pressed), dt);
 
 			LastMouseAction = dt;
 		}
@@ -192,7 +191,7 @@ namespace timetracker
 			if (LastMouseAction.AddMilliseconds(100) >= dt)
 				return;
 
-			MouseAppendDataLog(new MouseDataLine(dt, x, y));
+			AppendBinary(new MouseMoveEventType(x, y), dt);
 
 			LastMouseAction = dt;
 		}
@@ -202,7 +201,7 @@ namespace timetracker
 		{
 			DateTime dt = DateTime.Now;
 
-			MouseAppendDataLog(new MouseDataLine(dt, x, y, axis, value));
+			AppendBinary(new MouseWheelEventType(x, y, axis, value), dt);
 
 			LastMouseAction = dt;
 		}
