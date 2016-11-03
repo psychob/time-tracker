@@ -92,8 +92,12 @@
     <Compile Include="RingBuffer.cs" />
     <Compile Include="TrackSystem.cs" />
     <Compile Include="TrackSystem_BinaryStream.cs" />
+    <Compile Include="TrackSystem_Events.cs" />
+    <Compile Include="TrackSystem_Foreground.cs" />
     <Compile Include="TrackSystem_Keyboard.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
+    <Compile Include="TrackSystem_Namechange.cs" />
+    <Compile Include="TrackSystem_Processor.cs" />
     <Compile Include="XmlOutputHelper.cs" />
     <EmbeddedResource Include="AddDefinition.resx">
       <DependentUpon>AddDefinition.cs</DependentUpon>

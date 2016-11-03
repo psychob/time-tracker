@@ -88,5 +88,24 @@ namespace timetracker
 		{
 			return Encoding.ASCII.GetBytes(str);
 		}
+
+		public static byte[] GetBytesEncoded(this string str)
+		{
+			if (str.IsEmptyOrNull())
+				return new byte[] { 0, 0, 0, 0 };
+
+			byte[] buff;
+
+			// length of string
+			int len = Encoding.UTF8.GetByteCount(str);
+			buff = new byte[4 + len];
+
+			BitConverter.GetBytes(len).CopyTo(buff, 0);
+			byte[] data = Encoding.UTF8.GetBytes(str);
+
+			data.CopyTo(buff, 4);
+
+			return buff;
+		}
 	}
 }

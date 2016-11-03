@@ -96,9 +96,18 @@ namespace timetracker
 			else
 				tsslPixelDistance.Text = string.Format("{0} px", TrackSystem.TrackingSystemState.MouseDistance);
 
-			tsslPixelDistanceRaw.Text = pixels.ToString();
+			double mouseSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
+			tsslPixelDistanceRaw.Text = string.Format("{0:F2} px/s", mouseSpeed);
 
 			tsslKeyStrokes.Text = TrackSystem.TrackingSystemState.KeyboardStrokes.ToString();
+
+			double kpm = TrackSystem.TrackingSystemState.KeyboardSpeed;
+			tsslKeyPerSecond.Text = string.Format("{0:F2}", kpm);
+
+			tsslMouseClickCount.Text = TrackSystem.TrackingSystemState.MouseClickCount.ToString();
+
+			double mpm = TrackSystem.TrackingSystemState.MouseClickSpeed;
+			tsslMouseClickSpeed.Text = string.Format("{0:F2}", mpm);
 		}
 
 		private void NotifyIconDoubleClickEvent(object sender, EventArgs e)

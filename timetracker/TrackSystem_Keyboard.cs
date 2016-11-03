@@ -12,9 +12,6 @@ namespace timetracker
 {
 	public partial class TrackSystem
 	{
-		const byte KeyboardPress = (byte)'P';
-		const byte KeyboardUnpress = (byte)'U';
-
 		class KeyboardTokenPress : TokenValue
 		{
 			public byte Type;
@@ -23,7 +20,7 @@ namespace timetracker
 
 			public KeyboardTokenPress(bool pressed, uint vk, uint sc)
 			{
-				Type = pressed ? KeyboardPress : KeyboardUnpress;
+				Type = pressed ? MessageHeader_KeyPressed : MessageHeader_KeyUnpressed;
 				VirtualKey = vk;
 				ScanCode = sc;
 			}
@@ -55,21 +52,18 @@ namespace timetracker
 			private set;
 		}
 
-		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(512);
+		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(128);
 
 		internal double KeyboardSpeed
 		{
 			get
 			{
-				DateTime min, max;
+				DateTime min, max = DateTime.Now;
 				TimeSpan span;
 				int count;
 				double time;
 
 				if (!KeyboardSpeedData.Bottom(out min))
-					return 0;
-
-				if (!KeyboardSpeedData.Top(out max))
 					return 0;
 
 				span = max - min;

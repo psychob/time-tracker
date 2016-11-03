@@ -12,10 +12,6 @@ namespace timetracker
 {
 	public partial class TrackSystem
 	{
-		const byte MessageHeader_MouseClick = (byte)'C';
-		const byte MessageHeader_MouseMove = (byte)'M';
-		const byte MessageHeader_MouseWheel = (byte)'W';
-
 		abstract class MouseBaseEvent : TokenValue
 		{
 			public byte Type;
@@ -128,6 +124,49 @@ namespace timetracker
 			private set;
 		}
 
+		struct MouseCoords
+		{
+			public DateTime Time;
+			public int X, Y;
+
+			public MouseCoords(int x, int y, DateTime dt)
+			{
+				Time = dt;
+				X = x;
+				Y = y;
+			}
+		}
+
+		RingBuffer<MouseCoords> MouseDistanceSpeedData = new RingBuffer<MouseCoords>(128);
+
+		public double MouseDistanceSpeed
+		{
+			get
+			{
+				if (MouseDistanceSpeedData.Count < 2)
+					return 0;
+
+				MouseCoords item;
+				MouseDistanceSpeedData.Bottom(out item);
+
+				DateTime low = item.Time;
+				DateTime high = item.Time;
+				int distance = 0;
+
+				foreach (var it in MouseDistanceSpeedData)
+				{
+					low = new DateTime(Math.Min(low.Ticks, it.Time.Ticks));
+
+					distance += Distance(item.X, item.Y, it.X, it.Y);
+					item = it;
+				}
+
+				high = DateTime.Now;
+
+				return distance / (high - low).TotalSeconds;
+			}
+		}
+
 		public long MouseClickCount
 		{
 			get;
@@ -135,6 +174,8 @@ namespace timetracker
 		}
 
 		RingBuffer<DateTime> MouseClickSpeedData = new RingBuffer<DateTime>(128);
+		int LastX = 0;
+		int LastY = 0;
 
 		public double MouseClickSpeed
 		{
@@ -191,9 +232,14 @@ namespace timetracker
 			if (LastMouseAction.AddMilliseconds(100) >= dt)
 				return;
 
+			MouseDistance += Distance(LastX, LastY, x, y);
+			MouseDistanceSpeedData.Add(new MouseCoords(x, y, dt));
+
 			AppendBinary(new MouseMoveEventType(x, y), dt);
 
 			LastMouseAction = dt;
+			LastX = x;
+			LastY = y;
 		}
 
 		private void MouseWheelEvent(MouseHook.MouseAxis axis, int value,
@@ -204,6 +250,13 @@ namespace timetracker
 			AppendBinary(new MouseWheelEventType(x, y, axis, value), dt);
 
 			LastMouseAction = dt;
+		}
+
+		private int Distance(int x1, int y1, int x2, int y2)
+		{
+			int xx = x2 - x1;
+			int xy = y2 - y1;
+			return (int)Math.Sqrt(xx * xx + xy * xy);
 		}
 	}
 }

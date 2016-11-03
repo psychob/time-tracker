@@ -33,6 +33,22 @@ namespace timetracker
 		const byte BinaryEndInnerMessage = (byte)'}';
 		const byte BinaryEndMessage = (byte)']';
 
+		const byte MessageHeader_MouseClick = (byte)'C';
+		const byte MessageHeader_MouseMove = (byte)'M';
+		const byte MessageHeader_MouseWheel = (byte)'W';
+		const byte MessageHeader_KeyPressed = (byte)'P';
+		const byte MessageHeader_KeyUnpressed = (byte)'U';
+		const byte MessageHeader_ForegroundChange = (byte)'F';
+		const byte MessageHeader_Processor = (byte)'R';
+		const byte MessageHeader_Namechange = (byte)'N';
+
+		const byte MessageHeader_Begin = (byte)'B';
+		const byte MessageHeader_End = (byte)'E';
+		const byte MessageHeader_KeppAlive = (byte)'K';
+
+		const byte MessageHeader_ResolutionChange = (byte)'D';
+		const byte MessageHeader_NetworkAdapter = (byte)'A';
+
 		FileStream StreamBinary;
 		Thread ThreadBinary;
 		BlockingCollection<Token> QueueBinary = new BlockingCollection<Token>(BinaryQueueSize);
@@ -104,7 +120,7 @@ namespace timetracker
 
 			DateTime tokenTime;
 
-			if (!dt.HasValue)
+			if (dt.HasValue)
 				tokenTime = dt.Value;
 			else
 				tokenTime = DateTime.Now;

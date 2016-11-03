@@ -504,7 +504,7 @@ namespace timetracker
 			internal delegate void ProcesEndedType(int pid);
 			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
-			internal delegate void ProcessorLoad(int proc);
+			internal delegate void ProcessorLoad(string Name, ulong Idle, ulong Kernel, ulong Work);
 
 			internal ProcesSpawnedType OnCreate;
 			internal ProcesEndedType OnDelete;
@@ -537,7 +537,7 @@ namespace timetracker
 				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
 				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
-				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_Processor'";
+				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_Processor'";
 
 				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
 				eventCreated.EventArrived += OnCreateProcessEvent;
@@ -614,9 +614,10 @@ namespace timetracker
 			{
 				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
 
-				int LoadPrecentage = (int)(UInt16)mbo.Properties["LoadPercentage"].Value;
-
-				OnProcessorLoad(LoadPrecentage);
+				OnProcessorLoad((string)mbo.Properties["Name"].Value,
+					(UInt64)mbo.Properties["PercentIdleTime"].Value,
+					(UInt64)mbo.Properties["PercentPrivilegedTime"].Value,
+					(UInt64)mbo.Properties["PercentProcessorTime"].Value);
 			}
 
 			public void GrabAll()
@@ -772,12 +773,7 @@ namespace timetracker
 
 		private void OnTickTick(object sender, EventArgs e)
 		{
-			lock (inOutLock)
-			{
-				xmlTracker.Node_Ping(DateTime.Now);
-			}
-
-			tracker.PullAllInternet();
+			AppendBinary(new PingEventType());
 		}
 
 		private bool PidNotRunning(int PID)
@@ -906,60 +902,9 @@ namespace timetracker
 			tracker.Start();
 		}
 
-		private void ProcessorLoad(int proc)
-		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				xmlTracker.Node_ProcessorLoad(x, proc);
-			}
-		}
-
 		private void ResolutionChangeEvent(int width, int height)
 		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				xmlTracker.Node_ResolutionChanged(x, width, height);
-			}
-		}
-
-		uint LastNameChangePID = 0;
-		string LastNameChangeTitle = "";
-
-		private void NamechangeEvent(uint PID, string winTitle)
-		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				if (PID == LastNameChangePID && winTitle == LastNameChangeTitle)
-					return;
-
-				LastNameChangePID = PID;
-				LastNameChangeTitle = winTitle;
-
-				xmlTracker.Node_NameChange(x, PID, winTitle);
-			}
-		}
-
-		uint LastForegroundProcessID = 0;
-
-		private void ForegroundEvent(uint ThreadId, uint ProcessID)
-		{
-			if (LastForegroundProcessID == ProcessID)
-				return;
-
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				xmlTracker.Node_WindowForegroundChanged(x, ProcessID);
-			}
-
-			LastForegroundProcessID = ProcessID;
+			AppendBinary(new ResolutionChange(width, height));
 		}
 
 		int LastAllMemoryRecorded = 0;
@@ -1003,12 +948,7 @@ namespace timetracker
 
 		private void InternetEvent(Guid g, string Name, Win32_NetworkAdapter.NetConnectionStatus state)
 		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				xmlTracker.Node_NetworkAdapterEvent(x, Name, g, state);
-			}
+			AppendBinary(new NetworkAdapterDefinition(Name, g));
 		}
 
 		private void NewProcessArrived(int pid)
@@ -1181,12 +1121,7 @@ namespace timetracker
 
 			definedApps.Add(app);
 
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				xmlTracker.Node_NewDefinition(x, applicationUniqueID, app.Name);
-			}
+			AppendBinary(new AddNewDefinitionType(applicationUniqueID, app.Name));
 
 			return app;
 		}
@@ -1201,12 +1136,7 @@ namespace timetracker
 					c.IsShell = true;
 					c.Rules = null;
 
-					lock (inOutLock)
-					{
-						DateTime x = DateTime.Now;
-
-						xmlTracker.Node_RemoveDefinition(x, c.UniqueID);
-					}
+					AppendBinary(new RemoveDefinition(c.UniqueID));
 
 					definedApps.Remove(it);
 					definedApps.Add(c);
@@ -1256,23 +1186,18 @@ namespace timetracker
 
 			currentApps.Add(ca);
 
-			lock (inOutLock)
-			{
-				xmlTracker.Node_Begin(x, PID, ruleselected.UniqueID,
-					ruleselected.RuleSetID);
-			}
+			AppendBinary(new BeginEventType(PID, ruleselected.UniqueID,
+				ruleselected.RuleSetID), x);
 
 			// rejestrujemy nazwe głównego okna
 			try
 			{
 				Process p = Process.GetProcessById(PID);
 
-				lock (inOutLock)
-				{
-					xmlTracker.Node_NameChange(x, (uint)PID, p.MainWindowTitle);
-				}
+				AppendBinary(new NamechangeToken((uint)PID, p.MainWindowTitle), x);
 			} catch (Exception)
 			{
+				AppendBinary(new NamechangeToken((uint)PID, ""), x);
 			}
 		}
 
@@ -1306,11 +1231,7 @@ namespace timetracker
 			definedApps[idx] = c;
 
 			// sprawdzamy czy nie dodajemy promocji
-
-			lock (inOutLock)
-			{
-				xmlTracker.Node_End(x, pid, current.RuleTriggered.UniqueID, ct);
-			}
+			AppendBinary(new EndEventType(pid, current.RuleTriggered.UniqueID));
 		}
 
 		public void FinishTracking()
