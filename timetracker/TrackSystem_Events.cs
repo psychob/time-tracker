@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -222,5 +223,127 @@ namespace timetracker
 			}
 		}
 
+		class NetworkBandwidthEvent : TokenValue
+		{
+			public byte Type;
+			public ulong Recivied, Send;
+
+			public NetworkBandwidthEvent(ulong r, ulong s)
+			{
+				Type = MessageHeader_NetworkBandwidth;
+
+				Recivied = r;
+				Send = s;
+			}
+
+			public int AsByteStream(ref byte[] str, int start, int length)
+			{
+				int Written = 0;
+				byte[] buff;
+
+				str[start + Written++] = Type;
+
+				buff = BitConverter.GetBytes(Recivied);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				buff = BitConverter.GetBytes(Send);
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				return Written;
+			}
+		}
+
+		ulong StartR = 0, StartS = 0;
+		struct InternetData
+		{
+			public DateTime Time;
+			public ulong Data;
+
+			public InternetData(DateTime d, ulong u)
+			{
+				Time = d;
+				Data = u;
+			}
+		}
+
+		RingBuffer<InternetData> ReciverSpeedData = new RingBuffer<InternetData>(16);
+		RingBuffer<InternetData> SentSpeedData = new RingBuffer<InternetData>(16);
+
+		internal double ReciverSpeed
+		{
+			get
+			{
+				if (ReciverSpeedData.Count <= 2)
+					return 0;
+
+				InternetData id;
+				ReciverSpeedData.Bottom(out id);
+
+				DateTime low = id.Time;
+				ulong sum = 0;
+
+				foreach (var it in ReciverSpeedData)
+					sum += it.Data;
+
+				return sum / 1024.0 / (DateTime.Now - low).TotalSeconds;
+			}
+		}
+
+		internal ulong ReciverData
+		{
+			get; private set;
+		}
+
+		internal double SentSpeed
+		{
+			get
+			{
+				if (SentSpeedData.Count <= 2)
+					return 0;
+
+				InternetData id;
+				SentSpeedData.Bottom(out id);
+
+				DateTime low = id.Time;
+				ulong sum = 0;
+
+				foreach (var it in SentSpeedData)
+					sum += it.Data;
+
+				return sum / 1024.0 / (DateTime.Now - low).TotalSeconds;
+			}
+		}
+
+		internal ulong SentData
+		{
+			get; private set;
+		}
+
+		void NetworkBandwitch(ulong Recivied, ulong Send)
+		{
+			if (StartR == 0 && StartS == 0)
+			{
+				StartR = Recivied;
+				StartS = Send;
+			} else
+			{
+				var x = Recivied - StartR;
+				var y = Send - StartS;
+				var d = DateTime.Now;
+
+				AppendBinary(new NetworkBandwidthEvent(x, y), d);
+
+				ReciverSpeedData.Add(new InternetData(d, x));
+				SentSpeedData.Add(new InternetData(d, y));
+
+				ReciverData += x;
+				SentData += y;
+
+				StartR = Recivied;
+				StartS = Send;
+			}
+		}
 	}
 }

@@ -107,5 +107,39 @@ namespace timetracker
 
 			return buff;
 		}
+
+		public static string FormatWith(this string fmt, object obj1)
+		{
+			return string.Format(fmt, obj1);
+		}
+
+		public static string FormatWith(this string fmt, object obj1, object obj2)
+		{
+			return string.Format(fmt, obj1, obj2);
+		}
+
+		public static string FormatWith(this string fmt, object obj1, object obj2, object obj3)
+		{
+			return string.Format(fmt, obj1, obj2, obj3);
+		}
+
+		public static string FormatWith(this string fmt, params object[] arr)
+		{
+			return string.Format(fmt, arr);
+		}
+
+		public static string ToMetric(this ulong data)
+		{
+			if (data > 1000000000000)
+				return "{0:F2}T".FormatWith(data / 1000000000000.0);
+			else if (data > 1000000000)
+				return "{0:F2}G".FormatWith(data / 1000000000.0);
+			else if (data > 1000000)
+				return "{0:F2}M".FormatWith(data / 1000000.0);
+			else if (data > 1000)
+				return "{0:F2}K".FormatWith(data / 1000.0);
+			else
+				return "{0}".FormatWith(data);
+		}
 	}
 }

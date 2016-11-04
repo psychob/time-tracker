@@ -505,18 +505,21 @@ namespace timetracker
 			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
 			internal delegate void ProcessorLoad(string Name, ulong Idle, ulong Kernel, ulong Work);
+			internal delegate void OnNetworkBandwidthType(ulong R, ulong T);
 
 			internal ProcesSpawnedType OnCreate;
 			internal ProcesEndedType OnDelete;
 			internal InternetChangeStateType OnInternetEvent;
 			internal OSChangeType OnOsEvent;
 			internal ProcessorLoad OnProcessorLoad;
+			internal OnNetworkBandwidthType OnNetworkBandwidth;
 
 			ManagementEventWatcher eventCreated;
 			ManagementEventWatcher eventDestroyed;
 			ManagementEventWatcher eventInternet;
 			ManagementEventWatcher eventOS;
 			ManagementEventWatcher eventProcessor;
+			ManagementEventWatcher eventNetwork;
 
 			internal KeyboardHook kHook = new KeyboardHook();
 			internal ForegroundHook fHook = new ForegroundHook();
@@ -536,8 +539,9 @@ namespace timetracker
 				const string CreateSql = @"SELECT * FROM __InstanceCreationEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
 				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
-				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
+				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
 				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_Processor'";
+				const string NetworkSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_PerfRawData_Tcpip_NetworkInterface'";
 
 				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
 				eventCreated.EventArrived += OnCreateProcessEvent;
@@ -554,6 +558,9 @@ namespace timetracker
 				eventProcessor = new ManagementEventWatcher(NameSpace, ProcesSql);
 				eventProcessor.EventArrived += ProcessorEvent;
 
+				eventNetwork = new ManagementEventWatcher(NameSpace, NetworkSql);
+				eventNetwork.EventArrived += networkEventArrived;
+
 				kHook.Init();
 				fHook.Init();
 				nHook.Init();
@@ -566,6 +573,17 @@ namespace timetracker
 				eventInternet.Start();
 				eventOS.Start();
 				eventProcessor.Start();
+				eventNetwork.Start();
+			}
+
+			private void networkEventArrived(object sender, EventArrivedEventArgs e)
+			{
+				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
+
+				ulong Recivied = (ulong)(UInt64)mbo.Properties["BytesReceivedPersec"].Value;
+				ulong Send = (ulong)(UInt64)mbo.Properties["BytesSentPersec"].Value;
+
+				OnNetworkBandwidth(Recivied, Send);
 			}
 
 			private void OnCreateProcessEvent(object sender, EventArrivedEventArgs e)
@@ -666,6 +684,7 @@ namespace timetracker
 				eventInternet.Stop();
 				eventOS.Stop();
 				eventProcessor.Stop();
+				eventNetwork.Stop();
 
 				kHook.DeInit();
 				fHook.DeInit();
@@ -677,6 +696,7 @@ namespace timetracker
 				eventInternet.Dispose();
 				eventOS.Dispose();
 				eventProcessor.Dispose();
+				eventNetwork.Dispose();
 
 				eventInternet = eventCreated = eventDestroyed = null;
 			}
@@ -693,7 +713,6 @@ namespace timetracker
 		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
 		List<Structs.App> definedApps = new List<Structs.App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
-		XmlWriter xmlTracker = null;
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
@@ -828,13 +847,7 @@ namespace timetracker
 			xws.IndentChars = "\t";
 
 			string baseName = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
-			string xmlFileName =  baseName + ".xml";
 			string bdFileName = baseName + ".bxml";
-
-			xmlTracker = XmlWriter.Create(Path.Combine(TrackedTimesCatalogue, xmlFileName), xws);
-			xmlTracker.WriteStartDocument(true);
-			xmlTracker.WriteStartElement("root");
-			xmlTracker.WriteAttributeString("start-date", DateTime.Now.ToSensibleFormat());
 
 			string CurrentVersion = "";
 			{
@@ -851,7 +864,6 @@ namespace timetracker
 
 				CurrentVersion = CurrentVersion.Trim('.');
 			}
-			xmlTracker.WriteAttributeString("version", CurrentVersion);
 
 			StreamBinary = File.Open(Path.Combine(TrackedTimesCatalogue, bdFileName),
 				FileMode.Create, FileAccess.Write, FileShare.Read);
@@ -864,10 +876,6 @@ namespace timetracker
 
 		private void SaveState()
 		{
-			xmlTracker.WriteEndElement();
-			xmlTracker.WriteEndDocument();
-			xmlTracker.Close();
-
 			StreamBinary.Close();
 
 			SaveDatabase();
@@ -887,6 +895,7 @@ namespace timetracker
 			tracker.OnInternetEvent = InternetEvent;
 			tracker.OnOsEvent = MemoryEvent;
 			tracker.OnProcessorLoad = ProcessorLoad;
+			tracker.OnNetworkBandwidth = NetworkBandwitch;
 
 			tracker.kHook.keyEvent = KeyEvent;
 			tracker.fHook.foregroundChanged = ForegroundEvent;
@@ -905,45 +914,6 @@ namespace timetracker
 		private void ResolutionChangeEvent(int width, int height)
 		{
 			AppendBinary(new ResolutionChange(width, height));
-		}
-
-		int LastAllMemoryRecorded = 0;
-
-		private void MemoryEvent(ulong free, ulong all, ulong vfree, ulong vall)
-		{
-			lock (inOutLock)
-			{
-				DateTime x = DateTime.Now;
-
-				// physicial
-				double ptotal = all;
-				double pfree = free;
-				string pround = (Math.Round(((ptotal - pfree) / ptotal * 100), 2)).ToString();
-
-				// virtual
-				double vtotal = vall;
-				double vfrre = vfree;
-				string vround = (Math.Round(((vtotal - vfrre) / vtotal * 100), 2)).ToString();
-
-				// all
-				double atotal = ptotal + vtotal;
-				double afree = pfree + vfree;
-				string round = (Math.Round(((atotal - afree) / atotal * 100), 2)).ToString();
-
-				int allMemCurrent = (int)Math.Round(((atotal - afree) / atotal * 100), 2);
-
-				if (LastAllMemoryRecorded == allMemCurrent)
-					return;
-
-				LastAllMemoryRecorded = allMemCurrent;
-
-				ulong pvtotal = all + vall;
-				ulong pvfree = free + vfree;
-
-				xmlTracker.Node_MemoryInfo(x, free, all, pround,
-					vfree, vall, vround,
-					pvfree, pvtotal, round);
-			}
 		}
 
 		private void InternetEvent(Guid g, string Name, Win32_NetworkAdapter.NetConnectionStatus state)

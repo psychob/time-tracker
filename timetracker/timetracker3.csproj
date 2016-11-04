@@ -95,6 +95,7 @@
     <Compile Include="TrackSystem_Events.cs" />
     <Compile Include="TrackSystem_Foreground.cs" />
     <Compile Include="TrackSystem_Keyboard.cs" />
+    <Compile Include="TrackSystem_Memory.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="TrackSystem_Processor.cs" />

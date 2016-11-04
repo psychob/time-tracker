@@ -118,7 +118,7 @@ namespace timetracker
 			}
 		}
 
-		public long MouseDistance
+		public ulong MouseDistance
 		{
 			get;
 			private set;
@@ -151,7 +151,7 @@ namespace timetracker
 
 				DateTime low = item.Time;
 				DateTime high = item.Time;
-				int distance = 0;
+				ulong distance = 0;
 
 				foreach (var it in MouseDistanceSpeedData)
 				{
@@ -181,15 +181,12 @@ namespace timetracker
 		{
 			get
 			{
-				DateTime min, max;
+				DateTime min, max = DateTime.Now;
 				TimeSpan span;
 				int count;
 				double time;
 
 				if (!MouseClickSpeedData.Bottom(out min))
-					return 0;
-
-				if (!MouseClickSpeedData.Top(out max))
 					return 0;
 
 				span = max - min;
@@ -199,9 +196,6 @@ namespace timetracker
 
 				count = MouseClickSpeedData.Count;
 				time = span.TotalMinutes;
-
-				Debug.WriteLine("{0} - {1}", span.TotalMinutes,
-					MouseClickSpeedData.Count);
 
 				return count / time;
 			}
@@ -252,11 +246,11 @@ namespace timetracker
 			LastMouseAction = dt;
 		}
 
-		private int Distance(int x1, int y1, int x2, int y2)
+		private ulong Distance(int x1, int y1, int x2, int y2)
 		{
 			int xx = x2 - x1;
 			int xy = y2 - y1;
-			return (int)Math.Sqrt(xx * xx + xy * xy);
+			return (ulong)Math.Sqrt(xx * xx + xy * xy);
 		}
 	}
 }

@@ -49,6 +49,9 @@ namespace timetracker
 		const byte MessageHeader_ResolutionChange = (byte)'D';
 		const byte MessageHeader_NetworkAdapter = (byte)'A';
 
+		const byte MessageHeader_Memory = (byte)'I';
+		const byte MessageHeader_NetworkBandwidth = (byte)'E';
+
 		FileStream StreamBinary;
 		Thread ThreadBinary;
 		BlockingCollection<Token> QueueBinary = new BlockingCollection<Token>(BinaryQueueSize);
@@ -102,14 +105,15 @@ namespace timetracker
 
 					Debug.WriteLine("Saved bytes: {0}", Bytes);
 
-					if (BinaryStop)
+					if (BinaryStop && QueueBinary.Count == 0)
 						break;
 				} else
 				{
 					Debug.WriteLine("Binary Queue: {0}", QueueBinary.Count);
 				}
 
-				Thread.Sleep(1000);
+				if (!BinaryStop)
+					Thread.Sleep(1000);
 			}
 		}
 

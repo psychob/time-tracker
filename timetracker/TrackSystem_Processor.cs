@@ -59,7 +59,6 @@ namespace timetracker
 
 		void ProcessorLoad(string Name, ulong I, ulong K, ulong W)
 		{
-			Debug.WriteLine("{0}: Idle: {1} Kernel: {2} Work: {3}", Name, I, K, W);
 			AppendBinary(new ProcessLoadToken(Name, W, K, I));
 		}
 	}

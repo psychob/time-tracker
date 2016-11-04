@@ -1,7 +1,14 @@
-3.14
+3.15
+	* Changed versioning from 3.0.x, to 3.x
+	* All the data is now saved in *.bxml file
+	* Window now displays: Mouse distance, Mouse speed, Key per minute,
+	  numer of keys, mouse clicks per minute, mouse click total,
+	  current download, current upload, total download, total upload
+	* Added tracking of Network Upload and Download
+
+3.0.14
 	* Moved internal WinAPI export to WinAPI-Wrapper project
 	* Main window now displays number of keystrokes
-	* Changed versioning from 3.0.x, to 3.x
 	* Keydata is now saved in separate thread
 
 3.0.13

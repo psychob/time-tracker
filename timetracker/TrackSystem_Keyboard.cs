@@ -52,7 +52,7 @@ namespace timetracker
 			private set;
 		}
 
-		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(128);
+		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(64);
 
 		internal double KeyboardSpeed
 		{
@@ -73,9 +73,6 @@ namespace timetracker
 
 				count = KeyboardSpeedData.Count;
 				time = span.TotalMinutes;
-
-				Debug.WriteLine("{0} - {1}", span.TotalMinutes,
-					KeyboardSpeedData.Count);
 
 				return count / time;
 			}

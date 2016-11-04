@@ -83,31 +83,29 @@ namespace timetracker
 				lvTrackedApps.Items.Add(liv);
 			}
 
-			long pixels = TrackSystem.TrackingSystemState.MouseDistance;
+			var PixelDistance = TrackSystem.TrackingSystemState.MouseDistance;
+			var MouseDistanceSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
+			var KeyboardStrokes = TrackSystem.TrackingSystemState.KeyboardStrokes;
+			var KeyboardSpeed = TrackSystem.TrackingSystemState.KeyboardSpeed;
+			var MouseClick = TrackSystem.TrackingSystemState.MouseClickCount;
+			var MouseClickSpeed = TrackSystem.TrackingSystemState.MouseClickSpeed;
+			var NetworkReciver = TrackSystem.TrackingSystemState.ReciverSpeed;
+			var NetworkSent = TrackSystem.TrackingSystemState.SentSpeed;
+			var TotalNetworkReciver = TrackSystem.TrackingSystemState.ReciverData;
+			var TotalNetworkSent = TrackSystem.TrackingSystemState.SentData;
 
-			if (pixels > 1000000000000)
-				tsslPixelDistance.Text = string.Format("{0:F2} Tpx", TrackSystem.TrackingSystemState.MouseDistance / 1000000000000.0);
-			else if (pixels > 1000000000)
-				tsslPixelDistance.Text = string.Format("{0:F2} Gpx", TrackSystem.TrackingSystemState.MouseDistance / 1000000000.0);
-			else if (pixels > 1000000)
-				tsslPixelDistance.Text = string.Format("{0:F2} Mpx", TrackSystem.TrackingSystemState.MouseDistance / 1000000.0);
-			else if (pixels > 1000)
-				tsslPixelDistance.Text = string.Format("{0:F2} Kpx", TrackSystem.TrackingSystemState.MouseDistance / 1000.0);
-			else
-				tsslPixelDistance.Text = string.Format("{0} px", TrackSystem.TrackingSystemState.MouseDistance);
+			tsslPixelDistance.Text = "{0} px".FormatWith(PixelDistance.ToMetric());
+			tsslPixelDistanceRaw.Text = "{0:F2} px/s".FormatWith(MouseDistanceSpeed);
+			tsslKeyStrokes.Text = "{0} keys".FormatWith(KeyboardStrokes);
+			tsslKeyPerSecond.Text = "{0:F2} key/m".FormatWith(KeyboardSpeed);
+			tsslMouseClickCount.Text = "{0} mclk".FormatWith(MouseClick);
+			tsslMouseClickSpeed.Text = "{0:F2} mclk/m".FormatWith(MouseClickSpeed);
 
-			double mouseSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
-			tsslPixelDistanceRaw.Text = string.Format("{0:F2} px/s", mouseSpeed);
+			tsslNetworkReciver.Text = "↓ {0:F2} KB/s".FormatWith(NetworkReciver);
+			tsslNetSent.Text = "↑ {0:F2} KB/s".FormatWith(NetworkSent);
 
-			tsslKeyStrokes.Text = TrackSystem.TrackingSystemState.KeyboardStrokes.ToString();
-
-			double kpm = TrackSystem.TrackingSystemState.KeyboardSpeed;
-			tsslKeyPerSecond.Text = string.Format("{0:F2}", kpm);
-
-			tsslMouseClickCount.Text = TrackSystem.TrackingSystemState.MouseClickCount.ToString();
-
-			double mpm = TrackSystem.TrackingSystemState.MouseClickSpeed;
-			tsslMouseClickSpeed.Text = string.Format("{0:F2}", mpm);
+			tsslNetRecivedTotal.Text = "↓ {0}B".FormatWith(TotalNetworkReciver.ToMetric());
+			tsslNetTotalSent.Text = "↑ {0}B".FormatWith(TotalNetworkSent.ToMetric());
 		}
 
 		private void NotifyIconDoubleClickEvent(object sender, EventArgs e)
