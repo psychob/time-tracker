@@ -66,6 +66,12 @@ namespace timetracker
 				if (!KeyboardSpeedData.Bottom(out min))
 					return 0;
 
+				// remove old data
+				KeyboardSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
+
+				if (KeyboardSpeedData.Count < 2)
+					return 0;
+
 				span = max - min;
 
 				if (span == TimeSpan.Zero)

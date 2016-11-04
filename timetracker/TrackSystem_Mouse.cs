@@ -152,6 +152,12 @@ namespace timetracker
 				DateTime low = item.Time;
 				DateTime high = DateTime.Now;
 
+				// remove old data
+				MouseDistanceSpeedData.RemoveIf(m => m.Time.AddMinutes(1) < high);
+
+				if (MouseDistanceSpeedData.Count < 2)
+					return 0;
+
 				ulong distance = 0;
 
 				foreach (var it in MouseDistanceSpeedData)
@@ -186,6 +192,12 @@ namespace timetracker
 				double time;
 
 				if (!MouseClickSpeedData.Bottom(out min))
+					return 0;
+
+				// remove old data
+				MouseClickSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
+
+				if (MouseClickSpeedData.Count < 2)
 					return 0;
 
 				span = max - min;

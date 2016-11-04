@@ -70,6 +70,25 @@ namespace timetracker
 			}
 		}
 
+		public int RemoveIf(Predicate<T> p)
+		{
+			int ret = 0;
+
+			for (var it = 0; it < Buffer.Count ; )
+			{
+				if (p(Buffer[it]))
+				{
+					Buffer.RemoveAt(it);
+					ret++;
+				} else
+				{
+					it++;
+				}
+			}
+
+			return ret;
+		}
+
 		public IEnumerator<T> GetEnumerator()
 		{
 			return ((IEnumerable<T>)Buffer).GetEnumerator();
