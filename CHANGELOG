@@ -1,3 +1,6 @@
+3.16
+	* Shortend buffer that holds data from mouse speed and mouse data
+	
 3.15.1
 	* Added color to statusbar
 	* Values are now updated every second

@@ -137,7 +137,7 @@ namespace timetracker
 			}
 		}
 
-		RingBuffer<MouseCoords> MouseDistanceSpeedData = new RingBuffer<MouseCoords>(128);
+		RingBuffer<MouseCoords> MouseDistanceSpeedData = new RingBuffer<MouseCoords>(64);
 
 		public double MouseDistanceSpeed
 		{
@@ -150,7 +150,8 @@ namespace timetracker
 				MouseDistanceSpeedData.Bottom(out item);
 
 				DateTime low = item.Time;
-				DateTime high = item.Time;
+				DateTime high = DateTime.Now;
+
 				ulong distance = 0;
 
 				foreach (var it in MouseDistanceSpeedData)
@@ -160,8 +161,6 @@ namespace timetracker
 					distance += Distance(item.X, item.Y, it.X, it.Y);
 					item = it;
 				}
-
-				high = DateTime.Now;
 
 				return distance / (high - low).TotalSeconds;
 			}
@@ -173,7 +172,7 @@ namespace timetracker
 			private set;
 		}
 
-		RingBuffer<DateTime> MouseClickSpeedData = new RingBuffer<DateTime>(128);
+		RingBuffer<DateTime> MouseClickSpeedData = new RingBuffer<DateTime>(64);
 		int LastX = 0;
 		int LastY = 0;
 
