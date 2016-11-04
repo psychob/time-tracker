@@ -53,6 +53,7 @@ namespace timetracker
 		}
 
 		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(64);
+		object KeyboardSpeedDataLocker = new object();
 
 		internal double KeyboardSpeed
 		{
@@ -67,7 +68,8 @@ namespace timetracker
 					return 0;
 
 				// remove old data
-				KeyboardSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
+				lock (KeyboardSpeedDataLocker)
+					KeyboardSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
 
 				if (KeyboardSpeedData.Count < 2)
 					return 0;
@@ -91,7 +93,9 @@ namespace timetracker
 			if (!up)
 			{
 				KeyboardStrokes++;
-				KeyboardSpeedData.Add(dt);
+
+				lock (KeyboardSpeedDataLocker)
+					KeyboardSpeedData.Add(dt);
 			}
 
 			AppendBinary(new KeyboardTokenPress(up, virtualKode, scanKode), dt);

@@ -138,6 +138,7 @@ namespace timetracker
 		}
 
 		RingBuffer<MouseCoords> MouseDistanceSpeedData = new RingBuffer<MouseCoords>(64);
+		object MouseDistanceSpeedLocker = new object();
 
 		public double MouseDistanceSpeed
 		{
@@ -153,7 +154,8 @@ namespace timetracker
 				DateTime high = DateTime.Now;
 
 				// remove old data
-				MouseDistanceSpeedData.RemoveIf(m => m.Time.AddMinutes(1) < high);
+				lock (MouseDistanceSpeedLocker)
+					MouseDistanceSpeedData.RemoveIf(m => m.Time.AddMinutes(1) < high);
 
 				if (MouseDistanceSpeedData.Count < 2)
 					return 0;
@@ -181,6 +183,7 @@ namespace timetracker
 		RingBuffer<DateTime> MouseClickSpeedData = new RingBuffer<DateTime>(64);
 		int LastX = 0;
 		int LastY = 0;
+		object MouseClickSpeedLocker = new object();
 
 		public double MouseClickSpeed
 		{
@@ -195,7 +198,8 @@ namespace timetracker
 					return 0;
 
 				// remove old data
-				MouseClickSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
+				lock (MouseClickSpeedLocker)
+					MouseClickSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
 
 				if (MouseClickSpeedData.Count < 2)
 					return 0;
@@ -222,7 +226,9 @@ namespace timetracker
 			if (!pressed)
 			{
 				MouseClickCount++;
-				MouseClickSpeedData.Add(dt);
+
+				lock (MouseClickSpeedLocker)
+					MouseClickSpeedData.Add(dt);
 			}
 
 			AppendBinary(new MouseClickEventType(x, y, btn, pressed), dt);
@@ -238,7 +244,9 @@ namespace timetracker
 				return;
 
 			MouseDistance += Distance(LastX, LastY, x, y);
-			MouseDistanceSpeedData.Add(new MouseCoords(x, y, dt));
+
+			lock (MouseDistanceSpeedLocker)
+				MouseDistanceSpeedData.Add(new MouseCoords(x, y, dt));
 
 			AppendBinary(new MouseMoveEventType(x, y), dt);
 
