@@ -41,6 +41,10 @@
 			this.tsslKeyStrokes = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslMouseClickSpeed = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslMouseClickCount = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslNetworkReciver = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslNetSent = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslNetRecivedTotal = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslNetTotalSent = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.definitionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,10 +63,6 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.tsslNetworkReciver = new System.Windows.Forms.ToolStripStatusLabel();
-			this.tsslNetSent = new System.Windows.Forms.ToolStripStatusLabel();
-			this.tsslNetRecivedTotal = new System.Windows.Forms.ToolStripStatusLabel();
-			this.tsslNetTotalSent = new System.Windows.Forms.ToolStripStatusLabel();
 			this.cmsNotify.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -151,6 +151,34 @@
 			this.tsslMouseClickCount.Name = "tsslMouseClickCount";
 			this.tsslMouseClickCount.Size = new System.Drawing.Size(70, 17);
 			this.tsslMouseClickCount.Text = "[MouseTotal]";
+			// 
+			// tsslNetworkReciver
+			// 
+			this.tsslNetworkReciver.ForeColor = System.Drawing.Color.DarkGreen;
+			this.tsslNetworkReciver.Name = "tsslNetworkReciver";
+			this.tsslNetworkReciver.Size = new System.Drawing.Size(50, 17);
+			this.tsslNetworkReciver.Text = "[NetRec]";
+			// 
+			// tsslNetSent
+			// 
+			this.tsslNetSent.ForeColor = System.Drawing.Color.Red;
+			this.tsslNetSent.Name = "tsslNetSent";
+			this.tsslNetSent.Size = new System.Drawing.Size(54, 17);
+			this.tsslNetSent.Text = "[NetSent]";
+			// 
+			// tsslNetRecivedTotal
+			// 
+			this.tsslNetRecivedTotal.ForeColor = System.Drawing.Color.DarkGreen;
+			this.tsslNetRecivedTotal.Name = "tsslNetRecivedTotal";
+			this.tsslNetRecivedTotal.Size = new System.Drawing.Size(74, 17);
+			this.tsslNetRecivedTotal.Text = "[NetTotalRec]";
+			// 
+			// tsslNetTotalSent
+			// 
+			this.tsslNetTotalSent.ForeColor = System.Drawing.Color.Red;
+			this.tsslNetTotalSent.Name = "tsslNetTotalSent";
+			this.tsslNetTotalSent.Size = new System.Drawing.Size(78, 17);
+			this.tsslNetTotalSent.Text = "[NetTotalSent]";
 			// 
 			// menuStrip1
 			// 
@@ -295,30 +323,6 @@
 			this.columnHeader5.DisplayIndex = 1;
 			this.columnHeader5.Text = "Started";
 			this.columnHeader5.Width = 46;
-			// 
-			// tsslNetworkReciver
-			// 
-			this.tsslNetworkReciver.Name = "tsslNetworkReciver";
-			this.tsslNetworkReciver.Size = new System.Drawing.Size(50, 17);
-			this.tsslNetworkReciver.Text = "[NetRec]";
-			// 
-			// tsslNetSent
-			// 
-			this.tsslNetSent.Name = "tsslNetSent";
-			this.tsslNetSent.Size = new System.Drawing.Size(54, 17);
-			this.tsslNetSent.Text = "[NetSent]";
-			// 
-			// tsslNetRecivedTotal
-			// 
-			this.tsslNetRecivedTotal.Name = "tsslNetRecivedTotal";
-			this.tsslNetRecivedTotal.Size = new System.Drawing.Size(74, 17);
-			this.tsslNetRecivedTotal.Text = "[NetTotalRec]";
-			// 
-			// tsslNetTotalSent
-			// 
-			this.tsslNetTotalSent.Name = "tsslNetTotalSent";
-			this.tsslNetTotalSent.Size = new System.Drawing.Size(78, 17);
-			this.tsslNetTotalSent.Text = "[NetTotalSent]";
 			// 
 			// MainWindow
 			// 

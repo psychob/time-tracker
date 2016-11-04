@@ -51,7 +51,7 @@ namespace timetracker
 			OwnNotifyIcon.ContextMenuStrip = cmsNotify;
 
 			FetchTimer = new Timer();
-			FetchTimer.Interval = 5 * 1000;
+			FetchTimer.Interval = 1000;
 			FetchTimer.Tick += OnFetchTickEvent;
 		}
 
@@ -60,28 +60,35 @@ namespace timetracker
 			OnFetchTick();
 		}
 
+		uint TickCount = 0;
+
 		private void OnFetchTick()
 		{
-			var tapps = TrackSystem.TrackingSystemState.GetRunningAps();
-
-			lvTrackedApps.Items.Clear();
-
-			foreach (var it in tapps)
+			if (TickCount % 5 == 0)
 			{
-				ListViewItem liv = new ListViewItem(it.PID.ToString());
+				var tapps = TrackSystem.TrackingSystemState.GetRunningAps();
 
-				if (it.App.AllowOnlyOne)
-					liv.BackColor = Color.PaleGreen;
+				lvTrackedApps.Items.Clear();
 
-				liv.SubItems.AddRange(new string[]{
+				foreach (var it in tapps)
+				{
+					ListViewItem liv = new ListViewItem(it.PID.ToString());
+
+					if (it.App.AllowOnlyOne)
+						liv.BackColor = Color.PaleGreen;
+
+					liv.SubItems.AddRange(new string[]{
 					it.App.Name,
 					TrackSystem.Utils.GetTime(GetTickCount64() - it.StartTime),
 					TrackSystem.Utils.GetTime(it.AllTime + (GetTickCount64() - it.StartTime)),
 					it.StartCount.ToString(),
 				});
 
-				lvTrackedApps.Items.Add(liv);
+					lvTrackedApps.Items.Add(liv);
+				}
 			}
+
+			TickCount++;
 
 			var PixelDistance = TrackSystem.TrackingSystemState.MouseDistance;
 			var MouseDistanceSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
@@ -95,17 +102,17 @@ namespace timetracker
 			var TotalNetworkSent = TrackSystem.TrackingSystemState.SentData;
 
 			tsslPixelDistance.Text = "{0} px".FormatWith(PixelDistance.ToMetric());
-			tsslPixelDistanceRaw.Text = "{0:F2} px/s".FormatWith(MouseDistanceSpeed);
-			tsslKeyStrokes.Text = "{0} keys".FormatWith(KeyboardStrokes);
-			tsslKeyPerSecond.Text = "{0:F2} key/m".FormatWith(KeyboardSpeed);
-			tsslMouseClickCount.Text = "{0} mclk".FormatWith(MouseClick);
-			tsslMouseClickSpeed.Text = "{0:F2} mclk/m".FormatWith(MouseClickSpeed);
+			tsslPixelDistanceRaw.Text = "{0} px/s".FormatWith(MouseDistanceSpeed.ToMetric());
+			tsslKeyStrokes.Text = "{0} keys".FormatWith(KeyboardStrokes.ToMetric());
+			tsslKeyPerSecond.Text = "{0} key/m".FormatWith(KeyboardSpeed.ToMetric());
+			tsslMouseClickCount.Text = "{0} mclk".FormatWith(MouseClick.ToMetric());
+			tsslMouseClickSpeed.Text = "{0} mclk/m".FormatWith(MouseClickSpeed.ToMetric());
 
-			tsslNetworkReciver.Text = "↓ {0:F2} KB/s".FormatWith(NetworkReciver);
-			tsslNetSent.Text = "↑ {0:F2} KB/s".FormatWith(NetworkSent);
+			tsslNetworkReciver.Text = "↓ {0}B/s".FormatWith(NetworkReciver.ToMetric(1024, "i"));
+			tsslNetSent.Text = "↑ {0}B/s".FormatWith(NetworkSent.ToMetric(1024, "i"));
 
-			tsslNetRecivedTotal.Text = "↓ {0}B".FormatWith(TotalNetworkReciver.ToMetric());
-			tsslNetTotalSent.Text = "↑ {0}B".FormatWith(TotalNetworkSent.ToMetric());
+			tsslNetRecivedTotal.Text = "↓ {0}B".FormatWith(TotalNetworkReciver.ToMetric(1024, "i"));
+			tsslNetTotalSent.Text = "↑ {0}B".FormatWith(TotalNetworkSent.ToMetric(1024, "i"));
 		}
 
 		private void NotifyIconDoubleClickEvent(object sender, EventArgs e)

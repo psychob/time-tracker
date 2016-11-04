@@ -167,7 +167,7 @@ namespace timetracker
 			}
 		}
 
-		public long MouseClickCount
+		public ulong MouseClickCount
 		{
 			get;
 			private set;

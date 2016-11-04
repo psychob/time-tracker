@@ -287,7 +287,7 @@ namespace timetracker
 				foreach (var it in ReciverSpeedData)
 					sum += it.Data;
 
-				return sum / 1024.0 / (DateTime.Now - low).TotalSeconds;
+				return sum / (DateTime.Now - low).TotalSeconds;
 			}
 		}
 
@@ -312,7 +312,7 @@ namespace timetracker
 				foreach (var it in SentSpeedData)
 					sum += it.Data;
 
-				return sum / 1024.0 / (DateTime.Now - low).TotalSeconds;
+				return sum / (DateTime.Now - low).TotalSeconds;
 			}
 		}
 

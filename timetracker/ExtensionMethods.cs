@@ -128,18 +128,32 @@ namespace timetracker
 			return string.Format(fmt, arr);
 		}
 
-		public static string ToMetric(this ulong data)
+		public static string ToMetric(this ulong data, ulong b = 1000, string app = "")
 		{
-			if (data > 1000000000000)
-				return "{0:F2}T".FormatWith(data / 1000000000000.0);
-			else if (data > 1000000000)
-				return "{0:F2}G".FormatWith(data / 1000000000.0);
-			else if (data > 1000000)
-				return "{0:F2}M".FormatWith(data / 1000000.0);
-			else if (data > 1000)
-				return "{0:F2}K".FormatWith(data / 1000.0);
+			if (data > b * b * b * b)
+				return "{0:F2}T{1}".FormatWith(data / (b * b * b * b * 1.0), app);
+			else if (data > b * b * b)
+				return "{0:F2}G{1}".FormatWith(data / (b * b * b * 1.0), app);
+			else if (data > b * b)
+				return "{0:F2}M{1}".FormatWith(data / (b * b * 1.0), app);
+			else if (data > b)
+				return "{0:F2}K{1}".FormatWith(data / (b * 1.0), app);
 			else
 				return "{0}".FormatWith(data);
+		}
+
+		public static string ToMetric(this double data, ulong b = 1000, string app = "")
+		{
+			if (data > b * b * b * b)
+				return "{0:F2}T{1}".FormatWith(data / (b * b * b * b), app);
+			else if (data > b * b * b)
+				return "{0:F2}G{1}".FormatWith(data / (b * b * b), app);
+			else if (data > b * b)
+				return "{0:F2}M{1}".FormatWith(data / (b * b), app);
+			else if (data > b)
+				return "{0:F2}K{1}".FormatWith(data / (b), app);
+			else
+				return "{0:F2}".FormatWith(data);
 		}
 	}
 }

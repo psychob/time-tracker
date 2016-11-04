@@ -46,7 +46,7 @@ namespace timetracker
 			}
 		}
 
-		internal long KeyboardStrokes
+		internal ulong KeyboardStrokes
 		{
 			get;
 			private set;

@@ -1,3 +1,7 @@
+3.15.1
+	* Added color to statusbar
+	* Values are now updated every second
+
 3.15
 	* Changed versioning from 3.0.x, to 3.x
 	* All the data is now saved in *.bxml file
