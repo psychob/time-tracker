@@ -162,12 +162,15 @@ namespace timetracker
 
 				ulong distance = 0;
 
-				foreach (var it in MouseDistanceSpeedData)
+				lock (MouseDistanceSpeedLocker)
 				{
-					low = new DateTime(Math.Min(low.Ticks, it.Time.Ticks));
+					foreach (var it in MouseDistanceSpeedData)
+					{
+						low = new DateTime(Math.Min(low.Ticks, it.Time.Ticks));
 
-					distance += Distance(item.X, item.Y, it.X, it.Y);
-					item = it;
+						distance += Distance(item.X, item.Y, it.X, it.Y);
+						item = it;
+					}
 				}
 
 				return distance / (high - low).TotalSeconds;
@@ -199,7 +202,7 @@ namespace timetracker
 
 				// remove old data
 				lock (MouseClickSpeedLocker)
-					MouseClickSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
+					MouseClickSpeedData.RemoveIf(m => m.AddMinutes(5) < max);
 
 				if (MouseClickSpeedData.Count < 2)
 					return 0;

@@ -268,10 +268,10 @@ namespace timetracker
 			}
 		}
 
-		RingBuffer<InternetData> ReciverSpeedData = new RingBuffer<InternetData>(16);
-		RingBuffer<InternetData> SentSpeedData = new RingBuffer<InternetData>(16);
+		RingBuffer<InternetData> ReciverSpeedData = new RingBuffer<InternetData>(4);
+		RingBuffer<InternetData> SentSpeedData = new RingBuffer<InternetData>(4);
 
-		internal double ReciverSpeed
+		internal ulong ReciverSpeed
 		{
 			get
 			{
@@ -287,7 +287,7 @@ namespace timetracker
 				foreach (var it in ReciverSpeedData)
 					sum += it.Data;
 
-				return sum / (DateTime.Now - low).TotalSeconds;
+				return (ulong)(sum / (DateTime.Now - low).TotalSeconds);
 			}
 		}
 
@@ -296,7 +296,7 @@ namespace timetracker
 			get; private set;
 		}
 
-		internal double SentSpeed
+		internal ulong SentSpeed
 		{
 			get
 			{
@@ -312,7 +312,7 @@ namespace timetracker
 				foreach (var it in SentSpeedData)
 					sum += it.Data;
 
-				return sum / (DateTime.Now - low).TotalSeconds;
+				return (ulong)(sum / (DateTime.Now - low).TotalSeconds);
 			}
 		}
 

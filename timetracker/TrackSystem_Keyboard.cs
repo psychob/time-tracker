@@ -52,7 +52,7 @@ namespace timetracker
 			private set;
 		}
 
-		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(64);
+		RingBuffer<DateTime> KeyboardSpeedData = new RingBuffer<DateTime>(256);
 		object KeyboardSpeedDataLocker = new object();
 
 		internal double KeyboardSpeed
@@ -64,14 +64,16 @@ namespace timetracker
 				int count;
 				double time;
 
-				if (!KeyboardSpeedData.Bottom(out min))
-					return 0;
-
 				// remove old data
 				lock (KeyboardSpeedDataLocker)
-					KeyboardSpeedData.RemoveIf(m => m.AddMinutes(1) < max);
+				{
+					KeyboardSpeedData.RemoveIf(m => m.AddMinutes(5) < max);
+				}
 
 				if (KeyboardSpeedData.Count < 2)
+					return 0;
+
+				if (!KeyboardSpeedData.Bottom(out min))
 					return 0;
 
 				span = max - min;

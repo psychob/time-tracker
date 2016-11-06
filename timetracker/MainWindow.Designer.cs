@@ -112,7 +112,7 @@
             this.tsslNetTotalSent});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 283);
 			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(640, 22);
+			this.statusStrip1.Size = new System.Drawing.Size(672, 22);
 			this.statusStrip1.TabIndex = 1;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -187,7 +187,7 @@
             this.exitApplicationToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(640, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(672, 24);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -290,7 +290,7 @@
 			this.lvTrackedApps.GridLines = true;
 			this.lvTrackedApps.Location = new System.Drawing.Point(12, 27);
 			this.lvTrackedApps.Name = "lvTrackedApps";
-			this.lvTrackedApps.Size = new System.Drawing.Size(616, 253);
+			this.lvTrackedApps.Size = new System.Drawing.Size(648, 253);
 			this.lvTrackedApps.TabIndex = 3;
 			this.lvTrackedApps.UseCompatibleStateImageBehavior = false;
 			this.lvTrackedApps.View = System.Windows.Forms.View.Details;
@@ -304,7 +304,7 @@
 			// 
 			this.columnHeader2.DisplayIndex = 2;
 			this.columnHeader2.Text = "Application Name";
-			this.columnHeader2.Width = 295;
+			this.columnHeader2.Width = 330;
 			// 
 			// columnHeader3
 			// 
@@ -316,7 +316,7 @@
 			// 
 			this.columnHeader4.DisplayIndex = 4;
 			this.columnHeader4.Text = "Application All Time";
-			this.columnHeader4.Width = 112;
+			this.columnHeader4.Width = 118;
 			// 
 			// columnHeader5
 			// 
@@ -328,7 +328,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(640, 305);
+			this.ClientSize = new System.Drawing.Size(672, 305);
 			this.Controls.Add(this.lvTrackedApps);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);
