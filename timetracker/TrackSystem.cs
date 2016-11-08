@@ -500,22 +500,16 @@ namespace timetracker
 
 		internal class Tracker : IDisposable
 		{
-			internal delegate void ProcesSpawnedType(int pid);
-			internal delegate void ProcesEndedType(int pid);
 			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
 			internal delegate void ProcessorLoad(string Name, ulong Idle, ulong Kernel, ulong Work);
 			internal delegate void OnNetworkBandwidthType(ulong R, ulong T);
 
-			internal ProcesSpawnedType OnCreate;
-			internal ProcesEndedType OnDelete;
 			internal InternetChangeStateType OnInternetEvent;
 			internal OSChangeType OnOsEvent;
 			internal ProcessorLoad OnProcessorLoad;
 			internal OnNetworkBandwidthType OnNetworkBandwidth;
 
-			ManagementEventWatcher eventCreated;
-			ManagementEventWatcher eventDestroyed;
 			ManagementEventWatcher eventInternet;
 			ManagementEventWatcher eventOS;
 			ManagementEventWatcher eventProcessor;
@@ -528,26 +522,16 @@ namespace timetracker
 
 			public void Start()
 			{
-				GrabAll();
-
 				InitializeTracking();
 			}
 
 			private void InitializeTracking()
 			{
 				const string NameSpace = @"\\.\root\CIMV2";
-				const string CreateSql = @"SELECT * FROM __InstanceCreationEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
-				const string DeleteSql = @"SELECT * FROM __InstanceDeletionEvent WITHIN 10 WHERE TargetInstance ISA 'Win32_Process'";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
 				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
 				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_Processor'";
 				const string NetworkSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_PerfRawData_Tcpip_NetworkInterface'";
-
-				eventCreated = new ManagementEventWatcher(NameSpace, CreateSql);
-				eventCreated.EventArrived += OnCreateProcessEvent;
-
-				eventDestroyed = new ManagementEventWatcher(NameSpace, DeleteSql);
-				eventDestroyed.EventArrived += OnDeleteProcessEvent;
 
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
@@ -568,8 +552,6 @@ namespace timetracker
 
 				PullAllInternet();
 
-				eventCreated.Start();
-				eventDestroyed.Start();
 				eventInternet.Start();
 				eventOS.Start();
 				eventProcessor.Start();
@@ -584,24 +566,6 @@ namespace timetracker
 				ulong Send = (ulong)(UInt64)mbo.Properties["BytesSentPersec"].Value;
 
 				OnNetworkBandwidth(Recivied, Send);
-			}
-
-			private void OnCreateProcessEvent(object sender, EventArrivedEventArgs e)
-			{
-				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
-
-				int pid = (int)(UInt32)mbo.Properties["ProcessId"].Value;
-
-				OnCreate(pid);
-			}
-
-			private void OnDeleteProcessEvent(object sender, EventArrivedEventArgs e)
-			{
-				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
-
-				int pid = (int)(UInt32)mbo.Properties["ProcessId"].Value;
-
-				OnDelete(pid);
 			}
 
 			private void OnModificationInternetEvent(object sender, EventArrivedEventArgs e)
@@ -638,26 +602,6 @@ namespace timetracker
 					(UInt64)mbo.Properties["PercentProcessorTime"].Value);
 			}
 
-			public void GrabAll()
-			{
-				const string NameSpace = @"root\CIMV2";
-				const string Query = @"SELECT * FROM Win32_Process";
-
-				using (ManagementObjectSearcher mos = new ManagementObjectSearcher(NameSpace, Query))
-				{
-					foreach (ManagementObject mo in mos.Get())
-					{
-						if (mo["ProcessId"] != null)
-						{
-							int id = (int)(UInt32)mo["ProcessId"];
-
-							if (id != 0)
-								OnCreate(id);
-						}
-					}
-				}
-			}
-
 			public void PullAllInternet()
 			{
 				const string NameSpace = @"root\CIMV2";
@@ -679,8 +623,6 @@ namespace timetracker
 
 			public void Finish()
 			{
-				eventCreated.Stop();
-				eventDestroyed.Stop();
 				eventInternet.Stop();
 				eventOS.Stop();
 				eventProcessor.Stop();
@@ -691,14 +633,10 @@ namespace timetracker
 				nHook.DeInit();
 				mHook.DeInit();
 
-				eventCreated.Dispose();
-				eventDestroyed.Dispose();
 				eventInternet.Dispose();
 				eventOS.Dispose();
 				eventProcessor.Dispose();
 				eventNetwork.Dispose();
-
-				eventInternet = eventCreated = eventDestroyed = null;
 			}
 
 			public void Dispose()
@@ -881,6 +819,9 @@ namespace timetracker
 			SaveDatabase();
 		}
 
+		ManagementEventWatcher ProcessBeginWatcher;
+		ManagementEventWatcher ProcessEndWatcher;
+
 		public void BeginTracking()
 		{
 			ThreadBinary = new Thread(ThreadBinaryLoop);
@@ -888,10 +829,13 @@ namespace timetracker
 			ThreadBinary.Priority = ThreadPriority.BelowNormal;
 			ThreadBinary.Start();
 
+			ProcessBeginWatcher = Win32_Process.Watch(5, BaseClass.WatchType.Creation, CreateProcess);
+			ProcessEndWatcher = Win32_Process.Watch(5, BaseClass.WatchType.Deletion, DestroyProcess);
+
+			GrabAll();
+
 			tracker = new Tracker();
 
-			tracker.OnCreate = NewProcessArrived;
-			tracker.OnDelete = ProcessDestoryed;
 			tracker.OnInternetEvent = InternetEvent;
 			tracker.OnOsEvent = MemoryEvent;
 			tracker.OnProcessorLoad = ProcessorLoad;
@@ -909,6 +853,16 @@ namespace timetracker
 			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);
 
 			tracker.Start();
+		}
+
+		private void CreateProcess(Win32_Process obj)
+		{
+			NewProcessArrived((int)obj.ProcessId);
+		}
+
+		private void DestroyProcess(Win32_Process obj)
+		{
+			ProcessDestoryed((int)obj.ProcessId);
 		}
 
 		private void ResolutionChangeEvent(int width, int height)
@@ -1209,6 +1163,12 @@ namespace timetracker
 			tracker.Dispose();
 			tracker = null;
 
+			ProcessBeginWatcher.Stop();
+			ProcessEndWatcher.Stop();
+
+			ProcessBeginWatcher.Dispose();
+			ProcessEndWatcher.Dispose();
+
 			BinaryStop = true;
 
 			ThreadBinary.Join();
@@ -1238,7 +1198,11 @@ namespace timetracker
 
 		internal void GrabAll()
 		{
-			tracker.GrabAll();
+			foreach (var it in Win32_Process.Fetch())
+			{
+				if (it.ProcessIdWasQueried)
+					NewProcessArrived((int)it.ProcessId.Value);
+			}
 		}
 
 		internal void SaveDatabase()
