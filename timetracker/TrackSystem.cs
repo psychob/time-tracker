@@ -810,10 +810,17 @@ namespace timetracker
 				byte[] HEADER = "BINARY DATA FIL1".GetBytes();
 				StreamBinary.Write(HEADER, 0, HEADER.Length);
 			}
+
+			AppendBinary(new VersionEventType(CurrentVersion));
 		}
 
 		private void SaveState()
 		{
+			BinaryStop = true;
+
+			ThreadBinary.Priority = ThreadPriority.AboveNormal;
+			ThreadBinary.Join();
+
 			StreamBinary.Close();
 
 			SaveDatabase();
@@ -1168,10 +1175,6 @@ namespace timetracker
 
 			ProcessBeginWatcher.Dispose();
 			ProcessEndWatcher.Dispose();
-
-			BinaryStop = true;
-
-			ThreadBinary.Join();
 		}
 
 		private void FinishProcess()

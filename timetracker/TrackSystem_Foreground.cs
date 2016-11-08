@@ -1,5 +1,6 @@
-﻿
-using System;
+﻿using System;
+
+using static timetracker.Messages.v3_15_5.Constants;
 
 namespace timetracker
 {

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static timetracker.Messages.v3_15_5.Constants;
+
 namespace timetracker
 {
 	public partial class TrackSystem
@@ -56,7 +58,7 @@ namespace timetracker
 
 			public EndEventType(int pid, string appTag)
 			{
-				Type = MessageHeader_Begin;
+				Type = MessageHeader_End;
 				PID = pid;
 				AppTag = appTag;
 			}
@@ -95,6 +97,32 @@ namespace timetracker
 				int Written = 0;
 
 				str[start + Written++] = Type;
+
+				return Written;
+			}
+		}
+
+		class VersionEventType : TokenValue
+		{
+			public byte Type;
+			public string Version;
+
+			public VersionEventType(string ver)
+			{
+				Type = MessageHeader_Version;
+				Version = ver;
+			}
+
+			public int AsByteStream(ref byte[] str, int start, int length)
+			{
+				int Written = 0;
+				byte[] buff;
+
+				str[start + Written++] = Type;
+
+				buff = Version.GetBytesEncoded();
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
 
 				return Written;
 			}

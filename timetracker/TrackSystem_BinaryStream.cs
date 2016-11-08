@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
+using static timetracker.Messages.v3_15_5.Constants;
+
 namespace timetracker
 {
 	public partial class TrackSystem
@@ -27,30 +29,6 @@ namespace timetracker
 		}
 
 		const int BinaryQueueSize = 1024 * 10;
-
-		const byte BinaryStartMessage = (byte)'[';
-		const byte BinaryStartInnerMessage = (byte)'{';
-		const byte BinaryEndInnerMessage = (byte)'}';
-		const byte BinaryEndMessage = (byte)']';
-
-		const byte MessageHeader_MouseClick = (byte)'C';
-		const byte MessageHeader_MouseMove = (byte)'M';
-		const byte MessageHeader_MouseWheel = (byte)'W';
-		const byte MessageHeader_KeyPressed = (byte)'P';
-		const byte MessageHeader_KeyUnpressed = (byte)'U';
-		const byte MessageHeader_ForegroundChange = (byte)'F';
-		const byte MessageHeader_Processor = (byte)'R';
-		const byte MessageHeader_Namechange = (byte)'N';
-
-		const byte MessageHeader_Begin = (byte)'B';
-		const byte MessageHeader_End = (byte)'E';
-		const byte MessageHeader_KeppAlive = (byte)'K';
-
-		const byte MessageHeader_ResolutionChange = (byte)'D';
-		const byte MessageHeader_NetworkAdapter = (byte)'A';
-
-		const byte MessageHeader_Memory = (byte)'I';
-		const byte MessageHeader_NetworkBandwidth = (byte)'E';
 
 		FileStream StreamBinary;
 		Thread ThreadBinary;
