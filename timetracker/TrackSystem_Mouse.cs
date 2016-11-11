@@ -139,7 +139,7 @@ namespace timetracker
 			}
 		}
 
-		RingBuffer<MouseCoords> MouseDistanceSpeedData = new RingBuffer<MouseCoords>(64);
+		RingBuffer<MouseCoords> MouseDistanceSpeedData = new RingBuffer<MouseCoords>(8);
 		object MouseDistanceSpeedLocker = new object();
 
 		public double MouseDistanceSpeed
@@ -157,7 +157,7 @@ namespace timetracker
 
 				// remove old data
 				lock (MouseDistanceSpeedLocker)
-					MouseDistanceSpeedData.RemoveIf(m => m.Time.AddMinutes(1) < high);
+					MouseDistanceSpeedData.RemoveIf(m => m.Time.AddSeconds(5) < high);
 
 				if (MouseDistanceSpeedData.Count < 2)
 					return 0;
