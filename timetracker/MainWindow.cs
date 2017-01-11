@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 using static WinAPI.WinUser;
 using static WinAPI.Kernel32;
+using System.Globalization;
 
 namespace timetracker
 {
@@ -21,6 +22,7 @@ namespace timetracker
 		NotifyIcon OwnNotifyIcon;
 		Timer FetchTimer;
 		string CurrentVersion;
+		DateTime StartTime = DateTime.Now;
 
 		public MainWindow()
 		{
@@ -100,6 +102,17 @@ namespace timetracker
 			var NetworkSent = TrackSystem.TrackingSystemState.SentSpeed;
 			var TotalNetworkReciver = TrackSystem.TrackingSystemState.ReciverData;
 			var TotalNetworkSent = TrackSystem.TrackingSystemState.SentData;
+
+			var time = (DateTime.Now - StartTime);
+
+			if (time.Days > 0)
+				tsslTime.Text = time.ToString(@"d\d\:h\h\:m\m\:s\s", CultureInfo.InvariantCulture);
+			else if (time.Hours > 0)
+				tsslTime.Text = time.ToString(@"h\h\:m\m\:s\s", CultureInfo.InvariantCulture);
+			else if (time.Minutes > 0)
+				tsslTime.Text = time.ToString(@"m\m\:s\s", CultureInfo.InvariantCulture);
+			else
+				tsslTime.Text = time.ToString(@"s\s", CultureInfo.InvariantCulture);
 
 			tsslPixelDistance.Text = "{0} px".FormatWith(PixelDistance.ToMetric());
 			tsslPixelDistanceRaw.Text = "{0} px/s".FormatWith(MouseDistanceSpeed.ToMetric());

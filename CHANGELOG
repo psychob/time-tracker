@@ -1,5 +1,10 @@
 next:
 
+3.15.7:
+	* Added tags for AddDefinition and RemoveDefinition
+	* Added how many time elapsed from program start to main window
+	* Fixed wrongly reported network banwidth when
+
 3.15.6:
 	* Ajusted mouse speed display time
 

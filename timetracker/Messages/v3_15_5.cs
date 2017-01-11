@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace timetracker.Messages.v3_15_5
 {
-	internal static class Constants
+	static class Constants
 	{
 		internal const byte BinaryStartMessage = (byte)'[';
 		internal const byte BinaryStartInnerMessage = (byte)'{';
@@ -27,6 +27,7 @@ namespace timetracker.Messages.v3_15_5
 		internal const byte MessageHeader_End = (byte)'E';
 		internal const byte MessageHeader_KeppAlive = (byte)'K';
 
+		// adding new definition and removing definition also emitted D tag
 		internal const byte MessageHeader_ResolutionChange = (byte)'D';
 		internal const byte MessageHeader_NetworkAdapter = (byte)'A';
 

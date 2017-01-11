@@ -63,6 +63,7 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.tsslTime = new System.Windows.Forms.ToolStripStatusLabel();
 			this.cmsNotify.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -100,6 +101,7 @@
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsslTime,
             this.tsslPixelDistance,
             this.tsslPixelDistanceRaw,
             this.tsslKeyPerSecond,
@@ -112,7 +114,7 @@
             this.tsslNetTotalSent});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 283);
 			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(672, 22);
+			this.statusStrip1.Size = new System.Drawing.Size(726, 22);
 			this.statusStrip1.TabIndex = 1;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -187,7 +189,7 @@
             this.exitApplicationToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(672, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(726, 24);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -290,7 +292,7 @@
 			this.lvTrackedApps.GridLines = true;
 			this.lvTrackedApps.Location = new System.Drawing.Point(12, 27);
 			this.lvTrackedApps.Name = "lvTrackedApps";
-			this.lvTrackedApps.Size = new System.Drawing.Size(648, 253);
+			this.lvTrackedApps.Size = new System.Drawing.Size(702, 253);
 			this.lvTrackedApps.TabIndex = 3;
 			this.lvTrackedApps.UseCompatibleStateImageBehavior = false;
 			this.lvTrackedApps.View = System.Windows.Forms.View.Details;
@@ -298,19 +300,19 @@
 			// columnHeader1
 			// 
 			this.columnHeader1.Text = "PID";
-			this.columnHeader1.Width = 37;
+			this.columnHeader1.Width = 41;
 			// 
 			// columnHeader2
 			// 
 			this.columnHeader2.DisplayIndex = 2;
 			this.columnHeader2.Text = "Application Name";
-			this.columnHeader2.Width = 330;
+			this.columnHeader2.Width = 350;
 			// 
 			// columnHeader3
 			// 
 			this.columnHeader3.DisplayIndex = 3;
 			this.columnHeader3.Text = "Application Time";
-			this.columnHeader3.Width = 97;
+			this.columnHeader3.Width = 113;
 			// 
 			// columnHeader4
 			// 
@@ -322,13 +324,19 @@
 			// 
 			this.columnHeader5.DisplayIndex = 1;
 			this.columnHeader5.Text = "Started";
-			this.columnHeader5.Width = 46;
+			this.columnHeader5.Width = 51;
+			// 
+			// tsslTime
+			// 
+			this.tsslTime.Name = "tsslTime";
+			this.tsslTime.Size = new System.Drawing.Size(53, 17);
+			this.tsslTime.Text = "[tsslTime]";
 			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(672, 305);
+			this.ClientSize = new System.Drawing.Size(726, 305);
 			this.Controls.Add(this.lvTrackedApps);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);
@@ -383,5 +391,6 @@
 		private System.Windows.Forms.ToolStripStatusLabel tsslNetSent;
 		private System.Windows.Forms.ToolStripStatusLabel tsslNetRecivedTotal;
 		private System.Windows.Forms.ToolStripStatusLabel tsslNetTotalSent;
+		private System.Windows.Forms.ToolStripStatusLabel tsslTime;
 	}
 }

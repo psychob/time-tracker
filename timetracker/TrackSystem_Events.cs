@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static timetracker.Messages.v3_15_5.Constants;
+using static timetracker.Messages.v3_15_7.Constants;
 
 namespace timetracker
 {
@@ -167,7 +167,7 @@ namespace timetracker
 
 			public AddNewDefinitionType(string appTag, string name)
 			{
-				Type = MessageHeader_ResolutionChange;
+				Type = MessageHeader_AddDefinition;
 
 				AppTag = appTag;
 				Name = name;
@@ -199,7 +199,7 @@ namespace timetracker
 
 			public RemoveDefinition(string appTag)
 			{
-				Type = MessageHeader_ResolutionChange;
+				Type = MessageHeader_RemoveDefinition;
 
 				AppTag = appTag;
 			}
@@ -351,7 +351,16 @@ namespace timetracker
 
 		void NetworkBandwitch(ulong Recivied, ulong Send)
 		{
-			if (StartR == 0 && StartS == 0)
+			var d = DateTime.Now;
+
+			if (Recivied == 0 && Send == 0)
+			{
+				StartR = 0;
+				StartS = 0;
+
+				ReciverSpeedData.Add(new InternetData(d, 0));
+				SentSpeedData.Add(new InternetData(d, 0));
+			} else if (StartR == 0 && StartS == 0)
 			{
 				StartR = Recivied;
 				StartS = Send;
@@ -359,7 +368,6 @@ namespace timetracker
 			{
 				var x = Recivied - StartR;
 				var y = Send - StartS;
-				var d = DateTime.Now;
 
 				AppendBinary(new NetworkBandwidthEvent(x, y), d);
 

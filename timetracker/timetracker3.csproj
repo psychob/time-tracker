@@ -85,6 +85,7 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Messages\v3_15_7.cs" />
     <Compile Include="Messages\v3_15_4.cs" />
     <Compile Include="Messages\v3_15_5.cs" />
     <Compile Include="MouseHook.cs" />
