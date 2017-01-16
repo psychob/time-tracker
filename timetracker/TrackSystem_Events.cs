@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static timetracker.Messages.v3_15_7.Constants;
+using static timetracker.Messages.v3_16.Constants;
 
 namespace timetracker
 {
@@ -14,16 +14,17 @@ namespace timetracker
 		class BeginEventType : TokenValue
 		{
 			public byte Type;
-			public int PID;
+			public int PID, ParentId;
 			public string AppTag;
 			public string RuleSet;
 
-			public BeginEventType(int pid, string appTag, string ruleSet)
+			public BeginEventType(int pid, string appTag, string ruleSet, int parentId)
 			{
 				Type = MessageHeader_Begin;
 				PID = pid;
 				AppTag = appTag;
 				RuleSet = ruleSet;
+				ParentId = parentId;
 			}
 
 			public int AsByteStream(ref byte[] str, int start, int length)
@@ -43,6 +44,10 @@ namespace timetracker
 				Written += buff.Length;
 
 				buff = RuleSet.GetBytesEncoded();
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
+				buff = BitConverter.GetBytes(ParentId);
 				buff.CopyTo(str, start + Written);
 				Written += buff.Length;
 

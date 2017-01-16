@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-using static timetracker.Messages.v3_15_7.Constants;
+using static timetracker.Messages.v3_16.Constants;
 
 namespace timetracker
 {
@@ -34,6 +34,7 @@ namespace timetracker
 		Thread ThreadBinary;
 		BlockingCollection<Token> QueueBinary = new BlockingCollection<Token>(BinaryQueueSize);
 		bool BinaryStop = false;
+		bool Flush = false;
 
 		byte[] BinaryBuffer = new byte[1024 * 1024];
 
@@ -41,7 +42,7 @@ namespace timetracker
 		{
 			while (true)
 			{
-				if (BinaryStop || QueueBinary.Count >= 1024)
+				if (BinaryStop || Flush || QueueBinary.Count >= 1024)
 				{
 					Debug.WriteLine("Binary Queue: {0}", QueueBinary.Count);
 
@@ -83,6 +84,8 @@ namespace timetracker
 
 					Debug.WriteLine("Saved bytes: {0}", Bytes);
 
+					Flush = false;
+
 					if (BinaryStop && QueueBinary.Count == 0)
 						break;
 				} else
@@ -95,7 +98,7 @@ namespace timetracker
 			}
 		}
 
-		void AppendBinary(TokenValue value, DateTime? dt = null)
+		void AppendBinary(TokenValue value, DateTime? dt = null, bool ForceFlush = false)
 		{
 			if (value == null)
 				throw new NullReferenceException();
@@ -108,6 +111,9 @@ namespace timetracker
 				tokenTime = DateTime.Now;
 
 			QueueBinary.Add(new Token(tokenTime, value));
+
+			if (ForceFlush)
+				Flush = true;
 		}
 	}
 }

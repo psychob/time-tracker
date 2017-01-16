@@ -1,5 +1,9 @@
 next:
 
+3.16:
+	* Added new field in Begin message: ParentID
+	* BinaryQueue now saves to disk if Begin or End message appear
+
 3.15.7:
 	* Added tags for AddDefinition and RemoveDefinition
 	* Added how many time elapsed from program start to main window

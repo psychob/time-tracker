@@ -226,6 +226,7 @@ namespace timetracker
 				public int PID;
 				public ulong StartTime;
 				public int Count;
+				public int ParentID;
 			}
 		}
 
@@ -756,7 +757,7 @@ namespace timetracker
 				waitedApps.Clear();
 
 				foreach (var it in copy)
-					NewProcessArrived(it.PID, it.Count, it.StartTime);
+					NewProcessArrived(it.PID, it.Count, it.StartTime, it.ParentID);
 
 				waited_timer_running = false;
 			}
@@ -864,7 +865,12 @@ namespace timetracker
 
 		private void CreateProcess(Win32_Process obj)
 		{
-			NewProcessArrived((int)obj.ProcessId);
+			int parentId = 0;
+
+			if (obj.ParentProcessId.HasValue)
+				parentId = (int)obj.ParentProcessId.Value;
+
+			NewProcessArrived((int)obj.ProcessId, parentId);
 		}
 
 		private void DestroyProcess(Win32_Process obj)
@@ -882,12 +888,13 @@ namespace timetracker
 			AppendBinary(new NetworkAdapterDefinition(Name, g));
 		}
 
-		private void NewProcessArrived(int pid)
+		private void NewProcessArrived(int pid, int ParentID)
 		{
-			NewProcessArrived(pid, 0, GetTickCount64());
+			NewProcessArrived(pid, 0, GetTickCount64(), ParentID);
 		}
 
-		private void NewProcessArrived(int pid, int retire, ulong processTime)
+		private void NewProcessArrived(int pid, int retire, ulong processTime,
+			int ParentID)
 		{
 			if (pid == 0 || pid == 4)
 				return;
@@ -905,7 +912,7 @@ namespace timetracker
 				switch (pd.Reason)
 				{
 					case Structs.ExeDataContainerReason.IncompleteInformation:
-						AddToWaitQueue(pid, processTime, retire);
+						AddToWaitQueue(pid, processTime, retire, ParentID);
 						return;
 
 					case Structs.ExeDataContainerReason.ExceptionOccured:
@@ -915,7 +922,7 @@ namespace timetracker
 				var ipd = pd.Value;
 
 				ScanForApplication(ipd.PID, ipd.Name, ipd.Path, ipd.FileVersion,
-					processTime);
+					processTime, ParentID);
 			}
 		}
 
@@ -944,7 +951,7 @@ namespace timetracker
 			}
 		}
 
-		private void AddToWaitQueue(int pid, ulong processTime, int count)
+		private void AddToWaitQueue(int pid, ulong processTime, int count, int ParentID)
 		{
 			if (count > 5)
 				return;
@@ -956,13 +963,14 @@ namespace timetracker
 				ws.Count = count;
 				ws.PID = pid;
 				ws.StartTime = processTime;
+				ws.ParentID = ParentID;
 
 				waitedApps.Add(ws);
 			}
 		}
 
 		private void ScanForApplication(int PID, string name, string path,
-			FileVersionInfo fileVersion, ulong processTime)
+			FileVersionInfo fileVersion, ulong processTime, int ParentID)
 		{
 			lock (inOutLock)
 			{
@@ -1022,7 +1030,8 @@ namespace timetracker
 				qualified = qualified.OrderByDescending(x => x.Priority).ToList();
 				Structs.App chosen_app = GetAppByRule(qualified[0]);
 
-				StartApp(PID, chosen_app, processTime, chosen_app.Time, qualified[0]);
+				StartApp(PID, chosen_app, processTime, chosen_app.Time,
+					qualified[0], ParentID);
 			}
 		}
 
@@ -1097,7 +1106,8 @@ namespace timetracker
 		}
 
 		private void StartApp(int PID, Structs.App chosen_app,
-			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected)
+			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected,
+			int ParentID)
 		{
 			DateTime x = DateTime.Now;
 
@@ -1118,17 +1128,17 @@ namespace timetracker
 			currentApps.Add(ca);
 
 			AppendBinary(new BeginEventType(PID, ruleselected.UniqueID,
-				ruleselected.RuleSetID), x);
+				ruleselected.RuleSetID, ParentID), x);
 
 			// rejestrujemy nazwe głównego okna
 			try
 			{
 				Process p = Process.GetProcessById(PID);
 
-				AppendBinary(new NamechangeToken((uint)PID, p.MainWindowTitle), x);
+				AppendBinary(new NamechangeToken((uint)PID, p.MainWindowTitle), x, true);
 			} catch (Exception)
 			{
-				AppendBinary(new NamechangeToken((uint)PID, ""), x);
+				AppendBinary(new NamechangeToken((uint)PID, ""), x, true);
 			}
 		}
 
@@ -1162,7 +1172,7 @@ namespace timetracker
 			definedApps[idx] = c;
 
 			// sprawdzamy czy nie dodajemy promocji
-			AppendBinary(new EndEventType(pid, current.RuleTriggered.UniqueID));
+			AppendBinary(new EndEventType(pid, current.RuleTriggered.UniqueID), x, true);
 		}
 
 		public void FinishTracking()
@@ -1203,8 +1213,13 @@ namespace timetracker
 		{
 			foreach (var it in Win32_Process.Fetch())
 			{
+				int parentId = 0;
+
+				if (it.ParentProcessId.HasValue)
+					parentId = (int)it.ParentProcessId.Value;
+
 				if (it.ProcessIdWasQueried)
-					NewProcessArrived((int)it.ProcessId.Value);
+					NewProcessArrived((int)it.ProcessId.Value, parentId);
 			}
 		}
 

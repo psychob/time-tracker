@@ -88,6 +88,7 @@
     <Compile Include="Messages\v3_15_7.cs" />
     <Compile Include="Messages\v3_15_4.cs" />
     <Compile Include="Messages\v3_15_5.cs" />
+    <Compile Include="Messages\v3_16.cs" />
     <Compile Include="MouseHook.cs" />
     <Compile Include="NameChangeHook.cs" />
     <Compile Include="Program.cs" />

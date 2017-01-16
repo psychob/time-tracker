@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace timetracker.Messages.v3_15_5
+﻿namespace timetracker.Messages.v3_15_5
 {
 	static class Constants
 	{

@@ -1,6 +1,6 @@
-﻿namespace timetracker.Messages.v3_15_4
+﻿namespace timetracker.Messages.v3_16
 {
-	static class Constants
+	internal static class Constants
 	{
 		internal const byte BinaryStartMessage = (byte)'[';
 		internal const byte BinaryStartInnerMessage = (byte)'{';
@@ -16,9 +16,9 @@
 		internal const byte MessageHeader_Processor = (byte)'R';
 		internal const byte MessageHeader_Namechange = (byte)'N';
 
+		// extended Begin to add ParentID
 		internal const byte MessageHeader_Begin = (byte)'B';
 
-		// It was wrongly reported by class as B
 		internal const byte MessageHeader_End = (byte)'E';
 		internal const byte MessageHeader_KeppAlive = (byte)'K';
 
@@ -26,8 +26,11 @@
 		internal const byte MessageHeader_NetworkAdapter = (byte)'A';
 
 		internal const byte MessageHeader_Memory = (byte)'I';
+		internal const byte MessageHeader_NetworkBandwidth = (byte)'T';
 
-		// should not be reported as E
-		internal const byte MessageHeader_NetworkBandwidth = (byte)'E';
+		internal const byte MessageHeader_Version = (byte)'V';
+
+		internal const byte MessageHeader_AddDefinition = (byte)'a';
+		internal const byte MessageHeader_RemoveDefinition = (byte)'d';
 	}
 }
