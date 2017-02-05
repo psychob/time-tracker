@@ -504,7 +504,7 @@ namespace timetracker
 			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
 			internal delegate void ProcessorLoad(string Name, ulong Idle, ulong Kernel, ulong Work);
-			internal delegate void OnNetworkBandwidthType(ulong R, ulong T);
+			internal delegate void OnNetworkBandwidthType(string N, ulong R, ulong T);
 
 			internal InternetChangeStateType OnInternetEvent;
 			internal OSChangeType OnOsEvent;
@@ -565,8 +565,9 @@ namespace timetracker
 
 				ulong Recivied = (ulong)(UInt64)mbo.Properties["BytesReceivedPersec"].Value;
 				ulong Send = (ulong)(UInt64)mbo.Properties["BytesSentPersec"].Value;
+				string Name = (string)mbo.Properties["Name"].Value;
 
-				OnNetworkBandwidth(Recivied, Send);
+				OnNetworkBandwidth(Name, Recivied, Send);
 			}
 
 			private void OnModificationInternetEvent(object sender, EventArrivedEventArgs e)

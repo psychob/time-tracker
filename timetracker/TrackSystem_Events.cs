@@ -260,13 +260,15 @@ namespace timetracker
 		{
 			public byte Type;
 			public ulong Recivied, Send;
+			public string Name;
 
-			public NetworkBandwidthEvent(ulong r, ulong s)
+			public NetworkBandwidthEvent(string n, ulong r, ulong s)
 			{
 				Type = MessageHeader_NetworkBandwidth;
 
 				Recivied = r;
 				Send = s;
+				Name = n;
 			}
 
 			public int AsByteStream(ref byte[] str, int start, int length)
@@ -284,11 +286,14 @@ namespace timetracker
 				buff.CopyTo(str, start + Written);
 				Written += buff.Length;
 
+				buff = Name.GetBytesEncoded();
+				buff.CopyTo(str, start + Written);
+				Written += buff.Length;
+
 				return Written;
 			}
 		}
 
-		ulong StartR = 0, StartS = 0;
 		struct InternetData
 		{
 			public DateTime Time;
@@ -354,27 +359,47 @@ namespace timetracker
 			get; private set;
 		}
 
-		void NetworkBandwitch(ulong Recivied, ulong Send)
+		struct SendedData
 		{
+			public ulong Recived;
+			public ulong Send;
+		}
+
+		Dictionary<string, SendedData> sdata = new Dictionary<string, SendedData>();
+
+		void NetworkBandwitch(string Name, ulong Recivied, ulong Send)
+		{
+			SendedData sdv = new SendedData();
+
+			if (!sdata.TryGetValue(Name, out sdv))
+			{
+				sdv.Recived = Recivied;
+				sdv.Send = Send;
+
+				sdata.Add(Name, sdv);
+			}
+
 			var d = DateTime.Now;
+
+			sdv = sdata[Name];
 
 			if (Recivied == 0 && Send == 0)
 			{
-				StartR = 0;
-				StartS = 0;
+				sdv.Recived = 0;
+				sdv.Send = 0;
 
 				ReciverSpeedData.Add(new InternetData(d, 0));
 				SentSpeedData.Add(new InternetData(d, 0));
-			} else if (StartR == 0 && StartS == 0)
+			} else if (sdv.Recived == 0 && sdv.Send == 0)
 			{
-				StartR = Recivied;
-				StartS = Send;
+				sdv.Recived = Recivied;
+				sdv.Send = Send;
 			} else
 			{
-				var x = Recivied - StartR;
-				var y = Send - StartS;
+				var x = Recivied - sdv.Recived;
+				var y = Send - sdv.Send;
 
-				AppendBinary(new NetworkBandwidthEvent(x, y), d);
+				AppendBinary(new NetworkBandwidthEvent(Name, x, y), d);
 
 				ReciverSpeedData.Add(new InternetData(d, x));
 				SentSpeedData.Add(new InternetData(d, y));
@@ -382,9 +407,11 @@ namespace timetracker
 				ReciverData += x;
 				SentData += y;
 
-				StartR = Recivied;
-				StartS = Send;
+				sdv.Recived = Recivied;
+				sdv.Send = Send;
 			}
+
+			sdata[Name] = sdv;
 		}
 	}
 }
