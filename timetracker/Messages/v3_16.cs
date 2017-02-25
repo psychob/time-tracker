@@ -32,5 +32,7 @@
 
 		internal const byte MessageHeader_AddDefinition = (byte)'a';
 		internal const byte MessageHeader_RemoveDefinition = (byte)'d';
+
+		internal const byte MessageHeader_PCName = (byte)'$';
 	}
 }

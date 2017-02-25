@@ -1,5 +1,8 @@
 next:
 
+3.16.2:
+	* Added message: PCInfo: $ with fields: Machine Name, User Name and Os Version
+
 3.16:
 	* Added new field in Begin message: ParentID
 	* BinaryQueue now saves to disk if Begin or End message appear

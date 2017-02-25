@@ -814,6 +814,7 @@ namespace timetracker
 			}
 
 			AppendBinary(new VersionEventType(CurrentVersion));
+			AppendBinary(new PCInfoEventType());
 		}
 
 		private void SaveState()
