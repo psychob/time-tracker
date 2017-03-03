@@ -223,10 +223,15 @@ namespace timetracker
 
 			internal struct WaitStruct
 			{
-				public int PID;
-				public ulong StartTime;
-				public int Count;
-				public int ParentID;
+				public int PID { get; set; }
+
+				public ulong StartTime { get; set; }
+
+				public int Count { get; set; }
+
+				public int ParentID { get; set; }
+
+				public string Path { get; set; }
 			}
 		}
 
@@ -737,7 +742,7 @@ namespace timetracker
 
 		private bool PidNotRunning(int PID)
 		{
-			return GetProcessData(PID).Reason != Structs.ExeDataContainerReason.Valid;
+			return GetProcessData(PID, null).Reason != Structs.ExeDataContainerReason.Valid;
 		}
 
 		private void OnWaitTick(object sender, EventArgs e)
@@ -758,7 +763,7 @@ namespace timetracker
 				waitedApps.Clear();
 
 				foreach (var it in copy)
-					NewProcessArrived(it.PID, it.Count, it.StartTime, it.ParentID);
+					NewProcessArrived(it.PID, it.Count, it.StartTime, it.ParentID, it.Path);
 
 				waited_timer_running = false;
 			}
@@ -872,7 +877,7 @@ namespace timetracker
 			if (obj.ParentProcessId.HasValue)
 				parentId = (int)obj.ParentProcessId.Value;
 
-			NewProcessArrived((int)obj.ProcessId, parentId);
+			NewProcessArrived((int)obj.ProcessId, parentId, obj.ExecutablePath);
 		}
 
 		private void DestroyProcess(Win32_Process obj)
@@ -890,16 +895,19 @@ namespace timetracker
 			AppendBinary(new NetworkAdapterDefinition(Name, g));
 		}
 
-		private void NewProcessArrived(int pid, int ParentID)
+		private void NewProcessArrived(int pid, int ParentID, string Path)
 		{
-			NewProcessArrived(pid, 0, GetTickCount64(), ParentID);
+			NewProcessArrived(pid, 0, GetTickCount64(), ParentID, Path);
 		}
 
 		private void NewProcessArrived(int pid, int retire, ulong processTime,
-			int ParentID)
+			int ParentID, string Path)
 		{
 			if (pid == 0 || pid == 4)
 				return;
+
+			if (Path == null)
+				Path = string.Empty;
 
 			lock (inOutLock)
 			{
@@ -908,13 +916,13 @@ namespace timetracker
 					return;
 
 				// pobieramy dane o procesie
-				var pd = GetProcessData(pid);
+				var pd = GetProcessData(pid, Path);
 
 				// nie udało się pobrać danych?
 				switch (pd.Reason)
 				{
 					case Structs.ExeDataContainerReason.IncompleteInformation:
-						AddToWaitQueue(pid, processTime, retire, ParentID);
+						AddToWaitQueue(pid, processTime, retire, ParentID, Path);
 						return;
 
 					case Structs.ExeDataContainerReason.ExceptionOccured:
@@ -923,12 +931,12 @@ namespace timetracker
 
 				var ipd = pd.Value;
 
-				ScanForApplication(ipd.PID, ipd.Name, ipd.Path, ipd.FileVersion,
+				ScanForApplication(ipd.PID, ipd.Name, Path, ipd.FileVersion,
 					processTime, ParentID);
 			}
 		}
 
-		private Structs.ExeDataContainer GetProcessData(int pid)
+		private Structs.ExeDataContainer GetProcessData(int pid, string path)
 		{
 			try
 			{
@@ -937,23 +945,36 @@ namespace timetracker
 				var pinfo = Process.GetProcessById(pid);
 
 				ed.PID = pid;
-				ed.Path = pinfo.MainModule.FileName;
-				ed.Name = Path.GetFileName(ed.Path);
-				ed.FileVersion = FileVersionInfo.GetVersionInfo(ed.Path);
+
+				if (path != null)
+				{
+					ed.Path = path;
+					ed.Name = Path.GetFileName(path);
+					ed.FileVersion = FileVersionInfo.GetVersionInfo(path);
+				} else
+				{
+					ed.Path = string.Empty;
+					ed.Name = string.Empty;
+					ed.FileVersion = null;
+				}
+
+				Trace.WriteLine("Successfully read process: {0} {1} {2}".FormatWith(ed.PID, ed.Name, ed.FileVersion));
 
 				return new Structs.ExeDataContainer(ed);
 			}
 			catch (Win32Exception w32) when (w32.NativeErrorCode == 299)
 			{
+				Trace.WriteLine("Exception: {0}\n{1}".FormatWith(w32.Message, w32.StackTrace));
 				return new Structs.ExeDataContainer(Structs.ExeDataContainerReason.IncompleteInformation);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Trace.WriteLine("Exception: {0}\n{1}".FormatWith(e.Message, e.StackTrace));
 				return new Structs.ExeDataContainer(Structs.ExeDataContainerReason.ExceptionOccured);
 			}
 		}
 
-		private void AddToWaitQueue(int pid, ulong processTime, int count, int ParentID)
+		private void AddToWaitQueue(int pid, ulong processTime, int count, int ParentID, string Path)
 		{
 			if (count > 5)
 				return;
@@ -966,6 +987,7 @@ namespace timetracker
 				ws.PID = pid;
 				ws.StartTime = processTime;
 				ws.ParentID = ParentID;
+				ws.Path = Path;
 
 				waitedApps.Add(ws);
 			}
@@ -1221,7 +1243,7 @@ namespace timetracker
 					parentId = (int)it.ParentProcessId.Value;
 
 				if (it.ProcessIdWasQueried)
-					NewProcessArrived((int)it.ProcessId.Value, parentId);
+					NewProcessArrived((int)it.ProcessId.Value, parentId, it.ExecutablePath);
 			}
 		}
 
