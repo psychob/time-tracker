@@ -7,7 +7,7 @@ using System.Xml;
 using timetracker.WinAPI.WMI;
 using static timetracker.TrackSystem;
 
-namespace timetracker
+namespace timetracker.LegacyXML
 {
 	public static class XmlOutputHelper
 	{
