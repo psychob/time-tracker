@@ -33,43 +33,31 @@ namespace timetracker.WinAPI.WMI
 		/// </summary>
 		public string CreationClassName { get; private set; }
 
-		public bool CreationClassNameWasQueried { get; private set; }
-
 		/// <summary>
 		/// Time that the process began executing.
 		/// </summary>
 		public DateTime? CreationDate { get; private set; }
-
-		public bool CreationDateWasQueried { get; private set; }
 
 		/// <summary>
 		/// Scoping computer system's creation class name.
 		/// </summary>
 		public string CSCreationClassName { get; private set; }
 
-		public bool CSCreationClassNameWasQueried { get; private set; }
-
 		/// <summary>
 		/// Scoping computer system's name.
 		/// </summary>
 		public string CSName { get; private set; }
-
-		public bool CSNameWasQueried { get; private set; }
 
 		/// <summary>
 		/// Current operating condition of the process.
 		/// </summary>
 		public ExecutionStateType? ExecutionState { get; private set; }
 
-		public bool ExecutionStateWasQueried { get; private set; }
-
 		/// <summary>
 		/// Identifies the process. A process identifier is a kind of process
 		/// handle.
 		/// </summary>
 		public string Handle { get; private set; }
-
-		public bool HandleWasQueried { get; private set; }
 
 
 		/// <summary>
@@ -78,21 +66,15 @@ namespace timetracker.WinAPI.WMI
 		/// </summary>
 		public UInt64? KernelModeTime { get; private set; }
 
-		public bool KernelModeTimeWasQueried { get; private set; }
-
 		/// <summary>
 		/// Scoping operating system's creation class name.
 		/// </summary>
 		public string OSCreationClassName { get; private set; }
 
-		public bool OSCreationClassNameWasQueried { get; private set; }
-
 		/// <summary>
 		/// Scoping operating system's name.
 		/// </summary>
 		public string OSName { get; private set; }
-
-		public bool OSNameWasQueried { get; private set; }
 
 		/// <summary>
 		/// Urgency or importance for process execution. If a priority is not
@@ -100,22 +82,16 @@ namespace timetracker.WinAPI.WMI
 		/// </summary>
 		public UInt32? Priority { get; private set; }
 
-		public bool PriorityWasQueried { get; private set; }
-
 		/// <summary>
 		/// Time that the process was stopped or terminated.
 		/// </summary>
 		public DateTime? TerminationDate { get; private set; }
-
-		public bool TerminationDateWasQueried { get; private set; }
 
 		/// <summary>
 		/// Time in user mode, in 100 nanosecond units. If this information is
 		/// not available, a value of 0 (zero) should be used.
 		/// </summary>
 		public UInt64? UserModeTime { get; private set; }
-
-		public bool UserModeTimeWasQueried { get; private set; }
 
 		/// <summary>
 		/// Amount of memory, in bytes, that a process needs to execute
@@ -128,49 +104,23 @@ namespace timetracker.WinAPI.WMI
 		/// </summary>
 		public UInt64? WorkingSetSize { get; private set; }
 
-		public bool WorkingSetSizeWasQueried { get; private set; }
-
 		public CIM_Process(ManagementBaseObject mbo)
 			: base(mbo)
 		{
-			CreationClassName = GetValueString(mbo, nameof(CreationClassName),
-				s => CreationClassNameWasQueried = s);
-
-			CreationDate = GetValueDateTime(mbo, nameof(CreationDate),
-				s => CreationDateWasQueried = s);
-
-			CSCreationClassName = GetValueString(mbo, nameof(CSCreationClassName),
-				s => CSCreationClassNameWasQueried = s);
-
-			CSName = GetValueString(mbo, nameof(CSName),
-				s => CSNameWasQueried = s);
-
+			CreationClassName = GetValueString(mbo, nameof(CreationClassName));
+			CreationDate = GetValue<DateTime>(mbo, nameof(CreationDate));
+			CSCreationClassName = GetValueString(mbo, nameof(CSCreationClassName));
+			CSName = GetValueString(mbo, nameof(CSName));
 			ExecutionState = GetValueEnum<UInt16, ExecutionStateType>(mbo,
-				nameof(ExecutionState), s => ExecutionStateWasQueried = s,
-				p => ConvertExecutionState(p));
-
-			Handle = GetValueString(mbo, nameof(Handle), s => HandleWasQueried = s);
-
-			KernelModeTime = GetValueUInt64(mbo, nameof(KernelModeTime),
-				s => KernelModeTimeWasQueried = s);
-
-			OSCreationClassName = GetValueString(mbo, nameof(OSCreationClassName),
-				s => OSCreationClassNameWasQueried = s);
-
-			OSName = GetValueString(mbo, nameof(OSName),
-				s => OSNameWasQueried = s);
-
-			Priority = GetValueUInt32(mbo, nameof(Priority),
-				s => PriorityWasQueried = s);
-
-			TerminationDate = GetValueDateTime(mbo, nameof(TerminationDate),
-				s => TerminationDateWasQueried = s);
-
-			UserModeTime = GetValueUInt64(mbo, nameof(UserModeTime),
-				s => UserModeTimeWasQueried = s);
-
-			WorkingSetSize = GetValueUInt64(mbo, nameof(WorkingSetSize),
-				s => WorkingSetSizeWasQueried = s);
+				nameof(ExecutionState),	p => ConvertExecutionState(p));
+			Handle = GetValueString(mbo, nameof(Handle));
+			KernelModeTime = GetValue<UInt64>(mbo, nameof(KernelModeTime));
+			OSCreationClassName = GetValueString(mbo, nameof(OSCreationClassName));
+			OSName = GetValueString(mbo, nameof(OSName));
+			Priority = GetValue<UInt32>(mbo, nameof(Priority));
+			TerminationDate = GetValue<DateTime>(mbo, nameof(TerminationDate));
+			UserModeTime = GetValue<UInt64>(mbo, nameof(UserModeTime));
+			WorkingSetSize = GetValue<UInt64>(mbo, nameof(WorkingSetSize));
 		}
 
 		public static ExecutionStateType ConvertExecutionState(UInt16 i)

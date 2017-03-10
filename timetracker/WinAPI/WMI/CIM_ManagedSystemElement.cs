@@ -27,19 +27,9 @@ namespace timetracker.WinAPI.WMI
 		public string Caption { get; private set; }
 
 		/// <summary>
-		/// Was Caption queried
-		/// </summary>
-		public bool CaptionWasQueried { get; private set; }
-
-		/// <summary>
 		/// A textual description of the object.
 		/// </summary>
 		public string Description { get; private set; }
-
-		/// <summary>
-		/// Was Description queried
-		/// </summary>
-		public bool DescriptionWasQueried { get; private set; }
 
 		/// <summary>
 		/// Indicates when the object was installed. Lack of a value does not
@@ -48,20 +38,10 @@ namespace timetracker.WinAPI.WMI
 		public DateTime? InstallDate { get; private set; }
 
 		/// <summary>
-		/// Was InstallDate queried
-		/// </summary>
-		public bool InstallDateWasQueried { get; private set; }
-
-		/// <summary>
 		/// Label by which the object is known. When subclassed, this property
 		/// can be overridden to be a key property.
 		/// </summary>
 		public string Name { get; private set; }
-
-		/// <summary>
-		/// Was Name queried
-		/// </summary>
-		public bool NameWasQueried { get; private set; }
 
 		/// <summary>
 		/// String that indicates the current status of the object.
@@ -80,30 +60,16 @@ namespace timetracker.WinAPI.WMI
 		public string Status { get; private set; }
 
 		/// <summary>
-		/// Was Status queried
-		/// </summary>
-		public bool StatusWasQueried { get; private set; }
-
-		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="mbo"></param>
 		public CIM_ManagedSystemElement(ManagementBaseObject mbo)
 		{
-			Caption = GetValueString(mbo, nameof(Caption),
-				q => CaptionWasQueried = q);
-
-			Description = GetValueString(mbo, nameof(Description),
-				s => DescriptionWasQueried = s);
-
-			InstallDate = GetValueDateTime(mbo, nameof(InstallDate),
-				s => InstallDateWasQueried = s);
-
-			Name = GetValueString(mbo, nameof(Name),
-				s => NameWasQueried = s);
-
-			Status = GetValueString(mbo, nameof(Status),
-				s => StatusWasQueried = s);
+			Caption = GetValueString(mbo, nameof(Caption));
+			Description = GetValueString(mbo, nameof(Description));
+			InstallDate = GetValue<DateTime>(mbo, nameof(InstallDate));
+			Name = GetValueString(mbo, nameof(Name));
+			Status = GetValueString(mbo, nameof(Status));
 		}
 	}
 }

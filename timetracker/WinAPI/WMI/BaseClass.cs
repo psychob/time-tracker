@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -67,110 +68,65 @@ namespace timetracker.WinAPI.WMI
 				from, Interval, ClassName);
 		}
 
-		protected string GetValueString(ManagementBaseObject mbo, string name,
-			Action<bool> wasQueried)
+		protected string GetValueString(ManagementBaseObject mbo, string name)
 		{
+			var logger = LogManager.GetLogger(this.GetType());
+			logger.DebugFormat("Trying to access property: {0}", name);
+
 			try
 			{
-				string val = (string)mbo.Properties[name].Value;
-				wasQueried(true);
-				return val;
-			} catch (ManagementException)
+				return (string)mbo.Properties[name].Value;
+			} catch (ManagementException me)
 			{
-				wasQueried(false);
-				return null;
+				logger.ErrorFormat("Exception thrown while trying to access property: {0}", name);
+				logger.Error(me);
 			}
+
+			return null;
 		}
 
-		protected UInt32? GetValueUInt32(ManagementBaseObject mbo, string name,
-			Action<bool> wasQueried)
+		protected string[] GetValueArrayString(ManagementBaseObject mbo, string name)
 		{
-			try
-			{
-				object oVal = mbo.Properties[name].Value;
-
-				wasQueried(true);
-
-				if (oVal == null)
-					return null;
-
-				UInt32 val = (UInt32)oVal;
-				wasQueried(true);
-				return val;
-			} catch (ManagementException)
-			{
-				wasQueried(false);
-				return null;
-			}
+			return null;
 		}
 
-		protected UInt64? GetValueUInt64(ManagementBaseObject mbo, string name,
-			Action<bool> wasQueried)
+		protected T? GetValue<T>(ManagementBaseObject mbo, string name) where T:struct
 		{
+			var logger = LogManager.GetLogger(this.GetType());
+			logger.DebugFormat("Trying to access property: {0}", name);
+
 			try
 			{
-				object oVal = mbo.Properties[name].Value;
-
-				wasQueried(true);
-
-				if (oVal == null)
-					return null;
-
-				UInt64 val = (UInt64)oVal;
-				wasQueried(true);
-				return val;
-			} catch (ManagementException)
+				return (T?)mbo.Properties[name].Value;
+			} catch (ManagementException me)
 			{
-				wasQueried(false);
-				return null;
+				logger.ErrorFormat("Exception thrown while trying to access property: {0}", name);
+				logger.Error(me);
 			}
-		}
 
-		protected DateTime? GetValueDateTime(ManagementBaseObject mbo,
-			string name, Action<bool> wasQueried)
-		{
-			try
-			{
-				string val = (string)mbo.Properties[name].Value;
-				wasQueried(true);
-
-				if (val == null)
-					return null;
-
-				try
-				{
-					return ManagementDateTimeConverter.ToDateTime(val);
-				} catch (Exception)
-				{
-					return null;
-				}
-			} catch(ManagementException)
-			{
-				wasQueried(false);
-				return null;
-			}
+			return null;
 		}
 
 		protected U? GetValueEnum<T, U>(ManagementBaseObject mbo,
-			string name, Action<bool> wasQueried, Func<T, U> conv) where U: struct
+			string name, Func<T, U> conv) where U : struct
 		{
+			var logger = LogManager.GetLogger(this.GetType());
+			logger.DebugFormat("Trying to access property: {0}", name);
+
 			try
 			{
-				if (mbo.Properties[name].Value == null)
-				{
-					wasQueried(true);
-					return null;
-				} else
+				if (mbo.Properties[name].Value != null)
 				{
 					T val = (T)mbo.Properties[name].Value;
-					wasQueried(true);
 					return conv(val);
 				}
-			} catch (ManagementException)
+			} catch (ManagementException me)
 			{
-				wasQueried(false);
-				return null;
+				logger.ErrorFormat("Exception thrown while trying to access property: {0}", name);
+				logger.Error(me);
 			}
+
+			return null;
 		}
 	}
 }

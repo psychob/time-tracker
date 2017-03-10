@@ -19,19 +19,9 @@ namespace timetracker.WinAPI.WMI
 		public string CommandLine { get; private set; }
 
 		/// <summary>
-		/// Was CommandLine Queried
-		/// </summary>
-		public bool CommandLineWasQueried { get; private set; }
-
-		/// <summary>
 		/// Path to the executable file of the process.
 		/// </summary>
 		public string ExecutablePath { get; private set; }
-
-		/// <summary>
-		/// Was ExecutablePath Queried
-		/// </summary>
-		public bool ExecutablePathWasQueried { get; private set; }
 
 		/// <summary>
 		/// Total number of open handles owned by the process. HandleCount is
@@ -44,22 +34,12 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? HandleCount { get; private set; }
 
 		/// <summary>
-		/// Was HandleCount Queried
-		/// </summary>
-		public bool HandleCountWasQueried { get; private set; }
-
-		/// <summary>
 		/// Maximum working set size of the process. The working set of a
 		/// process is the set of memory pages visible to the process in
 		/// physical RAM. These pages are resident, and available for an
 		/// application to use without triggering a page fault.
 		/// </summary>
 		public UInt32? MaximumWorkingSetSize { get; private set; }
-
-		/// <summary>
-		/// Was MaximumWorkingSetSize Queried
-		/// </summary>
-		public bool MaximumWorkingSetSizeWasQueried { get; private set; }
 
 		/// <summary>
 		/// Minimum working set size of the process. The working set of a
@@ -70,20 +50,10 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? MinimumWorkingSetSize { get; private set; }
 
 		/// <summary>
-		/// Was MinimumWorkingSetSize Queried
-		/// </summary>
-		public bool MinimumWorkingSetSizeWasQueried { get; private set; }
-
-		/// <summary>
 		/// Number of I/O operations performed that are not read or write
 		/// operations.
 		/// </summary>
 		public UInt64? OtherOperationCount { get; private set; }
-
-		/// <summary>
-		/// Was OtherOperationCount Queried
-		/// </summary>
-		public bool OtherOperationCountWasQueried { get; private set; }
 
 		/// <summary>
 		/// Amount of data transferred during operations that are not read or
@@ -92,30 +62,15 @@ namespace timetracker.WinAPI.WMI
 		public UInt64? OtherTransferCount { get; private set; }
 
 		/// <summary>
-		/// Was OtherTransferCount Queried
-		/// </summary>
-		public bool OtherTransferCountWasQueried { get; private set; }
-
-		/// <summary>
 		/// Number of page faults that a process generates.
 		/// </summary>
 		public UInt32? PageFaults { get; private set; }
-
-		/// <summary>
-		/// Was PageFaults Queried
-		/// </summary>
-		public bool PageFaultsWasQueried { get; private set; }
 
 		/// <summary>
 		/// Amount of page file space that a process is using currently. This
 		/// value is consistent with the VMSize value in TaskMgr.exe.
 		/// </summary>
 		public UInt32? PageFileUsage { get; private set; }
-
-		/// <summary>
-		/// Was PageFileUsage Queried
-		/// </summary>
-		public bool PageFileUsageWasQueried { get; private set; }
 
 		/// <summary>
 		/// Unique identifier of the process that creates a process. Process
@@ -131,20 +86,10 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? ParentProcessId { get; private set; }
 
 		/// <summary>
-		/// Was ParentProcessId Queried
-		/// </summary>
-		public bool ParentProcessIdWasQueried { get; private set; }
-
-		/// <summary>
 		/// Maximum amount of page file space used during the life of a
 		/// process.
 		/// </summary>
 		public UInt32? PeakPageFileUsage { get; private set; }
-
-		/// <summary>
-		/// Was PeakPageFileUsage Queried
-		/// </summary>
-		public bool PeakPageFileUsageWasQueried { get; private set; }
 
 		/// <summary>
 		/// Maximum virtual address space a process uses at any one time.
@@ -156,30 +101,15 @@ namespace timetracker.WinAPI.WMI
 		public UInt64? PeakVirtualSize { get; private set; }
 
 		/// <summary>
-		/// Was PeakVirtualSize Queried
-		/// </summary>
-		public bool PeakVirtualSizeWasQueried { get; private set; }
-
-		/// <summary>
 		/// Peak working set size of a process.
 		/// </summary>
 		public UInt32? PeakWorkingSetSize { get; private set; }
-
-		/// <summary>
-		/// Was PeakWorkingSetSize Queried
-		/// </summary>
-		public bool PeakWorkingSetSizeWasQueried { get; private set; }
 
 		/// <summary>
 		/// Current number of pages allocated that are only accessible to the
 		/// process represented by this Win32_Process instance.
 		/// </summary>
 		public UInt64? PrivatePageCount { get; private set; }
-
-		/// <summary>
-		/// Was PrivatePageCount Queried
-		/// </summary>
-		public bool PrivatePageCountWasQueried { get; private set; }
 
 		/// <summary>
 		/// Numeric identifier used to distinguish one process from another.
@@ -197,19 +127,9 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? ProcessId { get; private set; }
 
 		/// <summary>
-		/// Was ProcessIdWasQueried Queried
-		/// </summary>
-		public bool ProcessIdWasQueried { get; private set; }
-
-		/// <summary>
 		/// Quota amount of nonpaged pool usage for a process.
 		/// </summary>
 		public UInt32? QuotaNonPagedPoolUsage { get; private set; }
-
-		/// <summary>
-		/// Was QuotaNonPagedPoolUsage Queried
-		/// </summary>
-		public bool QuotaNonPagedPoolUsageWasQueried { get; private set; }
 
 		/// <summary>
 		/// Quota amount of paged pool usage for a process.
@@ -217,19 +137,9 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? QuotaPagedPoolUsage { get; private set; }
 
 		/// <summary>
-		/// Was QuotaPagedPoolUsage Queried
-		/// </summary>
-		public bool QuotaPagedPoolUsageWasQueried { get; private set; }
-
-		/// <summary>
 		/// Peak quota amount of nonpaged pool usage for a process.
 		/// </summary>
 		public UInt32? QuotaPeakNonPagedPoolUsage { get; private set; }
-
-		/// <summary>
-		/// Was QuotaPeakNonPagedPoolUsage Queried
-		/// </summary>
-		public bool QuotaPeakNonPagedPoolUsageWasQueried { get; private set; }
 
 		/// <summary>
 		/// Peak quota amount of paged pool usage for a process.
@@ -237,29 +147,14 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? QuotaPeakPagedPoolUsage { get; private set; }
 
 		/// <summary>
-		/// Was QuotaPeakPagedPoolUsage Queried
-		/// </summary>
-		public bool QuotaPeakPagedPoolUsageWasQueried { get; private set; }
-
-		/// <summary>
 		/// Number of read operations performed.
 		/// </summary>
 		public UInt64? ReadOperationCount { get; private set; }
 
 		/// <summary>
-		/// Was ReadOperationCount Queried
-		/// </summary>
-		public bool ReadOperationCountWasQueried { get; private set; }
-
-		/// <summary>
 		/// Amount of data read.
 		/// </summary>
 		public UInt64? ReadTransferCount { get; private set; }
-
-		/// <summary>
-		/// Was ReadTransferCount Queried
-		/// </summary>
-		public bool ReadTransferCountWasQueried { get; private set; }
 
 		/// <summary>
 		/// Unique identifier that an operating system generates when a
@@ -269,22 +164,12 @@ namespace timetracker.WinAPI.WMI
 		public UInt32? SessionId { get; private set; }
 
 		/// <summary>
-		/// Was SessionId Queried
-		/// </summary>
-		public bool SessionIdWasQueried { get; private set; }
-
-		/// <summary>
 		/// Number of active threads in a process. An instruction is the basic
 		/// unit of execution in a processor, and a thread is the object that
 		/// executes an instruction. Each running process has at least one
 		/// thread.
 		/// </summary>
 		public UInt32? ThreadCount { get; private set; }
-
-		/// <summary>
-		/// Was ThreadCount Queried
-		/// </summary>
-		public bool ThreadCountWasQueried { get; private set; }
 
 		/// <summary>
 		/// Current size of the virtual address space that a process is using,
@@ -298,19 +183,9 @@ namespace timetracker.WinAPI.WMI
 		public UInt64? VirtualSize { get; private set; }
 
 		/// <summary>
-		/// Was VirtualSize Queried
-		/// </summary>
-		public bool VirtualSizeWasQueried { get; private set; }
-
-		/// <summary>
 		/// Version of Windows in which the process is running.
 		/// </summary>
 		public string WindowsVersion { get; private set; }
-
-		/// <summary>
-		/// Was WindowsVersion Queried
-		/// </summary>
-		public bool WindowsVersionWasQueried { get; private set; }
 
 		/// <summary>
 		/// Number of write operations performed.
@@ -318,19 +193,9 @@ namespace timetracker.WinAPI.WMI
 		public UInt64? WriteOperationCount { get; private set; }
 
 		/// <summary>
-		/// Was WriteOperationCount Queried
-		/// </summary>
-		public bool WriteOperationCountWasQueried { get; private set; }
-
-		/// <summary>
 		/// Amount of data written.
 		/// </summary>
 		public UInt64? WriteTransferCount { get; private set; }
-
-		/// <summary>
-		/// Was WriteTransferCount Queried
-		/// </summary>
-		public bool WriteTransferCountWasQueried { get; private set; }
 
 		/// <summary>
 		/// Class name
@@ -349,86 +214,33 @@ namespace timetracker.WinAPI.WMI
 		public Win32_Process(ManagementBaseObject mbo)
 			: base(mbo)
 		{
-			CommandLine = GetValueString(mbo, nameof(CommandLine),
-				s => CommandLineWasQueried = s);
-
-			ExecutablePath = GetValueString(mbo, nameof(ExecutablePath),
-				s => ExecutablePathWasQueried = s);
-
-			HandleCount = GetValueUInt32(mbo, nameof(HandleCount),
-				s => HandleCountWasQueried = s);
-
-			MaximumWorkingSetSize = GetValueUInt32(mbo, nameof(MaximumWorkingSetSize),
-				s => MaximumWorkingSetSizeWasQueried = s);
-
-			MinimumWorkingSetSize = GetValueUInt32(mbo, nameof(MinimumWorkingSetSize),
-				s => MinimumWorkingSetSizeWasQueried = s);
-
-			OtherOperationCount = GetValueUInt64(mbo, nameof(OtherOperationCount),
-				s => OtherOperationCountWasQueried = s);
-
-			OtherTransferCount = GetValueUInt64(mbo, nameof(OtherTransferCount),
-				s => OtherTransferCountWasQueried = s);
-
-			PageFaults = GetValueUInt32(mbo, nameof(PageFaults),
-				s => PageFaultsWasQueried = s);
-
-			PageFileUsage = GetValueUInt32(mbo, nameof(PageFileUsage),
-				s => PageFileUsageWasQueried = s);
-
-			ParentProcessId = GetValueUInt32(mbo, nameof(ParentProcessId),
-				s => ParentProcessIdWasQueried = s);
-
-			PeakPageFileUsage = GetValueUInt32(mbo, nameof(PeakPageFileUsage),
-				s => PeakPageFileUsageWasQueried = s);
-
-			PeakVirtualSize = GetValueUInt64(mbo, nameof(PeakVirtualSize),
-				s => PeakVirtualSizeWasQueried = s);
-
-			PeakWorkingSetSize = GetValueUInt32(mbo, nameof(PeakWorkingSetSize),
-				s => PeakWorkingSetSizeWasQueried = s);
-
-			PrivatePageCount = GetValueUInt64(mbo, nameof(PrivatePageCount),
-				s => PrivatePageCountWasQueried = s);
-
-			ProcessId = GetValueUInt32(mbo, nameof(ProcessId),
-				s => ProcessIdWasQueried = s);
-
-			QuotaNonPagedPoolUsage = GetValueUInt32(mbo, nameof(QuotaNonPagedPoolUsage),
-				s => QuotaNonPagedPoolUsageWasQueried = s);
-
-			QuotaPagedPoolUsage = GetValueUInt32(mbo, nameof(QuotaPagedPoolUsage),
-				s => QuotaPagedPoolUsageWasQueried = s);
-
-			QuotaPeakNonPagedPoolUsage = GetValueUInt32(mbo, nameof(QuotaPeakNonPagedPoolUsage),
-				s => QuotaPeakNonPagedPoolUsageWasQueried = s);
-
-			QuotaPeakPagedPoolUsage = GetValueUInt32(mbo, nameof(QuotaPeakPagedPoolUsage),
-				s => QuotaPeakPagedPoolUsageWasQueried = s);
-
-			ReadOperationCount = GetValueUInt64(mbo, nameof(ReadOperationCount),
-				s => ReadOperationCountWasQueried = s);
-
-			ReadTransferCount = GetValueUInt64(mbo, nameof(ReadTransferCount),
-				s => ReadTransferCountWasQueried = s);
-
-			SessionId = GetValueUInt32(mbo, nameof(SessionId),
-				s => SessionIdWasQueried = s);
-
-			ThreadCount = GetValueUInt32(mbo, nameof(ThreadCount),
-				s => ThreadCountWasQueried = s);
-
-			VirtualSize = GetValueUInt64(mbo, nameof(VirtualSize),
-				s => VirtualSizeWasQueried = s);
-
-			WindowsVersion = GetValueString(mbo, nameof(WindowsVersion),
-				s => WindowsVersionWasQueried = s);
-
-			WriteOperationCount = GetValueUInt64(mbo, nameof(WriteOperationCount),
-				s => WriteOperationCountWasQueried = s);
-
-			WriteTransferCount = GetValueUInt64(mbo, nameof(WriteTransferCount),
-				s => WriteTransferCountWasQueried = s);
+			CommandLine = GetValueString(mbo, nameof(CommandLine));
+			ExecutablePath = GetValueString(mbo, nameof(ExecutablePath));
+			HandleCount = GetValue<UInt32>(mbo, nameof(HandleCount));
+			MaximumWorkingSetSize = GetValue<UInt32>(mbo, nameof(MaximumWorkingSetSize));
+			MinimumWorkingSetSize = GetValue<UInt32>(mbo, nameof(MinimumWorkingSetSize));
+			OtherOperationCount = GetValue<UInt64>(mbo, nameof(OtherOperationCount));
+			OtherTransferCount = GetValue<UInt64>(mbo, nameof(OtherTransferCount));
+			PageFaults = GetValue<UInt32>(mbo, nameof(PageFaults));
+			PageFileUsage = GetValue<UInt32>(mbo, nameof(PageFileUsage));
+			ParentProcessId = GetValue<UInt32>(mbo, nameof(ParentProcessId));
+			PeakPageFileUsage = GetValue<UInt32>(mbo, nameof(PeakPageFileUsage));
+			PeakVirtualSize = GetValue<UInt64>(mbo, nameof(PeakVirtualSize));
+			PeakWorkingSetSize = GetValue<UInt32>(mbo, nameof(PeakWorkingSetSize));
+			PrivatePageCount = GetValue<UInt64>(mbo, nameof(PrivatePageCount));
+			ProcessId = GetValue<UInt32>(mbo, nameof(ProcessId));
+			QuotaNonPagedPoolUsage = GetValue<UInt32>(mbo, nameof(QuotaNonPagedPoolUsage));
+			QuotaPagedPoolUsage = GetValue<UInt32>(mbo, nameof(QuotaPagedPoolUsage));
+			QuotaPeakNonPagedPoolUsage = GetValue<UInt32>(mbo, nameof(QuotaPeakNonPagedPoolUsage));
+			QuotaPeakPagedPoolUsage = GetValue<UInt32>(mbo, nameof(QuotaPeakPagedPoolUsage));
+			ReadOperationCount = GetValue<UInt64>(mbo, nameof(ReadOperationCount));
+			ReadTransferCount = GetValue<UInt64>(mbo, nameof(ReadTransferCount));
+			SessionId = GetValue<UInt32>(mbo, nameof(SessionId));
+			ThreadCount = GetValue<UInt32>(mbo, nameof(ThreadCount));
+			VirtualSize = GetValue<UInt64>(mbo, nameof(VirtualSize));
+			WindowsVersion = GetValueString(mbo, nameof(WindowsVersion));
+			WriteOperationCount = GetValue<UInt64>(mbo, nameof(WriteOperationCount));
+			WriteTransferCount = GetValue<UInt64>(mbo, nameof(WriteTransferCount));
 		}
 
 		/// <summary>

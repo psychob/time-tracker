@@ -1242,7 +1242,7 @@ namespace timetracker
 				if (it.ParentProcessId.HasValue)
 					parentId = (int)it.ParentProcessId.Value;
 
-				if (it.ProcessIdWasQueried)
+				if (it.ProcessId.HasValue)
 					NewProcessArrived((int)it.ProcessId.Value, parentId, it.ExecutablePath);
 			}
 		}
