@@ -55,7 +55,11 @@ namespace timetracker
 			memory.ActivateOptions();
 			hierarchy.Root.AddAppender(memory);
 
+#if DEBUG
 			hierarchy.Root.Level = Level.All;
+#else
+			hierarchy.Root.Level = Level.Info;
+#endif
 			hierarchy.Configured = true;
 		}
 	}
