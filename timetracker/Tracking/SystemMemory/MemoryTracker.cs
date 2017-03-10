@@ -36,12 +36,10 @@ namespace timetracker.Tracking.SystemMemory
 			Db = db;
 		}
 
-		public bool SetUp()
+		public void SetUp()
 		{
 			Tracker = Win32_OperatingSystem.Watch(30,
 				BaseClass.WatchType.Modification, ModEvent);
-
-			return true;
 		}
 
 		public void TearDown()

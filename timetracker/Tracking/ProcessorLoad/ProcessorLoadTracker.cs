@@ -36,12 +36,10 @@ namespace timetracker.Tracking.ProcessorLoad
 			Db = db;
 		}
 
-		public bool SetUp()
+		public void SetUp()
 		{
 			Tracker = Win32_PerfFormattedData_PerfOS_Processor.Watch(5,
 				BaseClass.WatchType.Modification, onMod);
-
-			return true;
 		}
 
 		public void TearDown()

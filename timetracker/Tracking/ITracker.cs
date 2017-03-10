@@ -10,7 +10,7 @@ namespace timetracker.Tracking
 	{
 		string GetName();
 
-		bool SetUp();
+		void SetUp();
 
 		void TearDown();
 
