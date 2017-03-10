@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -18,6 +19,7 @@ namespace timetracker.Tracking.SystemMemory
 
 		private IDatabase Db;
 		private ManagementEventWatcher Tracker;
+		private ILog Logger = LogManager.GetLogger(typeof(MemoryTracker));
 
 		public string[] GetExtensions()
 		{
@@ -49,6 +51,8 @@ namespace timetracker.Tracking.SystemMemory
 
 		private void ModEvent(Win32_OperatingSystem obj)
 		{
+			Logger.Debug(obj);
+
 			Db.AppendMessage(new MemoryEvent(obj.FreePhysicalMemory.GetValueOrDefault(0),
 				obj.FreeVirtualMemory.GetValueOrDefault(0),
 				obj.TotalVisibleMemorySize.GetValueOrDefault(0),
