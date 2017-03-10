@@ -2,6 +2,6 @@
 {
 	internal class Current
 	{
-		public readonly v4_0 Messages = new v4_0();
+		public static readonly v4_0 Messages = new v4_0();
 	}
 }

@@ -512,12 +512,10 @@ namespace timetracker
 			internal delegate void OnNetworkBandwidthType(string N, ulong R, ulong T);
 
 			internal InternetChangeStateType OnInternetEvent;
-			internal OSChangeType OnOsEvent;
 			internal ProcessorLoad OnProcessorLoad;
 			internal OnNetworkBandwidthType OnNetworkBandwidth;
 
 			ManagementEventWatcher eventInternet;
-			ManagementEventWatcher eventOS;
 			ManagementEventWatcher eventProcessor;
 			ManagementEventWatcher eventNetwork;
 
@@ -535,15 +533,11 @@ namespace timetracker
 			{
 				const string NameSpace = @"\\.\root\CIMV2";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
-				const string OperatingSystem = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_OperatingSystem'";
 				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_Processor'";
 				const string NetworkSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_PerfRawData_Tcpip_NetworkInterface'";
 
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
-
-				eventOS = new ManagementEventWatcher(NameSpace, OperatingSystem);
-				eventOS.EventArrived += OnOSEvent;
 
 				eventProcessor = new ManagementEventWatcher(NameSpace, ProcesSql);
 				eventProcessor.EventArrived += ProcessorEvent;
@@ -559,7 +553,6 @@ namespace timetracker
 				PullAllInternet();
 
 				eventInternet.Start();
-				eventOS.Start();
 				eventProcessor.Start();
 				eventNetwork.Start();
 			}
@@ -585,18 +578,6 @@ namespace timetracker
 				var n = Win32_NetworkAdapter.Convert(status);
 
 				OnInternetEvent(g, name, n);
-			}
-
-			private void OnOSEvent(object sender, EventArrivedEventArgs e)
-			{
-				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
-
-				ulong FreePhysicialMemory = (ulong)(UInt64)mbo.Properties["FreePhysicalMemory"].Value;
-				ulong TotalVisibleMemorySize = (ulong)(UInt64)mbo.Properties["TotalVisibleMemorySize"].Value;
-				ulong FreeVirtualMemory = (ulong)(UInt64)mbo.Properties["FreeVirtualMemory"].Value;
-				ulong TotalVirtualMemorySize = (ulong)(UInt64)mbo.Properties["TotalVirtualMemorySize"].Value;
-
-				OnOsEvent(FreePhysicialMemory, TotalVisibleMemorySize, FreeVirtualMemory, TotalVirtualMemorySize);
 			}
 
 			private void ProcessorEvent(object sender, EventArrivedEventArgs e)
@@ -631,7 +612,6 @@ namespace timetracker
 			public void Finish()
 			{
 				eventInternet.Stop();
-				eventOS.Stop();
 				eventProcessor.Stop();
 				eventNetwork.Stop();
 
@@ -641,7 +621,6 @@ namespace timetracker
 				mHook.DeInit();
 
 				eventInternet.Dispose();
-				eventOS.Dispose();
 				eventProcessor.Dispose();
 				eventNetwork.Dispose();
 			}
@@ -852,7 +831,6 @@ namespace timetracker
 			tracker = new Tracker();
 
 			tracker.OnInternetEvent = InternetEvent;
-			tracker.OnOsEvent = MemoryEvent;
 			tracker.OnProcessorLoad = ProcessorLoad;
 			tracker.OnNetworkBandwidth = NetworkBandwitch;
 

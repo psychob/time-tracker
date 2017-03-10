@@ -10,6 +10,10 @@ namespace timetracker.Tracking
 	{
 		string GetName();
 
+		bool SetUp();
+
+		void TearDown();
+
 		void SetDatabase(IDatabase db);
 
 		string[] GetExtensions();

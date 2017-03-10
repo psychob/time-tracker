@@ -103,12 +103,13 @@
     <Compile Include="Tracking\IDatabase.cs" />
     <Compile Include="Tracking\IMessage.cs" />
     <Compile Include="Tracking\ITracker.cs" />
+    <Compile Include="Tracking\SystemMemory\MemoryEvent.cs" />
+    <Compile Include="Tracking\SystemMemory\MemoryTracker.cs" />
     <Compile Include="TrackSystem.cs" />
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
     <Compile Include="TrackSystem_Foreground.cs" />
     <Compile Include="TrackSystem_Keyboard.cs" />
-    <Compile Include="TrackSystem_Memory.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="TrackSystem_Processor.cs" />
