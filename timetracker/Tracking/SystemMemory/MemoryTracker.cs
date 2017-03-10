@@ -53,6 +53,15 @@ namespace timetracker.Tracking.SystemMemory
 				obj.FreeVirtualMemory.GetValueOrDefault(0),
 				obj.TotalVisibleMemorySize.GetValueOrDefault(0),
 				obj.TotalVirtualMemorySize.GetValueOrDefault(0)));
+
+			Db.SetProperty("Memory.Physicial.Total", obj.TotalVisibleMemorySize.GetValueOrDefault(0));
+			Db.SetProperty("Memory.Physicial.Free", obj.FreePhysicalMemory.GetValueOrDefault(0));
+
+			Db.SetProperty("Memory.Virtual.Total", obj.TotalVirtualMemorySize.GetValueOrDefault(0));
+			Db.SetProperty("Memory.Virtual.Free", obj.FreeVirtualMemory.GetValueOrDefault(0));
+
+			Db.SetProperty("Memory.All.Total", obj.TotalVirtualMemorySize.GetValueOrDefault(0) + obj.TotalVisibleMemorySize.GetValueOrDefault(0));
+			Db.SetProperty("Memory.All.Free", obj.FreeVirtualMemory.GetValueOrDefault(0) + obj.FreePhysicalMemory.GetValueOrDefault(0));
 		}
 	}
 }
