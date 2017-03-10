@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Time Tracker")]
 [assembly: AssemblyDescription("Application that tracks your time in applications")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("RGB Lighthouse")]
+[assembly: AssemblyCompany("budzanowski.pl")]
 [assembly: AssemblyProduct("timetracker")]
 [assembly: AssemblyCopyright("(c) 2015 - 2017 Andrzej Budzanowski")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.16.3.0")]
-[assembly: AssemblyFileVersion("3.16.3.0")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.0")]

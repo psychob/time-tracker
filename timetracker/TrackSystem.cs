@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-using WinAPI.WMI;
-using static WinAPI.Kernel32;
+using timetracker.WMI;
+using static timetracker.Kernel32;
 
 namespace timetracker
 {

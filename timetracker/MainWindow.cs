@@ -9,8 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using static WinAPI.WinUser;
-using static WinAPI.Kernel32;
+using static timetracker.WinUser;
+using static timetracker.Kernel32;
 using System.Globalization;
 
 namespace timetracker
