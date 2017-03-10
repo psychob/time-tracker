@@ -5,7 +5,7 @@ using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace timetracker.WMI
+namespace timetracker.WinAPI.WMI
 {
 	/// <summary>
 	/// The CIM_LogicalElement class is the base class for all system

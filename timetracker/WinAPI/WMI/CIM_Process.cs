@@ -5,7 +5,7 @@ using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace timetracker.WMI
+namespace timetracker.WinAPI.WMI
 {
 	internal abstract class CIM_Process : CIM_LogicalElement
 	{

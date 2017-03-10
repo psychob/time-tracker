@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker3", "timetracker\timetracker3.csproj", "{880367EB-DC6A-4851-821B-8361B202022E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinAPI-Wrapper", "..\WinAPI-Wrapper\WinAPI-Wrapper\WinAPI-Wrapper.csproj", "{82B570F1-F4D9-4305-8520-9D24FCB3A7FD}"
-EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
@@ -20,10 +18,6 @@ Global
 		{880367EB-DC6A-4851-821B-8361B202022E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{880367EB-DC6A-4851-821B-8361B202022E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{880367EB-DC6A-4851-821B-8361B202022E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82B570F1-F4D9-4305-8520-9D24FCB3A7FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82B570F1-F4D9-4305-8520-9D24FCB3A7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82B570F1-F4D9-4305-8520-9D24FCB3A7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82B570F1-F4D9-4305-8520-9D24FCB3A7FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

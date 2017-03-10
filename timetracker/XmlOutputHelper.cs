@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using timetracker.WMI;
+using timetracker.WinAPI.WMI;
 using static timetracker.TrackSystem;
 
 namespace timetracker

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static timetracker.User32;
-using static timetracker.WinDef;
-using static timetracker.WinUser;
+using static timetracker.WinAPI.User32;
+using static timetracker.WinAPI.WinDef;
+using static timetracker.WinAPI.WinUser;
 
 namespace timetracker
 {
