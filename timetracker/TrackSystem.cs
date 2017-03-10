@@ -508,15 +508,12 @@ namespace timetracker
 		{
 			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
-			internal delegate void ProcessorLoad(string Name, ulong Idle, ulong Kernel, ulong Work);
 			internal delegate void OnNetworkBandwidthType(string N, ulong R, ulong T);
 
 			internal InternetChangeStateType OnInternetEvent;
-			internal ProcessorLoad OnProcessorLoad;
 			internal OnNetworkBandwidthType OnNetworkBandwidth;
 
 			ManagementEventWatcher eventInternet;
-			ManagementEventWatcher eventProcessor;
 			ManagementEventWatcher eventNetwork;
 
 			internal KeyboardHook kHook = new KeyboardHook();
@@ -533,14 +530,10 @@ namespace timetracker
 			{
 				const string NameSpace = @"\\.\root\CIMV2";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
-				const string ProcesSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_Processor'";
 				const string NetworkSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_PerfRawData_Tcpip_NetworkInterface'";
 
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
-
-				eventProcessor = new ManagementEventWatcher(NameSpace, ProcesSql);
-				eventProcessor.EventArrived += ProcessorEvent;
 
 				eventNetwork = new ManagementEventWatcher(NameSpace, NetworkSql);
 				eventNetwork.EventArrived += networkEventArrived;
@@ -553,7 +546,6 @@ namespace timetracker
 				PullAllInternet();
 
 				eventInternet.Start();
-				eventProcessor.Start();
 				eventNetwork.Start();
 			}
 
@@ -580,16 +572,6 @@ namespace timetracker
 				OnInternetEvent(g, name, n);
 			}
 
-			private void ProcessorEvent(object sender, EventArrivedEventArgs e)
-			{
-				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
-
-				OnProcessorLoad((string)mbo.Properties["Name"].Value,
-					(UInt64)mbo.Properties["PercentIdleTime"].Value,
-					(UInt64)mbo.Properties["PercentPrivilegedTime"].Value,
-					(UInt64)mbo.Properties["PercentProcessorTime"].Value);
-			}
-
 			public void PullAllInternet()
 			{
 				const string NameSpace = @"root\CIMV2";
@@ -612,7 +594,6 @@ namespace timetracker
 			public void Finish()
 			{
 				eventInternet.Stop();
-				eventProcessor.Stop();
 				eventNetwork.Stop();
 
 				kHook.DeInit();
@@ -621,7 +602,6 @@ namespace timetracker
 				mHook.DeInit();
 
 				eventInternet.Dispose();
-				eventProcessor.Dispose();
 				eventNetwork.Dispose();
 			}
 
@@ -831,7 +811,6 @@ namespace timetracker
 			tracker = new Tracker();
 
 			tracker.OnInternetEvent = InternetEvent;
-			tracker.OnProcessorLoad = ProcessorLoad;
 			tracker.OnNetworkBandwidth = NetworkBandwitch;
 
 			tracker.kHook.keyEvent = KeyEvent;
