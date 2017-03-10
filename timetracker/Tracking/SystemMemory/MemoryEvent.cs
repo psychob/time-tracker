@@ -25,7 +25,7 @@ namespace timetracker.Tracking.SystemMemory
 			AllTotal = totalphy + totalvirt;
 		}
 
-		string IMessage.GetType()
+		public string GetMessageType()
 		{
 			return Current.Messages.MemoryInfo;
 		}

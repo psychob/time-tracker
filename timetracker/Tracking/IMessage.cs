@@ -8,7 +8,7 @@ namespace timetracker.Tracking
 {
 	interface IMessage
 	{
-		string GetType();
+		string GetMessageType();
 
 		int AsByteStream(ref byte[] outputStream, int start, int length);
 	}
