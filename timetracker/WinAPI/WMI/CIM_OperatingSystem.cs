@@ -63,8 +63,8 @@ namespace timetracker.WinAPI.WMI
 			FreePhysicalMemory = GetValue<UInt64>(mbo, nameof(FreePhysicalMemory));
 			FreeSpaceInPagingFiles = GetValue<UInt64>(mbo, nameof(FreeSpaceInPagingFiles));
 			FreeVirtualMemory = GetValue<UInt64>(mbo, nameof(FreeVirtualMemory));
-			LastBootUpTime = GetValue<DateTime>(mbo, nameof(LastBootUpTime));
-			LocalDateTime = GetValue<DateTime>(mbo, nameof(LocalDateTime));
+			LastBootUpTime = GetValueDateTime(mbo, nameof(LastBootUpTime));
+			LocalDateTime = GetValueDateTime(mbo, nameof(LocalDateTime));
 			MaxNumberOfProcesses = GetValue<UInt32>(mbo, nameof(MaxNumberOfProcesses));
 			MaxProcessMemorySize = GetValue<UInt32>(mbo, nameof(MaxProcessMemorySize));
 			NumberOfLicensedUsers = GetValue<UInt32>(mbo, nameof(NumberOfLicensedUsers));

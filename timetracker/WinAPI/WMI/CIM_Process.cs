@@ -108,7 +108,7 @@ namespace timetracker.WinAPI.WMI
 			: base(mbo)
 		{
 			CreationClassName = GetValueString(mbo, nameof(CreationClassName));
-			CreationDate = GetValue<DateTime>(mbo, nameof(CreationDate));
+			CreationDate = GetValueDateTime(mbo, nameof(CreationDate));
 			CSCreationClassName = GetValueString(mbo, nameof(CSCreationClassName));
 			CSName = GetValueString(mbo, nameof(CSName));
 			ExecutionState = GetValueEnum<UInt16, ExecutionStateType>(mbo,
@@ -118,7 +118,7 @@ namespace timetracker.WinAPI.WMI
 			OSCreationClassName = GetValueString(mbo, nameof(OSCreationClassName));
 			OSName = GetValueString(mbo, nameof(OSName));
 			Priority = GetValue<UInt32>(mbo, nameof(Priority));
-			TerminationDate = GetValue<DateTime>(mbo, nameof(TerminationDate));
+			TerminationDate = GetValueDateTime(mbo, nameof(TerminationDate));
 			UserModeTime = GetValue<UInt64>(mbo, nameof(UserModeTime));
 			WorkingSetSize = GetValue<UInt64>(mbo, nameof(WorkingSetSize));
 		}

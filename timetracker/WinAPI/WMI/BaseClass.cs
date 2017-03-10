@@ -90,6 +90,36 @@ namespace timetracker.WinAPI.WMI
 			return null;
 		}
 
+		protected DateTime? GetValueDateTime(ManagementBaseObject mbo,
+			string name)
+		{
+			var logger = LogManager.GetLogger(this.GetType());
+			logger.DebugFormat("Trying to access property: {0}", name);
+
+			try
+			{
+				string val = (string)mbo.Properties[name].Value;
+
+				if (val == null)
+					return null;
+
+				try
+				{
+					return ManagementDateTimeConverter.ToDateTime(val);
+				} catch (Exception ex)
+				{
+					logger.ErrorFormat("Exception thrown while trying to convert date in property: {0}", name);
+					logger.Error(ex);
+					return null;
+				}
+			} catch (ManagementException me)
+			{
+				logger.ErrorFormat("Exception thrown while trying to access property: {0}", name);
+				logger.Error(me);
+				return null;
+			}
+		}
+
 		protected T? GetValue<T>(ManagementBaseObject mbo, string name) where T:struct
 		{
 			var logger = LogManager.GetLogger(this.GetType());

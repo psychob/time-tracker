@@ -67,7 +67,7 @@ namespace timetracker.WinAPI.WMI
 		{
 			Caption = GetValueString(mbo, nameof(Caption));
 			Description = GetValueString(mbo, nameof(Description));
-			InstallDate = GetValue<DateTime>(mbo, nameof(InstallDate));
+			InstallDate = GetValueDateTime(mbo, nameof(InstallDate));
 			Name = GetValueString(mbo, nameof(Name));
 			Status = GetValueString(mbo, nameof(Status));
 		}
