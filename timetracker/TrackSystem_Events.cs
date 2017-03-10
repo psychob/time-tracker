@@ -256,162 +256,36 @@ namespace timetracker
 			}
 		}
 
-		class NetworkBandwidthEvent : TokenValue
-		{
-			public byte Type;
-			public ulong Recivied, Send;
-			public string Name;
-
-			public NetworkBandwidthEvent(string n, ulong r, ulong s)
-			{
-				Type = MessageHeader_NetworkBandwidth;
-
-				Recivied = r;
-				Send = s;
-				Name = n;
-			}
-
-			public int AsByteStream(ref byte[] str, int start, int length)
-			{
-				int Written = 0;
-				byte[] buff;
-
-				str[start + Written++] = Type;
-
-				buff = BitConverter.GetBytes(Recivied);
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				buff = BitConverter.GetBytes(Send);
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				buff = Name.GetBytesEncoded();
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				return Written;
-			}
-		}
-
-		struct InternetData
-		{
-			public DateTime Time;
-			public ulong Data;
-
-			public InternetData(DateTime d, ulong u)
-			{
-				Time = d;
-				Data = u;
-			}
-		}
-
-		RingBuffer<InternetData> ReciverSpeedData = new RingBuffer<InternetData>(4);
-		RingBuffer<InternetData> SentSpeedData = new RingBuffer<InternetData>(4);
-
 		internal ulong ReciverSpeed
 		{
 			get
 			{
-				if (ReciverSpeedData.Count <= 2)
-					return 0;
-
-				InternetData id;
-				ReciverSpeedData.Bottom(out id);
-
-				DateTime low = id.Time;
-				ulong sum = 0;
-
-				foreach (var it in ReciverSpeedData)
-					sum += it.Data;
-
-				return (ulong)(sum / (DateTime.Now - low).TotalSeconds);
+				return 0;
 			}
 		}
 
 		internal ulong ReciverData
 		{
-			get; private set;
+			get
+			{
+				return 0;
+			}
 		}
 
 		internal ulong SentSpeed
 		{
 			get
 			{
-				if (SentSpeedData.Count <= 2)
-					return 0;
-
-				InternetData id;
-				SentSpeedData.Bottom(out id);
-
-				DateTime low = id.Time;
-				ulong sum = 0;
-
-				foreach (var it in SentSpeedData)
-					sum += it.Data;
-
-				return (ulong)(sum / (DateTime.Now - low).TotalSeconds);
+				return 0;
 			}
 		}
 
 		internal ulong SentData
 		{
-			get; private set;
-		}
-
-		struct SendedData
-		{
-			public ulong Recived;
-			public ulong Send;
-		}
-
-		Dictionary<string, SendedData> sdata = new Dictionary<string, SendedData>();
-
-		void NetworkBandwitch(string Name, ulong Recivied, ulong Send)
-		{
-			SendedData sdv = new SendedData();
-
-			if (!sdata.TryGetValue(Name, out sdv))
+			get
 			{
-				sdv.Recived = Recivied;
-				sdv.Send = Send;
-
-				sdata.Add(Name, sdv);
+				return 0;
 			}
-
-			var d = DateTime.Now;
-
-			sdv = sdata[Name];
-
-			if (Recivied == 0 && Send == 0)
-			{
-				sdv.Recived = 0;
-				sdv.Send = 0;
-
-				ReciverSpeedData.Add(new InternetData(d, 0));
-				SentSpeedData.Add(new InternetData(d, 0));
-			} else if (sdv.Recived == 0 && sdv.Send == 0)
-			{
-				sdv.Recived = Recivied;
-				sdv.Send = Send;
-			} else
-			{
-				var x = Recivied - sdv.Recived;
-				var y = Send - sdv.Send;
-
-				AppendBinary(new NetworkBandwidthEvent(Name, x, y), d);
-
-				ReciverSpeedData.Add(new InternetData(d, x));
-				SentSpeedData.Add(new InternetData(d, y));
-
-				ReciverData += x;
-				SentData += y;
-
-				sdv.Recived = Recivied;
-				sdv.Send = Send;
-			}
-
-			sdata[Name] = sdv;
 		}
 
 		class PCInfoEventType : TokenValue

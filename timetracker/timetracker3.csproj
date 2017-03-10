@@ -103,6 +103,8 @@
     <Compile Include="Tracking\IDatabase.cs" />
     <Compile Include="Tracking\IMessage.cs" />
     <Compile Include="Tracking\ITracker.cs" />
+    <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthEvent.cs" />
+    <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthTracker.cs" />
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadEvent.cs" />
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadTracker.cs" />
     <Compile Include="Tracking\SystemMemory\MemoryEvent.cs" />
@@ -129,8 +131,10 @@
     <Compile Include="WinAPI\WMI\Win32_Perf.cs" />
     <Compile Include="WinAPI\WMI\Win32_PerfFormattedData.cs" />
     <Compile Include="WinAPI\WMI\Win32_PerfFormattedData_PerfOS_Processor.cs" />
+    <Compile Include="WinAPI\WMI\Win32_PerfFormattedData_Tcpip_NetworkInterface.cs" />
     <Compile Include="WinAPI\WMI\Win32_PerfRawData_PerfOS_Processor.cs" />
     <Compile Include="WinAPI\WMI\Win32_PerfRawData.cs" />
+    <Compile Include="WinAPI\WMI\Win32_PerfRawData_Tcpip_NetworkInterface.cs" />
     <Compile Include="WinAPI\WMI\Win32_Process.cs" />
     <Compile Include="LegacyXML\XmlOutputHelper.cs" />
     <EmbeddedResource Include="AddDefinition.resx">

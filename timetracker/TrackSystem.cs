@@ -508,13 +508,10 @@ namespace timetracker
 		{
 			internal delegate void InternetChangeStateType(Guid guid, string Name, Win32_NetworkAdapter.NetConnectionStatus state);
 			internal delegate void OSChangeType(ulong free, ulong all, ulong virtualFree, ulong virtualAll);
-			internal delegate void OnNetworkBandwidthType(string N, ulong R, ulong T);
 
 			internal InternetChangeStateType OnInternetEvent;
-			internal OnNetworkBandwidthType OnNetworkBandwidth;
 
 			ManagementEventWatcher eventInternet;
-			ManagementEventWatcher eventNetwork;
 
 			internal KeyboardHook kHook = new KeyboardHook();
 			internal ForegroundHook fHook = new ForegroundHook();
@@ -530,13 +527,9 @@ namespace timetracker
 			{
 				const string NameSpace = @"\\.\root\CIMV2";
 				const string NetChange = @"SELECT * FROM __InstanceModificationEvent WITHIN 600 WHERE TargetInstance ISA 'Win32_NetworkAdapter' AND TargetInstance.PhysicalAdapter = True";
-				const string NetworkSql = @"SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_PerfRawData_Tcpip_NetworkInterface'";
 
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
-
-				eventNetwork = new ManagementEventWatcher(NameSpace, NetworkSql);
-				eventNetwork.EventArrived += networkEventArrived;
 
 				kHook.Init();
 				fHook.Init();
@@ -546,18 +539,6 @@ namespace timetracker
 				PullAllInternet();
 
 				eventInternet.Start();
-				eventNetwork.Start();
-			}
-
-			private void networkEventArrived(object sender, EventArrivedEventArgs e)
-			{
-				ManagementBaseObject mbo = e.NewEvent.Properties["TargetInstance"].Value as ManagementBaseObject;
-
-				ulong Recivied = (ulong)(UInt64)mbo.Properties["BytesReceivedPersec"].Value;
-				ulong Send = (ulong)(UInt64)mbo.Properties["BytesSentPersec"].Value;
-				string Name = (string)mbo.Properties["Name"].Value;
-
-				OnNetworkBandwidth(Name, Recivied, Send);
 			}
 
 			private void OnModificationInternetEvent(object sender, EventArrivedEventArgs e)
@@ -594,7 +575,6 @@ namespace timetracker
 			public void Finish()
 			{
 				eventInternet.Stop();
-				eventNetwork.Stop();
 
 				kHook.DeInit();
 				fHook.DeInit();
@@ -602,7 +582,6 @@ namespace timetracker
 				mHook.DeInit();
 
 				eventInternet.Dispose();
-				eventNetwork.Dispose();
 			}
 
 			public void Dispose()
@@ -811,7 +790,6 @@ namespace timetracker
 			tracker = new Tracker();
 
 			tracker.OnInternetEvent = InternetEvent;
-			tracker.OnNetworkBandwidth = NetworkBandwitch;
 
 			tracker.kHook.keyEvent = KeyEvent;
 			tracker.fHook.foregroundChanged = ForegroundEvent;

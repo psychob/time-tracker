@@ -11,5 +11,7 @@ namespace timetracker.Messages
 		public string MemoryInfo { get { return "MEM"; } }
 
 		public string ProcessorLoad { get { return "PRC"; } }
+
+		public string NetworkLoad { get { return "NET"; } }
 	}
 }
