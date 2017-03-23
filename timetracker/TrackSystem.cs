@@ -513,7 +513,6 @@ namespace timetracker
 
 			ManagementEventWatcher eventInternet;
 
-			internal KeyboardHook kHook = new KeyboardHook();
 			internal ForegroundHook fHook = new ForegroundHook();
 			internal NamechangeHook nHook = new NamechangeHook();
 			internal MouseHook mHook = new MouseHook();
@@ -531,7 +530,6 @@ namespace timetracker
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
 
-				kHook.Init();
 				fHook.Init();
 				nHook.Init();
 				mHook.Init();
@@ -576,7 +574,6 @@ namespace timetracker
 			{
 				eventInternet.Stop();
 
-				kHook.DeInit();
 				fHook.DeInit();
 				nHook.DeInit();
 				mHook.DeInit();
@@ -791,7 +788,6 @@ namespace timetracker
 
 			tracker.OnInternetEvent = InternetEvent;
 
-			tracker.kHook.keyEvent = KeyEvent;
 			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
 

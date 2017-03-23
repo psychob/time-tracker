@@ -13,5 +13,9 @@ namespace timetracker.Messages
 		public string ProcessorLoad { get { return "PRC"; } }
 
 		public string NetworkLoad { get { return "NET"; } }
+
+		public string KeyboardRelease { get { return "KRE"; } }
+
+		public string KeyboardPress { get { return "KPR"; } }
 	}
 }

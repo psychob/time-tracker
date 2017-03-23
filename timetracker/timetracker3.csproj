@@ -82,7 +82,6 @@
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ForegroundHook.cs" />
-    <Compile Include="KeyboardHook.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +102,10 @@
     <Compile Include="Tracking\IDatabase.cs" />
     <Compile Include="Tracking\IMessage.cs" />
     <Compile Include="Tracking\ITracker.cs" />
+    <Compile Include="Tracking\Keyboard\KeyboardTracker.cs" />
+    <Compile Include="Tracking\Keyboard\KeyEvent.cs" />
+    <Compile Include="Tracking\Keyboard\KeyPressEvent.cs" />
+    <Compile Include="Tracking\Keyboard\KeyReleaseEvent.cs" />
     <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthEvent.cs" />
     <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthTracker.cs" />
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadEvent.cs" />
@@ -113,7 +116,6 @@
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
     <Compile Include="TrackSystem_Foreground.cs" />
-    <Compile Include="TrackSystem_Keyboard.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />

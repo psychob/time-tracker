@@ -94,8 +94,8 @@ namespace timetracker
 
 			var PixelDistance = TrackSystem.TrackingSystemState.MouseDistance;
 			var MouseDistanceSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
-			var KeyboardStrokes = TrackSystem.TrackingSystemState.KeyboardStrokes;
-			var KeyboardSpeed = TrackSystem.TrackingSystemState.KeyboardSpeed;
+			var KeyboardStrokes = 0ul;
+			var KeyboardSpeed = 0ul;
 			var MouseClick = TrackSystem.TrackingSystemState.MouseClickCount;
 			var MouseClickSpeed = TrackSystem.TrackingSystemState.MouseClickSpeed;
 			var NetworkReciver = TrackSystem.TrackingSystemState.ReciverSpeed;

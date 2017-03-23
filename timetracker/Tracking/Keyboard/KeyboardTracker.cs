@@ -1,39 +1,58 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using timetracker.Messages;
 using static timetracker.WinAPI.User32;
-using static timetracker.WinAPI.WinDef;
 using static timetracker.WinAPI.WinUser;
 
-namespace timetracker
+namespace timetracker.Tracking.Keyboard
 {
-	class KeyboardHook
+	class KeyboardTracker : ITracker
 	{
-		public delegate void KeyEventType(uint virtualKode, uint scanKode, bool up);
+		private readonly string[] Ext = new string[]
+		{
+			Current.Messages.KeyboardPress,
+			Current.Messages.KeyboardRelease
+		};
 
-		internal KeyEventType keyEvent;
+		private IDatabase Db;
+		private ManagementEventWatcher Tracker;
+		private ILog Logger = LogManager.GetLogger(typeof(KeyboardTracker));
 
-		private bool[] KeyState = new bool[255];
+		private bool[] KeyState = new bool[256];
 		private SetWindowsHookProc keyDelegate;
 		private IntPtr hHook = IntPtr.Zero;
 
-		public bool Init()
+		public string[] GetExtensions()
 		{
-			KeyState.Fill(false);
+			return Ext;
+		}
+
+		public string GetName()
+		{
+			return "Keyboard";
+		}
+
+		public void SetDatabase(IDatabase db)
+		{
+			Db = db;
+		}
+
+		public void SetUp()
+		{
+			Array.Clear(KeyState, 0, KeyState.Length);
 
 			keyDelegate = new SetWindowsHookProc(KeyHook);
 			hHook = SetWindowsHookEx(SetWindowsHookType.WH_KEYBOARD_LL, keyDelegate,
 				IntPtr.Zero, 0);
-
-			return hHook != IntPtr.Zero;
 		}
 
-		public void DeInit()
+		public void TearDown()
 		{
 			if (hHook != IntPtr.Zero)
 			{
@@ -48,6 +67,7 @@ namespace timetracker
 			{
 				var kInfo = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
 				var kMsg = (WindowMessage)wParam;
+				KeyEvent evnt = null;
 
 				switch (kMsg)
 				{
@@ -55,7 +75,7 @@ namespace timetracker
 					case WindowMessage.WM_SYSKEYDOWN:
 						if (KeyState[kInfo.vkCode] == false)
 						{
-							keyEvent(kInfo.vkCode, kInfo.scanCode, true);
+							evnt = new KeyPressEvent(kInfo.vkCode, kInfo.scanCode);
 							KeyState[kInfo.vkCode] = true;
 						}
 						break;
@@ -64,11 +84,14 @@ namespace timetracker
 					case WindowMessage.WM_SYSKEYUP:
 						if (KeyState[kInfo.vkCode] == true)
 						{
-							keyEvent(kInfo.vkCode, kInfo.scanCode, false);
+							evnt = new KeyReleaseEvent(kInfo.vkCode, kInfo.scanCode);
 							KeyState[kInfo.vkCode] = false;
 						}
 						break;
 				}
+
+				if (evnt != null)
+					Db.AppendMessage(evnt);
 			}
 
 			return CallNextHookEx(hHook, code, wParam, lParam);
