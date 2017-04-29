@@ -43,5 +43,7 @@ namespace timetracker.Messages
 		public string Namechange { get { return "ONC"; } }
 
 		public string ForegroundChange { get { return "OFC"; } }
+
+		public string Version { get { return "VER"; } }
 	}
 }

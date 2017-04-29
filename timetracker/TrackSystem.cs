@@ -741,7 +741,6 @@ namespace timetracker
 				StreamBinary.Write(HEADER, 0, HEADER.Length);
 			}
 
-			AppendBinary(new VersionEventType(CurrentVersion));
 			AppendBinary(new PCInfoEventType());
 		}
 

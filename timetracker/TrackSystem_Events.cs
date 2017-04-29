@@ -107,32 +107,6 @@ namespace timetracker
 			}
 		}
 
-		class VersionEventType : TokenValue
-		{
-			public byte Type;
-			public string Version;
-
-			public VersionEventType(string ver)
-			{
-				Type = MessageHeader_Version;
-				Version = ver;
-			}
-
-			public int AsByteStream(ref byte[] str, int start, int length)
-			{
-				int Written = 0;
-				byte[] buff;
-
-				str[start + Written++] = Type;
-
-				buff = Version.GetBytesEncoded();
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				return Written;
-			}
-		}
-
 		class ResolutionChange : TokenValue
 		{
 			public byte Type;
