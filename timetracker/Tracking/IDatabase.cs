@@ -4,9 +4,9 @@ namespace timetracker.Tracking
 {
 	internal interface IDatabase
 	{
-		void AppendMessage(IMessage msg);
+		void AppendMessage(IMessage msg, bool flush = false);
 
-		void AppendMessage(IMessage msg, DateTime time);
+		void AppendMessage(IMessage msg, DateTime time, bool flush = false);
 
 		void SetPropertyHistory(string Name, int records = 10, bool enable = true);
 
