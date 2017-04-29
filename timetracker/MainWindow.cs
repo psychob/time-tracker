@@ -92,12 +92,12 @@ namespace timetracker
 
 			TickCount++;
 
-			var PixelDistance = TrackSystem.TrackingSystemState.MouseDistance;
-			var MouseDistanceSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
+			var PixelDistance = 0ul;
+			var MouseDistanceSpeed = 0ul;
 			var KeyboardStrokes = 0ul;
 			var KeyboardSpeed = 0ul;
-			var MouseClick = TrackSystem.TrackingSystemState.MouseClickCount;
-			var MouseClickSpeed = TrackSystem.TrackingSystemState.MouseClickSpeed;
+			var MouseClick = 0ul;
+			var MouseClickSpeed = 0ul;
 			var NetworkReciver = TrackSystem.TrackingSystemState.ReciverSpeed;
 			var NetworkSent = TrackSystem.TrackingSystemState.SentSpeed;
 			var TotalNetworkReciver = TrackSystem.TrackingSystemState.ReciverData;

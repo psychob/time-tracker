@@ -515,7 +515,6 @@ namespace timetracker
 
 			internal ForegroundHook fHook = new ForegroundHook();
 			internal NamechangeHook nHook = new NamechangeHook();
-			internal MouseHook mHook = new MouseHook();
 
 			public void Start()
 			{
@@ -532,7 +531,6 @@ namespace timetracker
 
 				fHook.Init();
 				nHook.Init();
-				mHook.Init();
 
 				PullAllInternet();
 
@@ -576,7 +574,6 @@ namespace timetracker
 
 				fHook.DeInit();
 				nHook.DeInit();
-				mHook.DeInit();
 
 				eventInternet.Dispose();
 			}
@@ -790,10 +787,6 @@ namespace timetracker
 
 			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
-
-			tracker.mHook.mouseClickEvent = MouseClickEvent;
-			tracker.mHook.mouseMoveEvent = MouseMoveEvent;
-			tracker.mHook.mouseWheelMoveEvent = MouseWheelEvent;
 
 			var x = System.Windows.Forms.Screen.PrimaryScreen;
 			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);
