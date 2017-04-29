@@ -71,7 +71,6 @@ namespace timetracker.WinAPI.WMI
 		protected string GetValueString(ManagementBaseObject mbo, string name)
 		{
 			var logger = LogManager.GetLogger(this.GetType());
-			logger.DebugFormat("Trying to access property: {0}", name);
 
 			try
 			{
@@ -94,7 +93,6 @@ namespace timetracker.WinAPI.WMI
 			string name)
 		{
 			var logger = LogManager.GetLogger(this.GetType());
-			logger.DebugFormat("Trying to access property: {0}", name);
 
 			try
 			{
@@ -123,7 +121,6 @@ namespace timetracker.WinAPI.WMI
 		protected T? GetValue<T>(ManagementBaseObject mbo, string name) where T:struct
 		{
 			var logger = LogManager.GetLogger(this.GetType());
-			logger.DebugFormat("Trying to access property: {0}", name);
 
 			try
 			{
@@ -141,7 +138,6 @@ namespace timetracker.WinAPI.WMI
 			string name, Func<T, U> conv) where U : struct
 		{
 			var logger = LogManager.GetLogger(this.GetType());
-			logger.DebugFormat("Trying to access property: {0}", name);
 
 			try
 			{
