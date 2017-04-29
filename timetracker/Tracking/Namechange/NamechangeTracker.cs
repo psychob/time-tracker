@@ -1,46 +1,59 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using timetracker.Messages;
 using static timetracker.WinAPI.User32;
-using static timetracker.WinAPI.WinDef;
-using static timetracker.WinAPI.WinUser;
 
-namespace timetracker
+namespace timetracker.Tracking.Namechange
 {
-	class NamechangeHook
+	class NamechangeTracker : ITracker
 	{
-		public delegate void NamechangeHookType(uint processID, string winTitle);
+		private readonly string[] Ext = new string[]
+		{
+			Current.Messages.Namechange,
+		};
+
+		private IDatabase Db;
+		private ILog Logger = LogManager.GetLogger(typeof(NamechangeTracker));
 
 		private IntPtr hHook;
 		private SetWinEventHookProc wpDel;
 
-		internal NamechangeHookType namechangeEvent;
+		public string[] GetExtensions()
+		{
+			return Ext;
+		}
 
-		public bool Init()
+		public string GetName()
+		{
+			return "Namechange";
+		}
+
+		public void SetDatabase(IDatabase db)
+		{
+			Db = db;
+		}
+
+		public void SetUp()
 		{
 			wpDel = new SetWinEventHookProc(eventArrived);
 
 			hHook = SetWinEventHook(SetWinEventHookType.EVENT_OBJECT_NAMECHANGE,
 				SetWinEventHookType.EVENT_OBJECT_NAMECHANGE, IntPtr.Zero,
 				wpDel, 0, 0, SetWinEventHookFlags.WINEVENT_OUTOFCONTEXT);
-
-			return hHook == IntPtr.Zero;
 		}
 
-		public void DeInit()
+		public void TearDown()
 		{
 			UnhookWinEvent(hHook);
 
 			hHook = IntPtr.Zero;
 		}
 
-		private void eventArrived(IntPtr hWinEventHook,
-			uint eventType, IntPtr hwnd, int idObject, int idChild,
-			uint dwEventThread, uint dwmsEventTime)
+		private void eventArrived(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
 			if (idObject == OBJID_WINDOW && idChild == CHILDID_SELF)
 			{
@@ -54,7 +67,7 @@ namespace timetracker
 				int written = GetWindowText(hwnd, sb, 1024);
 
 				if (written != 0)
-					namechangeEvent(ProcessId, sb.ToString());
+					Db.AppendMessage(new NamechangeEvent(ProcessId, sb.ToString()));
 			}
 		}
 	}

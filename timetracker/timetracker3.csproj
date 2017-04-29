@@ -95,7 +95,6 @@
     <Compile Include="Messages\v3_16.cs" />
     <Compile Include="Messages\v4_0.cs" />
     <Compile Include="MouseHook.cs" />
-    <Compile Include="NameChangeHook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RingBuffer.cs" />
@@ -109,6 +108,8 @@
     <Compile Include="Tracking\Mouse\MouseEvent.cs" />
     <Compile Include="Tracking\Mouse\MouseTracker.cs" />
     <Compile Include="Tracking\Mouse\MouseWheelEvent.cs" />
+    <Compile Include="Tracking\Namechange\NamechangeEvent.cs" />
+    <Compile Include="Tracking\Namechange\NamechangeTracker.cs" />
     <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthEvent.cs" />
     <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthTracker.cs" />
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadEvent.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
     <Compile Include="TrackSystem_Foreground.cs" />
-    <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\User32.cs" />
     <Compile Include="WinAPI\WinDef.cs" />

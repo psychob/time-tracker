@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-
+using timetracker.Tracking.Namechange;
 using timetracker.WinAPI.WMI;
 using static timetracker.WinAPI.Kernel32;
 
@@ -514,7 +514,6 @@ namespace timetracker
 			ManagementEventWatcher eventInternet;
 
 			internal ForegroundHook fHook = new ForegroundHook();
-			internal NamechangeHook nHook = new NamechangeHook();
 
 			public void Start()
 			{
@@ -530,7 +529,6 @@ namespace timetracker
 				eventInternet.EventArrived += OnModificationInternetEvent;
 
 				fHook.Init();
-				nHook.Init();
 
 				PullAllInternet();
 
@@ -573,7 +571,6 @@ namespace timetracker
 				eventInternet.Stop();
 
 				fHook.DeInit();
-				nHook.DeInit();
 
 				eventInternet.Dispose();
 			}
@@ -786,7 +783,6 @@ namespace timetracker
 			tracker.OnInternetEvent = InternetEvent;
 
 			tracker.fHook.foregroundChanged = ForegroundEvent;
-			tracker.nHook.namechangeEvent = NamechangeEvent;
 
 			var x = System.Windows.Forms.Screen.PrimaryScreen;
 			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);
@@ -1077,17 +1073,6 @@ namespace timetracker
 
 			AppendBinary(new BeginEventType(PID, ruleselected.UniqueID,
 				ruleselected.RuleSetID, ParentID), x);
-
-			// rejestrujemy nazwe głównego okna
-			try
-			{
-				Process p = Process.GetProcessById(PID);
-
-				AppendBinary(new NamechangeToken((uint)PID, p.MainWindowTitle), x, true);
-			} catch (Exception)
-			{
-				AppendBinary(new NamechangeToken((uint)PID, ""), x, true);
-			}
 		}
 
 		private void ProcessDestoryed(int pid)
