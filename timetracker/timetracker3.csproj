@@ -113,6 +113,8 @@
     <Compile Include="Tracking\Namechange\NamechangeTracker.cs" />
     <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthEvent.cs" />
     <Compile Include="Tracking\NetworkBandwidth\NetworkBandwidthTracker.cs" />
+    <Compile Include="Tracking\PCInfo\PCInfoEvent.cs" />
+    <Compile Include="Tracking\PCInfo\PCInfoTracker.cs" />
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadEvent.cs" />
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadTracker.cs" />
     <Compile Include="Tracking\SystemMemory\MemoryEvent.cs" />

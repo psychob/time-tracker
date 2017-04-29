@@ -261,41 +261,5 @@ namespace timetracker
 				return 0;
 			}
 		}
-
-		class PCInfoEventType : TokenValue
-		{
-			public byte Type;
-			public string PcName, UserName, OsVersion;
-
-			public PCInfoEventType()
-			{
-				Type = MessageHeader_PCName;
-				PcName = Environment.MachineName;
-				UserName = Environment.UserName;
-				OsVersion = Environment.OSVersion.Platform.ToString() + " " +Environment.OSVersion.VersionString;
-			}
-
-			public int AsByteStream(ref byte[] str, int start, int length)
-			{
-				int Written = 0;
-				byte[] buff;
-
-				str[start + Written++] = Type;
-
-				buff = PcName.GetBytesEncoded();
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				buff = UserName.GetBytesEncoded();
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				buff = OsVersion.GetBytesEncoded();
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
-
-				return Written;
-			}
-		}
 	}
 }

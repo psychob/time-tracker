@@ -740,8 +740,6 @@ namespace timetracker
 				byte[] HEADER = "BINARY DATA FIL1".GetBytes();
 				StreamBinary.Write(HEADER, 0, HEADER.Length);
 			}
-
-			AppendBinary(new PCInfoEventType());
 		}
 
 		private void SaveState()

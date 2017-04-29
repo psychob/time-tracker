@@ -45,5 +45,7 @@ namespace timetracker.Messages
 		public string ForegroundChange { get { return "OFC"; } }
 
 		public string Version { get { return "VER"; } }
+
+		public string PCInfo { get { return "PCI"; } }
 	}
 }
