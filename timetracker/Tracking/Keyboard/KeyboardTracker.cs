@@ -21,7 +21,6 @@ namespace timetracker.Tracking.Keyboard
 		};
 
 		private IDatabase Db;
-		private ManagementEventWatcher Tracker;
 		private ILog Logger = LogManager.GetLogger(typeof(KeyboardTracker));
 
 		private bool[] KeyState = new bool[256];
