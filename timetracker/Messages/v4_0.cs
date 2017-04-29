@@ -41,5 +41,7 @@ namespace timetracker.Messages
 		public string MouseWheelHorizontal { get { return "MWH"; } }
 
 		public string Namechange { get { return "ONC"; } }
+
+		public string ForegroundChange { get { return "OFC"; } }
 	}
 }

@@ -513,8 +513,6 @@ namespace timetracker
 
 			ManagementEventWatcher eventInternet;
 
-			internal ForegroundHook fHook = new ForegroundHook();
-
 			public void Start()
 			{
 				InitializeTracking();
@@ -527,8 +525,6 @@ namespace timetracker
 
 				eventInternet = new ManagementEventWatcher(NameSpace, NetChange);
 				eventInternet.EventArrived += OnModificationInternetEvent;
-
-				fHook.Init();
 
 				PullAllInternet();
 
@@ -569,8 +565,6 @@ namespace timetracker
 			public void Finish()
 			{
 				eventInternet.Stop();
-
-				fHook.DeInit();
 
 				eventInternet.Dispose();
 			}
@@ -781,8 +775,6 @@ namespace timetracker
 			tracker = new Tracker();
 
 			tracker.OnInternetEvent = InternetEvent;
-
-			tracker.fHook.foregroundChanged = ForegroundEvent;
 
 			var x = System.Windows.Forms.Screen.PrimaryScreen;
 			ResolutionChangeEvent(x.Bounds.Width, x.Bounds.Height);

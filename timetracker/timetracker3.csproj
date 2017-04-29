@@ -81,7 +81,6 @@
       <DependentUpon>ApplicationDefinition.cs</DependentUpon>
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="ForegroundHook.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +97,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RingBuffer.cs" />
+    <Compile Include="Tracking\Foreground\ForegroundEvent.cs" />
+    <Compile Include="Tracking\Foreground\ForegroundTracker.cs" />
     <Compile Include="Tracking\IDatabase.cs" />
     <Compile Include="Tracking\IMessage.cs" />
     <Compile Include="Tracking\ITracker.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="TrackSystem.cs" />
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
-    <Compile Include="TrackSystem_Foreground.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\User32.cs" />
     <Compile Include="WinAPI\WinDef.cs" />
