@@ -80,6 +80,9 @@
     <Compile Include="ApplicationDefinition.Designer.cs">
       <DependentUpon>ApplicationDefinition.cs</DependentUpon>
     </Compile>
+    <Compile Include="Database\App.cs" />
+    <Compile Include="Database\Rule.cs" />
+    <Compile Include="Database\RuleSet.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
