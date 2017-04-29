@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icons\icons.ico</ApplicationIcon>
+    <ApplicationIcon>icons\timetracker-icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -182,6 +182,7 @@
     <Content Include="icons\folder-open.png" />
     <Content Include="icons\folder.png" />
     <Content Include="icons\icons.ico" />
+    <None Include="icons\timetracker-icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

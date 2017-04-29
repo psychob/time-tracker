@@ -35,6 +35,7 @@
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.tsslTime = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslPixelDistance = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslPixelDistanceRaw = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslKeyPerSecond = new System.Windows.Forms.ToolStripStatusLabel();
@@ -63,7 +64,6 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.tsslTime = new System.Windows.Forms.ToolStripStatusLabel();
 			this.cmsNotify.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -117,6 +117,12 @@
 			this.statusStrip1.Size = new System.Drawing.Size(726, 22);
 			this.statusStrip1.TabIndex = 1;
 			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// tsslTime
+			// 
+			this.tsslTime.Name = "tsslTime";
+			this.tsslTime.Size = new System.Drawing.Size(53, 17);
+			this.tsslTime.Text = "[tsslTime]";
 			// 
 			// tsslPixelDistance
 			// 
@@ -325,12 +331,6 @@
 			this.columnHeader5.DisplayIndex = 1;
 			this.columnHeader5.Text = "Started";
 			this.columnHeader5.Width = 51;
-			// 
-			// tsslTime
-			// 
-			this.tsslTime.Name = "tsslTime";
-			this.tsslTime.Size = new System.Drawing.Size(53, 17);
-			this.tsslTime.Text = "[tsslTime]";
 			// 
 			// MainWindow
 			// 
