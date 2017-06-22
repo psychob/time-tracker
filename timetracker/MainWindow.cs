@@ -307,28 +307,28 @@ namespace timetracker
 				ars.Priority = RulePriority.Medium;
 				ars.UniqueId = "Inherit from file: " + Path.GetFileName(ofd.FileName);
 
-				List<TrackSystem.Structs.AppRule> rules = new List<TrackSystem.Structs.AppRule>();
+				List<AppRule> rules = new List<AppRule>();
 
-				rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileName,
+				rules.Add(new AppRule(TrackSystem.Structs.AppRuleMatchTo.FileName,
 					Path.GetFileName(ofd.FileName),
 					TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant));
-				rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileMD5,
+				rules.Add(new AppRule(TrackSystem.Structs.AppRuleMatchTo.FileMD5,
 					md5, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
 				if (!fvi.FileDescription.IsEmptyOrNull())
-					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc,
+					rules.Add(new AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc,
 						fvi.FileDescription, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
 				if (!fvi.CompanyName.IsEmptyOrNull())
-					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany,
+					rules.Add(new AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany,
 						fvi.CompanyName, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
 				if (!fvi.FileVersion.IsEmptyOrNull())
-					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion,
+					rules.Add(new AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion,
 						fvi.FileVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
 				if (!fvi.ProductVersion.IsEmptyOrNull())
-					rules.Add(new TrackSystem.Structs.AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion,
+					rules.Add(new AppRule(TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion,
 						fvi.ProductVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
 
 				ars.Rules = rules.ToArray();

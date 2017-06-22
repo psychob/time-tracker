@@ -202,9 +202,9 @@ namespace timetracker
 			}
 		}
 
-		private TrackSystem.Structs.AppRule[] ExtractRules(int id)
+		private AppRule[] ExtractRules(int id)
 		{
-			List<TrackSystem.Structs.AppRule> lar = new List<TrackSystem.Structs.AppRule>();
+			List<AppRule> lar = new List<AppRule>();
 
 			List<int> rules = rules_to_ruleset.Filter((k, v) => v == id).Keys.ToList();
 
@@ -313,7 +313,7 @@ namespace timetracker
 		int rule_id = 0;
 
 		List<IdContainer<AppRuleSet>> rulesets = new List<IdContainer<AppRuleSet>>();
-		List<IdContainer<TrackSystem.Structs.AppRule>> rules = new List<IdContainer<TrackSystem.Structs.AppRule>>();
+		List<IdContainer<AppRule>> rules = new List<IdContainer<AppRule>>();
 		Dictionary<int, int> rules_to_ruleset = new Dictionary<int, int>();
 
 		private void button3_Click(object sender, EventArgs e)
@@ -353,7 +353,7 @@ namespace timetracker
 			return tn;
 		}
 
-		private void AddToTreeView(IdContainer<TrackSystem.Structs.AppRule> idcont,
+		private void AddToTreeView(IdContainer<AppRule> idcont,
 			TreeNode selectedNode)
 		{
 			TreeNode tn = new TreeNode(idcont.container.MatchString + " = " +
@@ -376,13 +376,13 @@ namespace timetracker
 			if (treeView1.SelectedNode.Parent != null)
 				return;
 
-			TrackSystem.Structs.AppRule ar = new TrackSystem.Structs.AppRule();
+			AppRule ar = new AppRule();
 
 			ar.MatchString = tbPattern.Text;
 			ar.MatchAlgorithm = MatchAlgorithm;
 			ar.MatchTo = MatchTo;
 
-			var idcont = new IdContainer<TrackSystem.Structs.AppRule>(rule_id++, ar);
+			var idcont = new IdContainer<AppRule>(rule_id++, ar);
 
 			rules.Add(idcont);
 			rules_to_ruleset.Add(idcont.id, (int)treeView1.SelectedNode.Tag);
@@ -684,7 +684,7 @@ namespace timetracker
 		private void exactToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			AppRule rs = GetRule(ruleset_id);
 			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Exact;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -694,7 +694,7 @@ namespace timetracker
 		private void exactCaseInsensitiveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			AppRule rs = GetRule(ruleset_id);
 			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -704,7 +704,7 @@ namespace timetracker
 		private void nearToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			AppRule rs = GetRule(ruleset_id);
 			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Near;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -714,7 +714,7 @@ namespace timetracker
 		private void nearCaseInsensitiveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			AppRule rs = GetRule(ruleset_id);
 			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.NearInvariant;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -724,7 +724,7 @@ namespace timetracker
 		private void regularExpressionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRule rs = GetRule(ruleset_id);
+			AppRule rs = GetRule(ruleset_id);
 			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Regex;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -740,7 +740,7 @@ namespace timetracker
 			throw new ArgumentException();
 		}
 
-		private TrackSystem.Structs.AppRule GetRule(int ruleset_id)
+		private AppRule GetRule(int ruleset_id)
 		{
 			foreach (var it in rules)
 				if (it.id == ruleset_id)
@@ -769,13 +769,13 @@ namespace timetracker
 		}
 
 		private void ReplaceRuleSetNode(TreeNode selectedNode,
-			TrackSystem.Structs.AppRule container)
+			AppRule container)
 		{
 			selectedNode.Text = container.MatchString + " = " + container.MatchTo + ", " +
 				container.MatchAlgorithm;
 		}
 
-		private void ReplaceRuleSetNode(TrackSystem.Structs.AppRule rs, int ruleset_id)
+		private void ReplaceRuleSetNode(AppRule rs, int ruleset_id)
 		{
 			foreach (var it in rules)
 				if (it.id == ruleset_id)

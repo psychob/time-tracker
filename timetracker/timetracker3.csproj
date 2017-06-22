@@ -77,6 +77,7 @@
       <DependentUpon>ApplicationDefinition.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\App.cs" />
+    <Compile Include="Entities\AppRule.cs" />
     <Compile Include="Entities\AppRuleSet.cs" />
     <Compile Include="Entities\RulePriority.cs" />
     <Compile Include="Entities\RuleSet.cs" />
