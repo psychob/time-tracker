@@ -25,20 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public enum AppRuleAlgorithm
-			{
-				Exact,
-				ExactInvariant,
-				Near,
-				NearInvariant,
-				Regex,
-				RegexInvariant,
-				StartsWith,
-				StartsWithInvariant,
-				EndWith,
-				EndWithInvariant,
-			}
-
 			internal struct CurrentApps
 			{
 				public int PID;
@@ -127,23 +113,23 @@ namespace timetracker
 		internal static class Utils
 		{
 			public static bool IsStringMatch(string pattern, string subject,
-				Structs.AppRuleAlgorithm algo)
+				AppRuleAlgorithm algo)
 			{
 				switch (algo)
 				{
-					case Structs.AppRuleAlgorithm.Exact:
+					case AppRuleAlgorithm.Exact:
 						return pattern == subject;
 
-					case Structs.AppRuleAlgorithm.ExactInvariant:
+					case AppRuleAlgorithm.ExactInvariant:
 						return pattern.Equals(subject, StringComparison.CurrentCultureIgnoreCase);
 
-					case Structs.AppRuleAlgorithm.Near:
+					case AppRuleAlgorithm.Near:
 						return new Regex(GenerateNearCharacters(pattern)).IsMatch(subject);
 
-					case Structs.AppRuleAlgorithm.NearInvariant:
+					case AppRuleAlgorithm.NearInvariant:
 						return new Regex(GenerateNearCharacters(pattern), RegexOptions.IgnoreCase).IsMatch(subject);
 
-					case Structs.AppRuleAlgorithm.Regex:
+					case AppRuleAlgorithm.Regex:
 						{
 							try
 							{
@@ -155,7 +141,7 @@ namespace timetracker
 							}
 						}
 
-					case Structs.AppRuleAlgorithm.RegexInvariant:
+					case AppRuleAlgorithm.RegexInvariant:
 						{
 							try
 							{
@@ -167,16 +153,16 @@ namespace timetracker
 							}
 						}
 
-					case Structs.AppRuleAlgorithm.StartsWith:
+					case AppRuleAlgorithm.StartsWith:
 						return subject.StartsWith(pattern);
 
-					case Structs.AppRuleAlgorithm.StartsWithInvariant:
+					case AppRuleAlgorithm.StartsWithInvariant:
 						return subject.StartsWith(pattern, StringComparison.CurrentCultureIgnoreCase);
 
-					case Structs.AppRuleAlgorithm.EndWith:
+					case AppRuleAlgorithm.EndWith:
 						return subject.EndsWith(pattern);
 
-					case Structs.AppRuleAlgorithm.EndWithInvariant:
+					case AppRuleAlgorithm.EndWithInvariant:
 						return subject.EndsWith(pattern, StringComparison.CurrentCultureIgnoreCase);
 				}
 

@@ -393,32 +393,32 @@ namespace timetracker
 			tbMatchTest.Text = "";
 		}
 
-		private TrackSystem.Structs.AppRuleAlgorithm MatchAlgorithm
+		private AppRuleAlgorithm MatchAlgorithm
 		{
 			get
 			{
 				switch (cbMatchAlgo.SelectedIndex)
 				{
 					case 0:
-						return TrackSystem.Structs.AppRuleAlgorithm.Exact;
+						return AppRuleAlgorithm.Exact;
 					case 1:
-						return TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant;
+						return AppRuleAlgorithm.ExactInvariant;
 					case 2:
-						return TrackSystem.Structs.AppRuleAlgorithm.Near;
+						return AppRuleAlgorithm.Near;
 					case 3:
-						return TrackSystem.Structs.AppRuleAlgorithm.NearInvariant;
+						return AppRuleAlgorithm.NearInvariant;
 					case 4:
-						return TrackSystem.Structs.AppRuleAlgorithm.Regex;
+						return AppRuleAlgorithm.Regex;
 					case 5:
-						return TrackSystem.Structs.AppRuleAlgorithm.RegexInvariant;
+						return AppRuleAlgorithm.RegexInvariant;
 					case 6:
-						return TrackSystem.Structs.AppRuleAlgorithm.StartsWith;
+						return AppRuleAlgorithm.StartsWith;
 					case 7:
-						return TrackSystem.Structs.AppRuleAlgorithm.StartsWithInvariant;
+						return AppRuleAlgorithm.StartsWithInvariant;
 					case 8:
-						return TrackSystem.Structs.AppRuleAlgorithm.EndWith;
+						return AppRuleAlgorithm.EndWith;
 					case 9:
-						return TrackSystem.Structs.AppRuleAlgorithm.EndWithInvariant;
+						return AppRuleAlgorithm.EndWithInvariant;
 				}
 
 				throw new NotSupportedException();
@@ -685,7 +685,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRule rs = GetRule(ruleset_id);
-			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Exact;
+			rs.MatchAlgorithm = AppRuleAlgorithm.Exact;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -695,7 +695,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRule rs = GetRule(ruleset_id);
-			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant;
+			rs.MatchAlgorithm = AppRuleAlgorithm.ExactInvariant;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -705,7 +705,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRule rs = GetRule(ruleset_id);
-			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Near;
+			rs.MatchAlgorithm = AppRuleAlgorithm.Near;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -715,7 +715,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRule rs = GetRule(ruleset_id);
-			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.NearInvariant;
+			rs.MatchAlgorithm = AppRuleAlgorithm.NearInvariant;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -725,7 +725,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRule rs = GetRule(ruleset_id);
-			rs.MatchAlgorithm = TrackSystem.Structs.AppRuleAlgorithm.Regex;
+			rs.MatchAlgorithm = AppRuleAlgorithm.Regex;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);

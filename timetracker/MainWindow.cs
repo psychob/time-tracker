@@ -311,25 +311,25 @@ namespace timetracker
 
 				rules.Add(new AppRule(AppRuleMatchTo.FileName,
 					Path.GetFileName(ofd.FileName),
-					TrackSystem.Structs.AppRuleAlgorithm.ExactInvariant));
+					AppRuleAlgorithm.ExactInvariant));
 				rules.Add(new AppRule(AppRuleMatchTo.FileMD5,
-					md5, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+					md5, AppRuleAlgorithm.Exact));
 
 				if (!fvi.FileDescription.IsEmptyOrNull())
 					rules.Add(new AppRule(AppRuleMatchTo.FileVersionDesc,
-						fvi.FileDescription, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+						fvi.FileDescription, AppRuleAlgorithm.Exact));
 
 				if (!fvi.CompanyName.IsEmptyOrNull())
 					rules.Add(new AppRule(AppRuleMatchTo.FileVersionCompany,
-						fvi.CompanyName, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+						fvi.CompanyName, AppRuleAlgorithm.Exact));
 
 				if (!fvi.FileVersion.IsEmptyOrNull())
 					rules.Add(new AppRule(AppRuleMatchTo.FileVersionFileVersion,
-						fvi.FileVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+						fvi.FileVersion, AppRuleAlgorithm.Exact));
 
 				if (!fvi.ProductVersion.IsEmptyOrNull())
 					rules.Add(new AppRule(AppRuleMatchTo.FileVersionProductVersion,
-						fvi.ProductVersion, TrackSystem.Structs.AppRuleAlgorithm.Exact));
+						fvi.ProductVersion, AppRuleAlgorithm.Exact));
 
 				ars.Rules = rules.ToArray();
 
