@@ -256,20 +256,20 @@ namespace timetracker
 			}
 		}
 
-		private TrackSystem.Structs.RulePriority RuleSetPriority
+		private RulePriority RuleSetPriority
 		{
 			get
 			{
 				switch (cbGroupPriority.SelectedIndex)
 				{
 					case 0: // low
-						return TrackSystem.Structs.RulePriority.Low;
+						return RulePriority.Low;
 
 					case 1: // medium
-						return TrackSystem.Structs.RulePriority.Medium;
+						return RulePriority.Medium;
 
 					case 2: // high
-						return TrackSystem.Structs.RulePriority.High;
+						return RulePriority.High;
 				}
 
 				throw new NotSupportedException();
@@ -279,15 +279,15 @@ namespace timetracker
 			{
 				switch (value)
 				{
-					case TrackSystem.Structs.RulePriority.Low:
+					case RulePriority.Low:
 						cbGroupPriority.SelectedIndex = 0;
 						break;
 
-					case TrackSystem.Structs.RulePriority.Medium:
+					case RulePriority.Medium:
 						cbGroupPriority.SelectedIndex = 1;
 						break;
 
-					case TrackSystem.Structs.RulePriority.High:
+					case RulePriority.High:
 						cbGroupPriority.SelectedIndex = 2;
 						break;
 
@@ -338,7 +338,7 @@ namespace timetracker
 
 			tbGroupName.Text = Guid.NewGuid().ToString();
 			RuleSetType = TrackSystem.Structs.RuleSet.All;
-			RuleSetPriority = TrackSystem.Structs.RulePriority.Medium;
+			RuleSetPriority = RulePriority.Medium;
 		}
 
 		private TreeNode AddToTreeView(IdContainer<AppRuleSet> idcnt)
@@ -640,7 +640,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRuleSet rs = GetRuleSet(ruleset_id);
-			rs.Priority = TrackSystem.Structs.RulePriority.Low;
+			rs.Priority = RulePriority.Low;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -650,7 +650,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRuleSet rs = GetRuleSet(ruleset_id);
-			rs.Priority = TrackSystem.Structs.RulePriority.Medium;
+			rs.Priority = RulePriority.Medium;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -660,7 +660,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRuleSet rs = GetRuleSet(ruleset_id);
-			rs.Priority = TrackSystem.Structs.RulePriority.High;
+			rs.Priority = RulePriority.High;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);

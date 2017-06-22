@@ -25,14 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public enum RulePriority
-			{
-				None,
-				Low,
-				Medium,
-				High,
-			}
-
 			public enum RuleSet
 			{
 				Any,
@@ -919,7 +911,7 @@ namespace timetracker
 			{
 				List<Structs.AppRulePair> qualified = new List<Structs.AppRulePair>();
 				Dictionary<string, string> md5Cache = new Dictionary<string, string>();
-				Structs.RulePriority definedPriority = Structs.RulePriority.None;
+				RulePriority definedPriority = RulePriority.None;
 
 				foreach (var it in definedApps)
 				{
