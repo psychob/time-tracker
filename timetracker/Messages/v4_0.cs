@@ -47,5 +47,13 @@ namespace timetracker.Messages
 		public string Version { get { return "VER"; } }
 
 		public string PCInfo { get { return "PCI"; } }
+
+		public string AppBegin { get { return "APB"; } }
+
+		public string AppEnd { get { return "APE"; } }
+
+		public string UnknownAppBegin { get { return "UAB"; } }
+
+		public string UnknownAppEnd { get { return "UAE"; } }
 	}
 }

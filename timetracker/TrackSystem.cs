@@ -754,19 +754,12 @@ namespace timetracker
 			SaveDatabase();
 		}
 
-		ManagementEventWatcher ProcessBeginWatcher;
-		ManagementEventWatcher ProcessEndWatcher;
-
 		public void BeginTracking()
 		{
 			ThreadBinary = new Thread(ThreadBinaryLoop);
 			ThreadBinary.Name = "Binary Data Saver";
 			ThreadBinary.Priority = ThreadPriority.BelowNormal;
 			ThreadBinary.Start();
-
-			ProcessBeginWatcher = Win32_Process.Watch(5, BaseClass.WatchType.Creation, CreateProcess);
-			ProcessEndWatcher = Win32_Process.Watch(5, BaseClass.WatchType.Deletion, DestroyProcess);
-
 			GrabAll();
 
 			tracker = new Tracker();
@@ -1101,12 +1094,6 @@ namespace timetracker
 		{
 			tracker.Dispose();
 			tracker = null;
-
-			ProcessBeginWatcher.Stop();
-			ProcessEndWatcher.Stop();
-
-			ProcessBeginWatcher.Dispose();
-			ProcessEndWatcher.Dispose();
 		}
 
 		private void FinishProcess()
