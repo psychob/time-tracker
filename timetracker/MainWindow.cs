@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
+using timetracker.Entities;
+
 using static timetracker.WinAPI.WinUser;
 using static timetracker.WinAPI.Kernel32;
 using System.Globalization;
@@ -279,7 +281,7 @@ namespace timetracker
 			OpenFileTemplate();
 		}
 
-		internal static TrackSystem.Structs.App? OpenFileTemplate()
+		internal static App? OpenFileTemplate()
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 

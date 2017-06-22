@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using timetracker.Entities;
 
 namespace timetracker
 {
@@ -17,7 +18,7 @@ namespace timetracker
 			InitializeComponent();
 		}
 
-		public List<TrackSystem.Structs.App> AppDefinitions
+		public List<App> AppDefinitions
 		{
 			set
 			{

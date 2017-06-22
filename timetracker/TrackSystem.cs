@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 
 using timetracker.WinAPI.WMI;
 using static timetracker.WinAPI.Kernel32;
+using timetracker.Entities;
 
 namespace timetracker
 {
@@ -24,79 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public struct App
-			{
-				public string Name, UniqueID;
-				public ulong Time, StartCounter;
-				public bool IsShell;
-
-				public AppRuleSet[] Rules;
-
-				public bool AllowOnlyOne
-				{
-					get
-					{
-						if (_AllowOnlyOne.HasValue)
-							return _AllowOnlyOne.Value;
-						else
-							return false;
-					}
-
-					set
-					{
-						_AllowOnlyOne = value;
-					}
-				}
-
-				public bool AllowOnlyOneSpecified
-				{
-					get
-					{
-						return _AllowOnlyOne.HasValue;
-					}
-				}
-
-				private bool? _AllowOnlyOne;
-
-				public bool MergeSpawned
-				{
-					get
-					{
-						if (_MergeSpawned.HasValue)
-							return _MergeSpawned.Value;
-						else
-							return false;
-					}
-
-					set
-					{
-						_MergeSpawned = value;
-					}
-				}
-
-				public bool MergeSpawnedSpecified
-				{
-					get
-					{
-						return _MergeSpawned.HasValue;
-					}
-				}
-
-				private bool? _MergeSpawned;
-
-				public App(App copy)
-				{
-					Name = copy.Name;
-					UniqueID = copy.UniqueID;
-					Time = copy.Time;
-					StartCounter = copy.StartCounter;
-					IsShell = copy.IsShell;
-					Rules = copy.Rules;
-					_AllowOnlyOne = copy._AllowOnlyOne;
-					_MergeSpawned = copy._MergeSpawned;
-				}
-			}
-
 			public struct AppRuleSet
 			{
 				public RuleSet Kind;
@@ -674,7 +602,7 @@ namespace timetracker
 
 		Tracker tracker = null;
 		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
-		List<Structs.App> definedApps = new List<Structs.App>();
+		List<App> definedApps = new List<App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
@@ -794,7 +722,7 @@ namespace timetracker
 				XmlReader xr = XmlReader.Create(ApplicationDefinitions);
 
 				XmlSerializer xs = new XmlSerializer(definedApps.GetType());
-				definedApps = (List<Structs.App>)xs.Deserialize(xr);
+				definedApps = (List<App>)xs.Deserialize(xr);
 			}
 			catch (Exception)
 			{
@@ -1052,14 +980,14 @@ namespace timetracker
 					return;
 
 				qualified = qualified.OrderByDescending(x => x.Priority).ToList();
-				Structs.App chosen_app = GetAppByRule(qualified[0]);
+				App chosen_app = GetAppByRule(qualified[0]);
 
 				StartApp(PID, chosen_app, processTime, chosen_app.Time,
 					qualified[0], ParentID);
 			}
 		}
 
-		public Structs.App AddNewDefinition(string applicationName,
+		public App AddNewDefinition(string applicationName,
 			string applicationUniqueID, Structs.AppRuleSet[] applicationRules,
 			bool allowOnlyOne, bool merge)
 		{
@@ -1071,7 +999,7 @@ namespace timetracker
 
 			applicationUniqueID = application_unique_id;
 
-			Structs.App app = new Structs.App();
+			App app = new App();
 
 			app.Name = applicationName;
 			app.UniqueID = applicationUniqueID;
@@ -1097,7 +1025,7 @@ namespace timetracker
 			{
 				if (it.UniqueID == text)
 				{
-					Structs.App c = it;
+					App c = it;
 					c.IsShell = true;
 					c.Rules = null;
 
@@ -1110,33 +1038,33 @@ namespace timetracker
 			}
 		}
 
-		public void UpdateApp(string uniqueID, Structs.App idata)
+		public void UpdateApp(string uniqueID, App idata)
 		{
 			definedApps.Replace(p => p.UniqueID == uniqueID, idata);
 		}
 
-		public Structs.App GetAppById(string AppID)
+		public App GetAppById(string AppID)
 		{
 			return (from t in definedApps where t.UniqueID == AppID select t).First();
 		}
 
-		public List<Structs.App> GetDefiniedApps()
+		public List<App> GetDefiniedApps()
 		{
 			return (from t in definedApps where t.IsShell == false select t).ToList();
 		}
 
-		private Structs.App GetAppByRule(Structs.AppRulePair appRulePair)
+		private App GetAppByRule(Structs.AppRulePair appRulePair)
 		{
 			return GetAppById(appRulePair.UniqueID);
 		}
 
-		private void StartApp(int PID, Structs.App chosen_app,
+		private void StartApp(int PID, App chosen_app,
 			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected,
 			int ParentID)
 		{
 			DateTime x = DateTime.Now;
 
-			var n = new Structs.App(chosen_app);
+			var n = new App(chosen_app);
 			n.StartCounter++;
 
 			definedApps.Replace(p => p.UniqueID == chosen_app.UniqueID, n);
@@ -1170,7 +1098,7 @@ namespace timetracker
 
 		private bool CheckMergedParent(int parentID)
 		{
-			Structs.App? parent = GetAppByPID(parentID);
+			App? parent = GetAppByPID(parentID);
 
 			if (parent.HasValue)
 			{
@@ -1181,7 +1109,7 @@ namespace timetracker
 			}
 		}
 
-		private Structs.App? GetAppByPID(int parentID)
+		private App? GetAppByPID(int parentID)
 		{
 			var app = (from ca in currentApps where ca.PID == parentID select ca).ToList();
 
@@ -1216,7 +1144,7 @@ namespace timetracker
 
 			Debug.Assert(idx >= 0);
 
-			Structs.App c = definedApps[idx];
+			App c = definedApps[idx];
 			c.Time += ct;
 			definedApps[idx] = c;
 
