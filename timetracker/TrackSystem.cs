@@ -25,15 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public struct AppRuleSet
-			{
-				public RuleSet Kind;
-				public string UniqueId;
-				public RulePriority Priority;
-
-				public AppRule[] Rules;
-			}
-
 			public enum RulePriority
 			{
 				None,
@@ -988,7 +979,7 @@ namespace timetracker
 		}
 
 		public App AddNewDefinition(string applicationName,
-			string applicationUniqueID, Structs.AppRuleSet[] applicationRules,
+			string applicationUniqueID, AppRuleSet[] applicationRules,
 			bool allowOnlyOne, bool merge)
 		{
 			string application_unique_id = applicationUniqueID;

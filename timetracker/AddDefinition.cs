@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using timetracker.Entities;
+
 namespace timetracker
 {
 	public partial class AddDefinition : Form
@@ -144,15 +146,15 @@ namespace timetracker
 			}
 		}
 
-		public TrackSystem.Structs.AppRuleSet[] ApplicationRules
+		public AppRuleSet[] ApplicationRules
 		{
 			get
 			{
-				List<TrackSystem.Structs.AppRuleSet> ars = new List<TrackSystem.Structs.AppRuleSet>();
+				List<AppRuleSet> ars = new List<AppRuleSet>();
 
 				foreach (var it in rulesets)
 				{
-					TrackSystem.Structs.AppRuleSet rs = new TrackSystem.Structs.AppRuleSet();
+					AppRuleSet rs = new AppRuleSet();
 
 					rs = it.container;
 					rs.Rules = ExtractRules(it.id);
@@ -310,7 +312,7 @@ namespace timetracker
 		int ruleset_id = 0;
 		int rule_id = 0;
 
-		List<IdContainer<TrackSystem.Structs.AppRuleSet>> rulesets = new List<IdContainer<TrackSystem.Structs.AppRuleSet>>();
+		List<IdContainer<AppRuleSet>> rulesets = new List<IdContainer<AppRuleSet>>();
 		List<IdContainer<TrackSystem.Structs.AppRule>> rules = new List<IdContainer<TrackSystem.Structs.AppRule>>();
 		Dictionary<int, int> rules_to_ruleset = new Dictionary<int, int>();
 
@@ -322,13 +324,13 @@ namespace timetracker
 			if (rulesets.Contains(p => p.container.UniqueId == tbGroupName.Text))
 				return;
 
-			TrackSystem.Structs.AppRuleSet ars = new TrackSystem.Structs.AppRuleSet();
+			AppRuleSet ars = new AppRuleSet();
 
 			ars.Kind = RuleSetType;
 			ars.Priority = RuleSetPriority;
 			ars.UniqueId = tbGroupName.Text;
 
-			var idcnt = new IdContainer<TrackSystem.Structs.AppRuleSet>(ruleset_id++, ars);
+			var idcnt = new IdContainer<AppRuleSet>(ruleset_id++, ars);
 
 			rulesets.Add(idcnt);
 
@@ -339,7 +341,7 @@ namespace timetracker
 			RuleSetPriority = TrackSystem.Structs.RulePriority.Medium;
 		}
 
-		private TreeNode AddToTreeView(IdContainer<TrackSystem.Structs.AppRuleSet> idcnt)
+		private TreeNode AddToTreeView(IdContainer<AppRuleSet> idcnt)
 		{
 			TreeNode tn = new TreeNode(idcnt.container.UniqueId + ", " +
 				idcnt.container.Kind + ", " + idcnt.container.Priority, 0, 1);
@@ -617,7 +619,7 @@ namespace timetracker
 		private void allToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			AppRuleSet rs = GetRuleSet(ruleset_id);
 			rs.Kind = TrackSystem.Structs.RuleSet.All;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -627,7 +629,7 @@ namespace timetracker
 		private void anyToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			AppRuleSet rs = GetRuleSet(ruleset_id);
 			rs.Kind = TrackSystem.Structs.RuleSet.Any;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -637,7 +639,7 @@ namespace timetracker
 		private void lowToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			AppRuleSet rs = GetRuleSet(ruleset_id);
 			rs.Priority = TrackSystem.Structs.RulePriority.Low;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -647,7 +649,7 @@ namespace timetracker
 		private void mediumToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			AppRuleSet rs = GetRuleSet(ruleset_id);
 			rs.Priority = TrackSystem.Structs.RulePriority.Medium;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -657,7 +659,7 @@ namespace timetracker
 		private void highToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
-			TrackSystem.Structs.AppRuleSet rs = GetRuleSet(ruleset_id);
+			AppRuleSet rs = GetRuleSet(ruleset_id);
 			rs.Priority = TrackSystem.Structs.RulePriority.High;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
@@ -729,7 +731,7 @@ namespace timetracker
 			ReplaceRuleSetNode(rs, ruleset_id);
 		}
 
-		private TrackSystem.Structs.AppRuleSet GetRuleSet(int ruleset_id)
+		private AppRuleSet GetRuleSet(int ruleset_id)
 		{
 			foreach (var it in rulesets)
 				if (it.id == ruleset_id)
@@ -748,13 +750,13 @@ namespace timetracker
 		}
 
 		private void ReplaceRuleSetNode(TreeNode selectedNode,
-			TrackSystem.Structs.AppRuleSet idcnt)
+			AppRuleSet idcnt)
 		{
 			selectedNode.Text = idcnt.UniqueId + ", " +
 				idcnt.Kind + ", " + idcnt.Priority;
 		}
 
-		private void ReplaceRuleSetNode(TrackSystem.Structs.AppRuleSet rs, int ruleset_id)
+		private void ReplaceRuleSetNode(AppRuleSet rs, int ruleset_id)
 		{
 			foreach (var it in rulesets)
 				if (it.id == ruleset_id)
