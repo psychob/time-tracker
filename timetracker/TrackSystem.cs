@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-using WinAPI.WMI;
-using static WinAPI.Kernel32;
+using timetracker.WinAPI.WMI;
+using static timetracker.WinAPI.Kernel32;
 
 namespace timetracker
 {

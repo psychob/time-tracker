@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using WinAPI.WMI;
-using static timetracker.TrackSystem;
-
-namespace timetracker
+﻿namespace timetracker
 {
 	public static class XmlOutputHelper
 	{

@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using static WinAPI.User32;
-using static WinAPI.WinDef;
-using static WinAPI.WinUser;
+using static timetracker.WinAPI.User32;
 
 namespace timetracker
 {
