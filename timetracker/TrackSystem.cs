@@ -25,19 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public enum AppRuleMatchTo
-			{
-				FileName,
-				FileNamePath,
-				FilePath,
-				FileVersionName,
-				FileVersionDesc,
-				FileVersionCompany,
-				FileVersionProductVersion,
-				FileVersionFileVersion,
-				FileMD5,
-			}
-
 			public enum AppRuleAlgorithm
 			{
 				Exact,
@@ -369,37 +356,37 @@ namespace timetracker
 				return md5_str;
 			}
 
-			internal static string ExtractString(Structs.AppRuleMatchTo matchTo, int pID,
+			internal static string ExtractString(AppRuleMatchTo matchTo, int pID,
 				string name, string path, FileVersionInfo fileVersion,
 				ref Dictionary<string, string> md5Cache)
 			{
 				switch (matchTo)
 				{
-					case Structs.AppRuleMatchTo.FileName:
+					case AppRuleMatchTo.FileName:
 						return name;
 
-					case Structs.AppRuleMatchTo.FileNamePath:
+					case AppRuleMatchTo.FileNamePath:
 						return path;
 
-					case Structs.AppRuleMatchTo.FilePath:
+					case AppRuleMatchTo.FilePath:
 						return Path.GetDirectoryName(path);
 
-					case Structs.AppRuleMatchTo.FileVersionCompany:
+					case AppRuleMatchTo.FileVersionCompany:
 						return fileVersion.CompanyName;
 
-					case Structs.AppRuleMatchTo.FileVersionDesc:
+					case AppRuleMatchTo.FileVersionDesc:
 						return fileVersion.FileDescription;
 
-					case Structs.AppRuleMatchTo.FileVersionFileVersion:
+					case AppRuleMatchTo.FileVersionFileVersion:
 						return fileVersion.FileVersion;
 
-					case Structs.AppRuleMatchTo.FileVersionName:
+					case AppRuleMatchTo.FileVersionName:
 						return fileVersion.ProductName;
 
-					case Structs.AppRuleMatchTo.FileVersionProductVersion:
+					case AppRuleMatchTo.FileVersionProductVersion:
 						return fileVersion.ProductVersion;
 
-					case Structs.AppRuleMatchTo.FileMD5:
+					case AppRuleMatchTo.FileMD5:
 						if (md5Cache.ContainsKey(path))
 							return md5Cache[path];
 						else

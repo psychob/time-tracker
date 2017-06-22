@@ -425,38 +425,38 @@ namespace timetracker
 			}
 		}
 
-		private TrackSystem.Structs.AppRuleMatchTo MatchTo
+		private AppRuleMatchTo MatchTo
 		{
 			get
 			{
 				switch (cbRuleMatchTo.SelectedIndex)
 				{
 					case 0:
-						return TrackSystem.Structs.AppRuleMatchTo.FileName;
+						return AppRuleMatchTo.FileName;
 
 					case 1:
-						return TrackSystem.Structs.AppRuleMatchTo.FileNamePath;
+						return AppRuleMatchTo.FileNamePath;
 
 					case 2:
-						return TrackSystem.Structs.AppRuleMatchTo.FilePath;
+						return AppRuleMatchTo.FilePath;
 
 					case 3:
-						return TrackSystem.Structs.AppRuleMatchTo.FileVersionName;
+						return AppRuleMatchTo.FileVersionName;
 
 					case 4:
-						return TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc;
+						return AppRuleMatchTo.FileVersionDesc;
 
 					case 5:
-						return TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany;
+						return AppRuleMatchTo.FileVersionCompany;
 
 					case 6:
-						return TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion;
+						return AppRuleMatchTo.FileVersionProductVersion;
 
 					case 7:
-						return TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion;
+						return AppRuleMatchTo.FileVersionFileVersion;
 
 					case 8:
-						return TrackSystem.Structs.AppRuleMatchTo.FileMD5;
+						return AppRuleMatchTo.FileMD5;
 				}
 
 				throw new NotSupportedException();
@@ -466,39 +466,39 @@ namespace timetracker
 			{
 				switch (value)
 				{
-					case TrackSystem.Structs.AppRuleMatchTo.FileName:
+					case AppRuleMatchTo.FileName:
 						cbRuleMatchTo.SelectedIndex = 0;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileNamePath:
+					case AppRuleMatchTo.FileNamePath:
 						cbRuleMatchTo.SelectedIndex = 1;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FilePath:
+					case AppRuleMatchTo.FilePath:
 						cbRuleMatchTo.SelectedIndex = 2;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileVersionName:
+					case AppRuleMatchTo.FileVersionName:
 						cbRuleMatchTo.SelectedIndex = 3;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileVersionDesc:
+					case AppRuleMatchTo.FileVersionDesc:
 						cbRuleMatchTo.SelectedIndex = 4;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileVersionCompany:
+					case AppRuleMatchTo.FileVersionCompany:
 						cbRuleMatchTo.SelectedIndex = 5;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileVersionProductVersion:
+					case AppRuleMatchTo.FileVersionProductVersion:
 						cbRuleMatchTo.SelectedIndex = 6;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileVersionFileVersion:
+					case AppRuleMatchTo.FileVersionFileVersion:
 						cbRuleMatchTo.SelectedIndex = 7;
 						break;
 
-					case TrackSystem.Structs.AppRuleMatchTo.FileMD5:
+					case AppRuleMatchTo.FileMD5:
 						cbRuleMatchTo.SelectedIndex = 8;
 						break;
 
@@ -523,9 +523,9 @@ namespace timetracker
 			TextTestChanged();
 
 			if (tbPattern.Text.IndexOf('\\') > -1 &&
-				MatchTo == TrackSystem.Structs.AppRuleMatchTo.FileName)
+				MatchTo == AppRuleMatchTo.FileName)
 			{
-				MatchTo = TrackSystem.Structs.AppRuleMatchTo.FileNamePath;
+				MatchTo = AppRuleMatchTo.FileNamePath;
 			}
 		}
 
