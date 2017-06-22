@@ -31,6 +31,7 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddDefinition));
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.cbAllowOnlyOne = new System.Windows.Forms.CheckBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
@@ -83,7 +84,7 @@
 			this.regularExpressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.cbAllowOnlyOne = new System.Windows.Forms.CheckBox();
+			this.cbMergeSpawned = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			this.cmsNaming.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -94,6 +95,7 @@
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.cbMergeSpawned);
 			this.groupBox1.Controls.Add(this.cbAllowOnlyOne);
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.label1);
@@ -106,6 +108,16 @@
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Base Info";
+			// 
+			// cbAllowOnlyOne
+			// 
+			this.cbAllowOnlyOne.AutoSize = true;
+			this.cbAllowOnlyOne.Location = new System.Drawing.Point(9, 71);
+			this.cbAllowOnlyOne.Name = "cbAllowOnlyOne";
+			this.cbAllowOnlyOne.Size = new System.Drawing.Size(137, 17);
+			this.cbAllowOnlyOne.TabIndex = 5;
+			this.cbAllowOnlyOne.Text = "Allow only one instance";
+			this.cbAllowOnlyOne.UseVisualStyleBackColor = true;
 			// 
 			// label2
 			// 
@@ -587,15 +599,15 @@
 			this.removeToolStripMenuItem1.Text = "Remove";
 			this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
 			// 
-			// cbAllowOnlyOne
+			// cbMergeSpawned
 			// 
-			this.cbAllowOnlyOne.AutoSize = true;
-			this.cbAllowOnlyOne.Location = new System.Drawing.Point(9, 71);
-			this.cbAllowOnlyOne.Name = "cbAllowOnlyOne";
-			this.cbAllowOnlyOne.Size = new System.Drawing.Size(137, 17);
-			this.cbAllowOnlyOne.TabIndex = 5;
-			this.cbAllowOnlyOne.Text = "Allow only one instance";
-			this.cbAllowOnlyOne.UseVisualStyleBackColor = true;
+			this.cbMergeSpawned.AutoSize = true;
+			this.cbMergeSpawned.Location = new System.Drawing.Point(152, 71);
+			this.cbMergeSpawned.Name = "cbMergeSpawned";
+			this.cbMergeSpawned.Size = new System.Drawing.Size(104, 17);
+			this.cbMergeSpawned.TabIndex = 6;
+			this.cbMergeSpawned.Text = "Merge Spawned";
+			this.cbMergeSpawned.UseVisualStyleBackColor = true;
 			// 
 			// AddDefinition
 			// 
@@ -682,5 +694,6 @@
 		private System.Windows.Forms.ToolStripMenuItem nearCaseInsensitiveToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem regularExpressionToolStripMenuItem;
 		private System.Windows.Forms.CheckBox cbAllowOnlyOne;
+		private System.Windows.Forms.CheckBox cbMergeSpawned;
 	}
 }

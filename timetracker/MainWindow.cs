@@ -72,7 +72,11 @@ namespace timetracker
 				{
 					ListViewItem liv = new ListViewItem(it.PID.ToString());
 
-					if (it.App.AllowOnlyOne)
+					if (it.Merged)
+						liv.BackColor = Color.Blue;
+					else if (it.App.AllowOnlyOne && it.Merged)
+						liv.BackColor = Color.Yellow;
+					else if (it.App.AllowOnlyOne)
 						liv.BackColor = Color.PaleGreen;
 
 					liv.SubItems.AddRange(new string[]{
@@ -261,7 +265,8 @@ namespace timetracker
 			if (ad.IsValid)
 			{
 				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
+					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne,
+					ad.MergeSpawned);
 
 				TrackSystem.TrackingSystemState.GrabAll();
 			}
@@ -336,7 +341,8 @@ namespace timetracker
 				if (ad.IsValid)
 				{
 					var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-						ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
+						ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne,
+						ad.MergeSpawned);
 
 					TrackSystem.TrackingSystemState.GrabAll();
 

@@ -568,6 +568,19 @@ namespace timetracker
 			}
 		}
 
+		public bool MergeSpawned
+		{
+			get
+			{
+				return cbMergeSpawned.Checked;
+			}
+
+			set
+			{
+				cbMergeSpawned.Checked = value;
+			}
+		}
+
 		private void button6_Click(object sender, EventArgs e)
 		{
 			_IsValid = false;

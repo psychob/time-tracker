@@ -58,6 +58,32 @@ namespace timetracker
 
 				private bool? _AllowOnlyOne;
 
+				public bool MergeSpawned
+				{
+					get
+					{
+						if (_MergeSpawned.HasValue)
+							return _MergeSpawned.Value;
+						else
+							return false;
+					}
+
+					set
+					{
+						_MergeSpawned = value;
+					}
+				}
+
+				public bool MergeSpawnedSpecified
+				{
+					get
+					{
+						return _MergeSpawned.HasValue;
+					}
+				}
+
+				private bool? _MergeSpawned;
+
 				public App(App copy)
 				{
 					Name = copy.Name;
@@ -67,6 +93,7 @@ namespace timetracker
 					IsShell = copy.IsShell;
 					Rules = copy.Rules;
 					_AllowOnlyOne = copy._AllowOnlyOne;
+					_MergeSpawned = copy._MergeSpawned;
 				}
 			}
 
@@ -151,6 +178,7 @@ namespace timetracker
 				public ulong AllTime;
 				public ulong StartCount;
 				public App App;
+				public bool Merged;
 			}
 
 			internal struct AppRulePair
@@ -542,10 +570,10 @@ namespace timetracker
 				eventNetwork = new ManagementEventWatcher(NameSpace, NetworkSql);
 				eventNetwork.EventArrived += networkEventArrived;
 
-				kHook.Init();
+//				kHook.Init();
 				fHook.Init();
 				nHook.Init();
-				mHook.Init();
+//				mHook.Init();
 
 				PullAllInternet();
 
@@ -625,10 +653,10 @@ namespace timetracker
 				eventProcessor.Stop();
 				eventNetwork.Stop();
 
-				kHook.DeInit();
+//				kHook.DeInit();
 				fHook.DeInit();
 				nHook.DeInit();
-				mHook.DeInit();
+//				mHook.DeInit();
 
 				eventInternet.Dispose();
 				eventOS.Dispose();
@@ -1033,7 +1061,7 @@ namespace timetracker
 
 		public Structs.App AddNewDefinition(string applicationName,
 			string applicationUniqueID, Structs.AppRuleSet[] applicationRules,
-			bool allowOnlyOne)
+			bool allowOnlyOne, bool merge)
 		{
 			string application_unique_id = applicationUniqueID;
 			int counter = 2;
@@ -1054,6 +1082,7 @@ namespace timetracker
 			app.Time = 0;
 
 			app.AllowOnlyOne = allowOnlyOne;
+			app.MergeSpawned = merge;
 
 			definedApps.Add(app);
 
@@ -1120,6 +1149,7 @@ namespace timetracker
 			ca.AllTime = fullTime;
 			ca.RuleTriggered = ruleselected;
 			ca.StartCount = n.StartCounter;
+			ca.Merged = CheckMergedParent(ParentID);
 
 			currentApps.Add(ca);
 
@@ -1136,6 +1166,29 @@ namespace timetracker
 			{
 				AppendBinary(new NamechangeToken((uint)PID, ""), x, true);
 			}
+		}
+
+		private bool CheckMergedParent(int parentID)
+		{
+			Structs.App? parent = GetAppByPID(parentID);
+
+			if (parent.HasValue)
+			{
+				return parent.Value.MergeSpawned;
+			} else
+			{
+				return false;
+			}
+		}
+
+		private Structs.App? GetAppByPID(int parentID)
+		{
+			var app = (from ca in currentApps where ca.PID == parentID select ca).ToList();
+
+			if (app.Count == 0)
+				return null;
+			else
+				return app[0].App;
 		}
 
 		private void ProcessDestoryed(int pid)
