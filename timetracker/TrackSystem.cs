@@ -39,14 +39,6 @@ namespace timetracker
 				EndWithInvariant,
 			}
 
-			public struct AppTrack
-			{
-				public ulong EventID;
-				public DateTime BeginTime, EndTime;
-				public string UniqueID;
-				public ulong Time;
-			}
-
 			internal struct CurrentApps
 			{
 				public int PID;
