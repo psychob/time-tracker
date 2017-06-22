@@ -303,7 +303,7 @@ namespace timetracker
 				ad.RunIntelligentNamer();
 
 				AppRuleSet ars = new AppRuleSet();
-				ars.Kind = TrackSystem.Structs.RuleSet.All;
+				ars.Kind = RuleSet.All;
 				ars.Priority = RulePriority.Medium;
 				ars.UniqueId = "Inherit from file: " + Path.GetFileName(ofd.FileName);
 

@@ -79,6 +79,7 @@
     <Compile Include="Entities\App.cs" />
     <Compile Include="Entities\AppRuleSet.cs" />
     <Compile Include="Entities\RulePriority.cs" />
+    <Compile Include="Entities\RuleSet.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ForegroundHook.cs" />
     <Compile Include="KeyboardHook.cs" />

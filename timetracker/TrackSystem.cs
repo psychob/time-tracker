@@ -25,12 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public enum RuleSet
-			{
-				Any,
-				All
-			}
-
 			public struct AppRule
 			{
 				public AppRuleMatchTo MatchTo;
@@ -934,12 +928,12 @@ namespace timetracker
 								rules_match++;
 							else
 							{
-								if (jt.Kind == Structs.RuleSet.All)
+								if (jt.Kind == RuleSet.All)
 									break;
 							}
 						}
 
-						if (jt.Kind == Structs.RuleSet.All &&
+						if (jt.Kind == RuleSet.All &&
 							rules_match == jt.Rules.Length)
 						{
 							qualified.Add(new Structs.AppRulePair(it.UniqueID,
@@ -948,7 +942,7 @@ namespace timetracker
 							if (definedPriority > jt.Priority)
 								definedPriority = jt.Priority;
 						}
-						else if (jt.Kind == Structs.RuleSet.Any && rules_match > 0)
+						else if (jt.Kind == RuleSet.Any && rules_match > 0)
 						{
 							qualified.Add(new Structs.AppRulePair(it.UniqueID,
 								jt.UniqueId, jt.Priority));

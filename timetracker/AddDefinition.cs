@@ -222,17 +222,17 @@ namespace timetracker
 			return new IdContainer<T>(id, it);
 		}
 
-		private TrackSystem.Structs.RuleSet RuleSetType
+		private RuleSet RuleSetType
 		{
 			get
 			{
 				switch (cbGroupType.SelectedIndex)
 				{
 					case 0: // All
-						return TrackSystem.Structs.RuleSet.All;
+						return RuleSet.All;
 
 					case 1: // Any
-						return TrackSystem.Structs.RuleSet.Any;
+						return RuleSet.Any;
 				}
 
 				throw new ArgumentException();
@@ -242,11 +242,11 @@ namespace timetracker
 			{
 				switch (value)
 				{
-					case TrackSystem.Structs.RuleSet.All:
+					case RuleSet.All:
 						cbGroupType.SelectedIndex = 0;
 						break;
 
-					case TrackSystem.Structs.RuleSet.Any:
+					case RuleSet.Any:
 						cbGroupType.SelectedIndex = 1;
 						break;
 
@@ -337,7 +337,7 @@ namespace timetracker
 			AddToTreeView(idcnt);
 
 			tbGroupName.Text = Guid.NewGuid().ToString();
-			RuleSetType = TrackSystem.Structs.RuleSet.All;
+			RuleSetType = RuleSet.All;
 			RuleSetPriority = RulePriority.Medium;
 		}
 
@@ -620,7 +620,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRuleSet rs = GetRuleSet(ruleset_id);
-			rs.Kind = TrackSystem.Structs.RuleSet.All;
+			rs.Kind = RuleSet.All;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
@@ -630,7 +630,7 @@ namespace timetracker
 		{
 			int ruleset_id = (int)treeView1.SelectedNode.Tag;
 			AppRuleSet rs = GetRuleSet(ruleset_id);
-			rs.Kind = TrackSystem.Structs.RuleSet.Any;
+			rs.Kind = RuleSet.Any;
 
 			ReplaceRuleSetNode(treeView1.SelectedNode, rs);
 			ReplaceRuleSetNode(rs, ruleset_id);
