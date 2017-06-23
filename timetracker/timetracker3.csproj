@@ -80,6 +80,7 @@
     <Compile Include="Entities\AppRule.cs" />
     <Compile Include="Entities\AppRuleAlgorithm.cs" />
     <Compile Include="Entities\AppRuleMatchTo.cs" />
+    <Compile Include="Entities\AppRulePair.cs" />
     <Compile Include="Entities\AppRuleSet.cs" />
     <Compile Include="Entities\CurrentApps.cs" />
     <Compile Include="Entities\RulePriority.cs" />

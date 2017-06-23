@@ -25,20 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			public struct AppRulePair
-			{
-				public string UniqueID;
-				public string RuleSetID;
-				public RulePriority Priority;
-
-				public AppRulePair(string id, string gid, RulePriority p)
-				{
-					UniqueID = id;
-					RuleSetID = gid;
-					Priority = p;
-				}
-			}
-
 			internal struct ExeData
 			{
 				public int PID;
@@ -842,7 +828,7 @@ namespace timetracker
 		{
 			lock (inOutLock)
 			{
-				List<Structs.AppRulePair> qualified = new List<Structs.AppRulePair>();
+				List<AppRulePair> qualified = new List<AppRulePair>();
 				Dictionary<string, string> md5Cache = new Dictionary<string, string>();
 				RulePriority definedPriority = RulePriority.None;
 
@@ -875,7 +861,7 @@ namespace timetracker
 						if (jt.Kind == RuleSet.All &&
 							rules_match == jt.Rules.Length)
 						{
-							qualified.Add(new Structs.AppRulePair(it.UniqueID,
+							qualified.Add(new AppRulePair(it.UniqueID,
 								jt.UniqueId, jt.Priority));
 
 							if (definedPriority > jt.Priority)
@@ -883,7 +869,7 @@ namespace timetracker
 						}
 						else if (jt.Kind == RuleSet.Any && rules_match > 0)
 						{
-							qualified.Add(new Structs.AppRulePair(it.UniqueID,
+							qualified.Add(new AppRulePair(it.UniqueID,
 								jt.UniqueId, jt.Priority));
 
 							if (definedPriority > jt.Priority)
@@ -969,13 +955,13 @@ namespace timetracker
 			return (from t in definedApps where t.IsShell == false select t).ToList();
 		}
 
-		private App GetAppByRule(Structs.AppRulePair appRulePair)
+		private App GetAppByRule(AppRulePair appRulePair)
 		{
 			return GetAppById(appRulePair.UniqueID);
 		}
 
 		private void StartApp(int PID, App chosen_app,
-			ulong processTime, ulong fullTime, Structs.AppRulePair ruleselected,
+			ulong processTime, ulong fullTime, AppRulePair ruleselected,
 			int ParentID)
 		{
 			DateTime x = DateTime.Now;
