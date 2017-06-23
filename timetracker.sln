@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker3", "timetracker
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker.WinAPI", "timetracker.winapi\timetracker.WinAPI.csproj", "{8013C0FB-DDEC-4C82-8DBA-F1FF2122DEAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker.BasePlugin", "timetracker.BasePlugin\timetracker.BasePlugin.csproj", "{B1CCFE96-D40E-48CA-9BE8-2177CE5981F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8013C0FB-DDEC-4C82-8DBA-F1FF2122DEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8013C0FB-DDEC-4C82-8DBA-F1FF2122DEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8013C0FB-DDEC-4C82-8DBA-F1FF2122DEAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1CCFE96-D40E-48CA-9BE8-2177CE5981F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1CCFE96-D40E-48CA-9BE8-2177CE5981F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1CCFE96-D40E-48CA-9BE8-2177CE5981F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1CCFE96-D40E-48CA-9BE8-2177CE5981F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

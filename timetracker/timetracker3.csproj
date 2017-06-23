@@ -173,6 +173,10 @@
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\timetracker.BasePlugin\timetracker.BasePlugin.csproj">
+      <Project>{b1ccfe96-d40e-48ca-9be8-2177ce5981f0}</Project>
+      <Name>timetracker.BasePlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\timetracker.winapi\timetracker.WinAPI.csproj">
       <Project>{8013c0fb-ddec-4c82-8dba-f1ff2122deaf}</Project>
       <Name>timetracker.WinAPI</Name>
