@@ -47,6 +47,11 @@
     <Compile Include="ISpy.cs" />
     <Compile Include="IToken.cs" />
     <Compile Include="IValueStorage.cs" />
+    <Compile Include="Messages\CurrentMessages.cs" />
+    <Compile Include="Messages\v3_15_4.cs" />
+    <Compile Include="Messages\v3_15_5.cs" />
+    <Compile Include="Messages\v3_15_7.cs" />
+    <Compile Include="Messages\v3_16.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

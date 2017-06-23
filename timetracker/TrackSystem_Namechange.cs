@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -18,7 +17,7 @@ namespace timetracker
 
 			public NamechangeToken(uint pid, string name)
 			{
-				Type = MessageHeader_Namechange;
+				Type = CurrentMessages.MessageHeader_Namechange;
 				PID = pid;
 				Name = name;
 			}

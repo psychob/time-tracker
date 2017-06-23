@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -22,7 +21,7 @@ namespace timetracker
 			public ProcessLoadToken(string name, ulong WorkProc, ulong KernelPorc,
 				ulong IdleProc)
 			{
-				Type = MessageHeader_Processor;
+				Type = CurrentMessages.MessageHeader_Processor;
 				Name = name;
 				Work = (int)WorkProc;
 				Kernel = (int)KernelPorc;

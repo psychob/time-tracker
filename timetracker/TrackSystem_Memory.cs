@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -21,7 +20,7 @@ namespace timetracker
 
 			public MemoryToke(ulong pfree, ulong ptotal, ulong vfree, ulong vtotal)
 			{
-				Type = MessageHeader_Memory;
+				Type = CurrentMessages.MessageHeader_Memory;
 
 				PFree = pfree;
 				PTotal = ptotal;

@@ -1,6 +1,5 @@
 ﻿using System;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -13,7 +12,7 @@ namespace timetracker
 
 			public ForegroundToken(uint pid)
 			{
-				Type = MessageHeader_ForegroundChange;
+				Type = CurrentMessages.MessageHeader_ForegroundChange;
 				PID = pid;
 			}
 

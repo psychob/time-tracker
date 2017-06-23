@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -22,7 +21,7 @@ namespace timetracker
 
 			public KeyboardTokenPress(bool pressed, uint vk, uint sc)
 			{
-				Type = pressed ? MessageHeader_KeyPressed : MessageHeader_KeyUnpressed;
+				Type = pressed ? CurrentMessages.MessageHeader_KeyPressed : CurrentMessages.MessageHeader_KeyUnpressed;
 				VirtualKey = vk;
 				ScanCode = sc;
 			}

@@ -3,8 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -55,7 +54,7 @@ namespace timetracker
 						byte[] bytes;
 
 						// first thing we output is start tag of token message
-						BinaryBuffer[Bytes++] = BinaryStartMessage;
+						BinaryBuffer[Bytes++] = CurrentMessages.BinaryStartMessage;
 
 						// then we output ticks
 						bytes = BitConverter.GetBytes(item.Time.Ticks);
@@ -63,7 +62,7 @@ namespace timetracker
 						Bytes += bytes.Length;
 
 						// next we indicate start of inner message
-						BinaryBuffer[Bytes] = BinaryStartInnerMessage;
+						BinaryBuffer[Bytes] = CurrentMessages.BinaryStartInnerMessage;
 						Bytes++;
 
 						// then we output message
@@ -71,8 +70,8 @@ namespace timetracker
 
 						// in the end we output End of inner message and end
 						// of message
-						BinaryBuffer[Bytes++] = BinaryEndInnerMessage;
-						BinaryBuffer[Bytes++] = BinaryEndMessage;
+						BinaryBuffer[Bytes++] = CurrentMessages.BinaryEndInnerMessage;
+						BinaryBuffer[Bytes++] = CurrentMessages.BinaryEndMessage;
 					}
 
 					// now we simply save data to file

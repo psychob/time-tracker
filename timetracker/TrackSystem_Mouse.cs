@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -55,7 +54,7 @@ namespace timetracker
 
 			public MouseClickEventType(int x, int y, MouseHook.MouseButton btn,
 				bool press)
-				: base(MessageHeader_MouseClick, x, y)
+				: base(CurrentMessages.MessageHeader_MouseClick, x, y)
 			{
 				Button = btn;
 				Pressed = press;
@@ -87,7 +86,7 @@ namespace timetracker
 
 			public MouseWheelEventType(int x, int y, MouseHook.MouseAxis a,
 				int value)
-				: base(MessageHeader_MouseWheel, x, y)
+				: base(CurrentMessages.MessageHeader_MouseWheel, x, y)
 			{
 				Axis = a;
 				Value = value;
@@ -115,7 +114,7 @@ namespace timetracker
 		class MouseMoveEventType : MouseBaseEvent
 		{
 			public MouseMoveEventType(int x, int y)
-				: base(MessageHeader_MouseMove, x, y)
+				: base(CurrentMessages.MessageHeader_MouseMove, x, y)
 			{
 			}
 		}

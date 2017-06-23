@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using static timetracker.Messages.v3_16.Constants;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker
 {
@@ -20,7 +19,7 @@ namespace timetracker
 
 			public BeginEventType(int pid, string appTag, string ruleSet, int parentId)
 			{
-				Type = MessageHeader_Begin;
+				Type = CurrentMessages.MessageHeader_Begin;
 				PID = pid;
 				AppTag = appTag;
 				RuleSet = ruleSet;
@@ -63,7 +62,7 @@ namespace timetracker
 
 			public EndEventType(int pid, string appTag)
 			{
-				Type = MessageHeader_End;
+				Type = CurrentMessages.MessageHeader_End;
 				PID = pid;
 				AppTag = appTag;
 			}
@@ -94,7 +93,7 @@ namespace timetracker
 
 			public PingEventType()
 			{
-				Type = MessageHeader_KeppAlive;
+				Type = CurrentMessages.MessageHeader_KeppAlive;
 			}
 
 			public int AsByteStream(ref byte[] str, int start, int length)
@@ -114,7 +113,7 @@ namespace timetracker
 
 			public VersionEventType(string ver)
 			{
-				Type = MessageHeader_Version;
+				Type = CurrentMessages.MessageHeader_Version;
 				Version = ver;
 			}
 
@@ -140,7 +139,7 @@ namespace timetracker
 
 			public ResolutionChange(int width, int height)
 			{
-				Type = MessageHeader_ResolutionChange;
+				Type = CurrentMessages.MessageHeader_ResolutionChange;
 
 				Width = width;
 				Height = height;
@@ -172,7 +171,7 @@ namespace timetracker
 
 			public AddNewDefinitionType(string appTag, string name)
 			{
-				Type = MessageHeader_AddDefinition;
+				Type = CurrentMessages.MessageHeader_AddDefinition;
 
 				AppTag = appTag;
 				Name = name;
@@ -204,7 +203,7 @@ namespace timetracker
 
 			public RemoveDefinition(string appTag)
 			{
-				Type = MessageHeader_RemoveDefinition;
+				Type = CurrentMessages.MessageHeader_RemoveDefinition;
 
 				AppTag = appTag;
 			}
@@ -232,7 +231,7 @@ namespace timetracker
 
 			public NetworkAdapterDefinition(string name, Guid guid)
 			{
-				Type = MessageHeader_NetworkAdapter;
+				Type = CurrentMessages.MessageHeader_NetworkAdapter;
 				Name = name;
 				Guid = guid;
 			}
@@ -263,7 +262,7 @@ namespace timetracker
 
 			public NetworkBandwidthEvent(ulong r, ulong s)
 			{
-				Type = MessageHeader_NetworkBandwidth;
+				Type = CurrentMessages.MessageHeader_NetworkBandwidth;
 
 				Recivied = r;
 				Send = s;
