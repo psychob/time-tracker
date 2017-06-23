@@ -25,56 +25,6 @@ namespace timetracker
 
 		public static class Structs
 		{
-			internal struct ExeData
-			{
-				public int PID;
-				public string Name;
-				public string Path;
-				public FileVersionInfo FileVersion;
-			}
-
-			internal struct ExeDataContainer
-			{
-				public ExeDataContainerReason Reason;
-				private ExeData? data;
-
-				public ExeDataContainer(ExeData ed)
-				{
-					Reason = ExeDataContainerReason.Valid;
-					data = ed;
-				}
-
-				public ExeDataContainer(ExeDataContainerReason reason)
-				{
-					Reason = reason;
-					data = null;
-				}
-
-				public ExeData Value
-				{
-					get
-					{
-						if (data.HasValue)
-							return data.Value;
-						else
-							throw new InvalidOperationException("We don't have value!");
-					}
-
-					set
-					{
-						Reason = ExeDataContainerReason.Valid;
-						data = value;
-					}
-				}
-			}
-
-			internal enum ExeDataContainerReason
-			{
-				Valid,
-				IncompleteInformation,
-				ExceptionOccured,
-			}
-
 			internal struct WaitStruct
 			{
 				public int PID;
@@ -590,7 +540,7 @@ namespace timetracker
 
 		private bool PidNotRunning(int PID)
 		{
-			return GetProcessData(PID).Reason != Structs.ExeDataContainerReason.Valid;
+			return GetProcessData(PID).Reason != ExeDataContainerReason.Valid;
 		}
 
 		private void OnWaitTick(object sender, EventArgs e)
@@ -765,11 +715,11 @@ namespace timetracker
 				// nie udało się pobrać danych?
 				switch (pd.Reason)
 				{
-					case Structs.ExeDataContainerReason.IncompleteInformation:
+					case ExeDataContainerReason.IncompleteInformation:
 						AddToWaitQueue(pid, processTime, retire, ParentID);
 						return;
 
-					case Structs.ExeDataContainerReason.ExceptionOccured:
+					case ExeDataContainerReason.ExceptionOccured:
 						return;
 				}
 
@@ -780,11 +730,11 @@ namespace timetracker
 			}
 		}
 
-		private Structs.ExeDataContainer GetProcessData(int pid)
+		private ExeDataContainer GetProcessData(int pid)
 		{
 			try
 			{
-				Structs.ExeData ed;
+				ExeData ed;
 
 				var pinfo = Process.GetProcessById(pid);
 
@@ -793,15 +743,15 @@ namespace timetracker
 				ed.Name = Path.GetFileName(ed.Path);
 				ed.FileVersion = FileVersionInfo.GetVersionInfo(ed.Path);
 
-				return new Structs.ExeDataContainer(ed);
+				return new ExeDataContainer(ed);
 			}
 			catch (Win32Exception w32) when (w32.NativeErrorCode == 299)
 			{
-				return new Structs.ExeDataContainer(Structs.ExeDataContainerReason.IncompleteInformation);
+				return new ExeDataContainer(ExeDataContainerReason.IncompleteInformation);
 			}
 			catch (Exception)
 			{
-				return new Structs.ExeDataContainer(Structs.ExeDataContainerReason.ExceptionOccured);
+				return new ExeDataContainer(ExeDataContainerReason.ExceptionOccured);
 			}
 		}
 
