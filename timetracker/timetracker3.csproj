@@ -114,16 +114,6 @@
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="TrackSystem_Processor.cs" />
-    <Compile Include="WinAPI\Kernel32.cs" />
-    <Compile Include="WinAPI\User32.cs" />
-    <Compile Include="WinAPI\WinDef.cs" />
-    <Compile Include="WinAPI\WinUser.cs" />
-    <Compile Include="WinAPI\WMI\BaseClass.cs" />
-    <Compile Include="WinAPI\WMI\CIM_LogicalElement.cs" />
-    <Compile Include="WinAPI\WMI\CIM_ManagedSystemElement.cs" />
-    <Compile Include="WinAPI\WMI\CIM_Process.cs" />
-    <Compile Include="WinAPI\WMI\Win32_NetworkAdapter.cs" />
-    <Compile Include="WinAPI\WMI\Win32_Process.cs" />
     <Compile Include="XmlOutputHelper.cs" />
     <EmbeddedResource Include="AddDefinition.resx">
       <DependentUpon>AddDefinition.cs</DependentUpon>
@@ -181,6 +171,12 @@
   <ItemGroup>
     <Folder Include="Tracker\" />
     <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\timetracker.winapi\timetracker.WinAPI.csproj">
+      <Project>{8013c0fb-ddec-4c82-8dba-f1ff2122deaf}</Project>
+      <Name>timetracker.WinAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
