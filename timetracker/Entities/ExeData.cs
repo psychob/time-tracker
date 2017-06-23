@@ -1,19 +1,21 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace timetracker.Entities
 {
 	public struct ExeData
 	{
-		public int PID;
-		public string Name;
-		public string Path;
-		public FileVersionInfo FileVersion;
+		public int PID { get; set; }
+
+		public string Name { get; set; }
+
+		public string Path { get; set; }
+
+		public FileVersionInfo FileVersion { get; set; }
 	}
 
 	public struct ExeDataContainer
 	{
-		public ExeDataContainerReason Reason;
+		public ExeDataContainerReason Reason { get; set; }
 		private ExeData? data;
 
 		public ExeDataContainer(ExeData ed)
@@ -32,10 +34,7 @@ namespace timetracker.Entities
 		{
 			get
 			{
-				if (data.HasValue)
-					return data.Value;
-				else
-					throw new InvalidOperationException("We don't have value!");
+				return data.Value;
 			}
 
 			set

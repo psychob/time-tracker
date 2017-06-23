@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace timetracker.Entities
+﻿namespace timetracker.Entities
 {
 	public struct WaitStruct
 	{
-		public int PID;
-		public ulong StartTime;
-		public int Count;
-		public int ParentID;
+		public int PID { get; set; }
+
+		public ulong StartTime { get; set; }
+
+		public int Count { get; set; }
+
+		public int ParentID { get; set; }
 	}
 }

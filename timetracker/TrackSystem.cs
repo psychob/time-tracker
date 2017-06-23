@@ -723,7 +723,7 @@ namespace timetracker
 		{
 			try
 			{
-				ExeData ed;
+				ExeData ed = new ExeData();
 
 				var pinfo = Process.GetProcessById(pid);
 

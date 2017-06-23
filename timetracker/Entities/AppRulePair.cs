@@ -2,9 +2,11 @@
 {
 	public struct AppRulePair
 	{
-		public string UniqueID;
-		public string RuleSetID;
-		public RulePriority Priority;
+		public string UniqueID { get; set; }
+
+		public string RuleSetID { get; set; }
+
+		public RulePriority Priority { get; set; }
 
 		public AppRulePair(string id, string gid, RulePriority p)
 		{
