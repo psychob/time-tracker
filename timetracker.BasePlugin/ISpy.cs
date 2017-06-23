@@ -15,5 +15,7 @@ namespace timetracker.BasePlugin
 		void SetObjects(IValueStorage storage,
 			IBinaryStream stream, ILog logger,
 			IConfigurationStorage conf);
+
+		string[] RegisterTokens();
 	}
 }
