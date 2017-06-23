@@ -25,19 +25,7 @@ namespace timetracker
 
 		public static class Structs
 		{
-			internal struct CurrentApps
-			{
-				public int PID;
-				public string UniqueId;
-				public AppRulePair RuleTriggered;
-				public ulong StartTime;
-				public ulong AllTime;
-				public ulong StartCount;
-				public App App;
-				public bool Merged;
-			}
-
-			internal struct AppRulePair
+			public struct AppRulePair
 			{
 				public string UniqueID;
 				public string RuleSetID;
@@ -529,7 +517,7 @@ namespace timetracker
 		internal static TrackSystem TrackingSystemState = null;
 
 		Tracker tracker = null;
-		List<Structs.CurrentApps> currentApps = new List<Structs.CurrentApps>();
+		List<CurrentApps> currentApps = new List<CurrentApps>();
 		List<App> definedApps = new List<App>();
 		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
@@ -997,7 +985,7 @@ namespace timetracker
 
 			definedApps.Replace(p => p.UniqueID == chosen_app.UniqueID, n);
 
-			Structs.CurrentApps ca = new Structs.CurrentApps();
+			CurrentApps ca = new CurrentApps();
 
 			ca.PID = PID;
 			ca.UniqueId = chosen_app.UniqueID;
@@ -1063,7 +1051,7 @@ namespace timetracker
 			}
 		}
 
-		private void StopApp(int pid, Structs.CurrentApps current)
+		private void StopApp(int pid, CurrentApps current)
 		{
 			ulong ct = GetTickCount64() - current.StartTime;
 			DateTime x = DateTime.Now;
@@ -1098,13 +1086,13 @@ namespace timetracker
 				StopApp(it.PID, it);
 		}
 
-		internal List<Structs.CurrentApps> GetRunningAps()
+		internal List<CurrentApps> GetRunningAps()
 		{
-			List<Structs.CurrentApps> ret = new List<Structs.CurrentApps>(currentApps.Count);
+			List<CurrentApps> ret = new List<CurrentApps>(currentApps.Count);
 
 			for (var it = 0; it < currentApps.Count; ++it)
 			{
-				Structs.CurrentApps copy = currentApps[it];
+				CurrentApps copy = currentApps[it];
 				copy.App = (from da in definedApps
 							where da.UniqueID == copy.UniqueId
 							select da).First();
