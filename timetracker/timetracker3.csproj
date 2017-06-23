@@ -22,9 +22,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -48,6 +49,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icons\icons.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>B2A5DF3D5B89A4AA9A9400AF115384520727C897</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>timetracker3_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -100,15 +113,13 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Messages\v3_15_7.cs" />
-    <Compile Include="Messages\v3_15_4.cs" />
-    <Compile Include="Messages\v3_15_5.cs" />
-    <Compile Include="Messages\v3_16.cs" />
     <Compile Include="MouseHook.cs" />
     <Compile Include="NameChangeHook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RingBuffer.cs" />
+    <Compile Include="Tracker\BasePlugin\BinaryStream.cs" />
+    <Compile Include="Tracker\BasePlugin\Token.cs" />
     <Compile Include="TrackSystem.cs" />
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
@@ -148,6 +159,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="timetracker3_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -174,7 +186,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Tracker\Spys\" />
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>

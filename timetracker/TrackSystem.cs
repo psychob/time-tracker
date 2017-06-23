@@ -610,11 +610,6 @@ namespace timetracker
 
 		private void SaveState()
 		{
-			BinaryStop = true;
-
-			ThreadBinary.Priority = ThreadPriority.AboveNormal;
-			ThreadBinary.Join();
-
 			StreamBinary.Close();
 
 			SaveDatabase();
@@ -625,11 +620,6 @@ namespace timetracker
 
 		public void BeginTracking()
 		{
-			ThreadBinary = new Thread(ThreadBinaryLoop);
-			ThreadBinary.Name = "Binary Data Saver";
-			ThreadBinary.Priority = ThreadPriority.BelowNormal;
-			ThreadBinary.Start();
-
 			ProcessBeginWatcher = Win32_Process.Watch(5, BaseClass.WatchType.Creation, CreateProcess);
 			ProcessEndWatcher = Win32_Process.Watch(5, BaseClass.WatchType.Deletion, DestroyProcess);
 

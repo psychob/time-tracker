@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,6 +155,13 @@ namespace timetracker
 				return "{0:F2}K{1}".FormatWith(data / (b), app);
 			else
 				return "{0:F2}".FormatWith(data);
+		}
+
+		public static void WriteBytes(this FileStream stream, string toWrite)
+		{
+			byte[] bytes = toWrite.GetBytes();
+
+			stream.Write(bytes, 0, bytes.Length);
 		}
 	}
 }
