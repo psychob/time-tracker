@@ -23,17 +23,6 @@ namespace timetracker
 		const string ApplicationDefinitions = "appdefinition3.xml";
 		const string TrackedTimesCatalogue = "tracks3";
 
-		public static class Structs
-		{
-			internal struct WaitStruct
-			{
-				public int PID;
-				public ulong StartTime;
-				public int Count;
-				public int ParentID;
-			}
-		}
-
 		internal static class Utils
 		{
 			public static bool IsStringMatch(string pattern, string subject,
@@ -455,7 +444,7 @@ namespace timetracker
 		Tracker tracker = null;
 		List<CurrentApps> currentApps = new List<CurrentApps>();
 		List<App> definedApps = new List<App>();
-		List<Structs.WaitStruct> waitedApps = new List<Structs.WaitStruct>();
+		List<WaitStruct> waitedApps = new List<WaitStruct>();
 		System.Timers.Timer waited_timer, valid_timer, tick_timer;
 		object inOutLock = new object();
 		bool valid_tick_running = false;
@@ -762,7 +751,7 @@ namespace timetracker
 
 			lock (inOutLock)
 			{
-				Structs.WaitStruct ws = new Structs.WaitStruct();
+				WaitStruct ws = new WaitStruct();
 
 				ws.Count = count;
 				ws.PID = pid;

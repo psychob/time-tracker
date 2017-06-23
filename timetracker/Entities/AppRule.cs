@@ -1,5 +1,4 @@
-﻿using static timetracker.TrackSystem.Structs;
-
+﻿
 namespace timetracker.Entities
 {
 	public struct AppRule

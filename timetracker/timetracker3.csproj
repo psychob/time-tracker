@@ -86,6 +86,7 @@
     <Compile Include="Entities\ExeData.cs" />
     <Compile Include="Entities\RulePriority.cs" />
     <Compile Include="Entities\RuleSet.cs" />
+    <Compile Include="Entities\WaitStruct.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ForegroundHook.cs" />
     <Compile Include="KeyboardHook.cs" />
