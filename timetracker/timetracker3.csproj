@@ -65,7 +65,6 @@
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -194,6 +193,10 @@
     <ProjectReference Include="..\timetracker.Plugin.KeyboardTracker\timetracker.Plugin.KeyboardTracker.csproj">
       <Project>{64a228e3-11cc-4423-82db-2d49e22bec73}</Project>
       <Name>timetracker.Plugin.KeyboardTracker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\timetracker.Plugin.MouseTracker\timetracker.Plugin.MouseTracker.csproj">
+      <Project>{ec9f4e1b-ff53-45ca-87fc-da8360076652}</Project>
+      <Name>timetracker.Plugin.MouseTracker</Name>
     </ProjectReference>
     <ProjectReference Include="..\timetracker.winapi\timetracker.WinAPI.csproj">
       <Project>{8013c0fb-ddec-4c82-8dba-f1ff2122deaf}</Project>
