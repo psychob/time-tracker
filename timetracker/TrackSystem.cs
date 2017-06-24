@@ -15,6 +15,7 @@ using System.Xml.Serialization;
 using timetracker.WinAPI.WMI;
 using static timetracker.WinAPI.Kernel32;
 using timetracker.Entities;
+using timetracker.BasePlugin;
 
 namespace timetracker
 {
@@ -309,7 +310,6 @@ namespace timetracker
 			ManagementEventWatcher eventProcessor;
 			ManagementEventWatcher eventNetwork;
 
-			internal KeyboardHook kHook = new KeyboardHook();
 			internal ForegroundHook fHook = new ForegroundHook();
 			internal NamechangeHook nHook = new NamechangeHook();
 			internal MouseHook mHook = new MouseHook();
@@ -338,11 +338,10 @@ namespace timetracker
 
 				eventNetwork = new ManagementEventWatcher(NameSpace, NetworkSql);
 				eventNetwork.EventArrived += networkEventArrived;
-
-//				kHook.Init();
+                
 				fHook.Init();
 				nHook.Init();
-//				mHook.Init();
+				mHook.Init();
 
 				PullAllInternet();
 
@@ -422,10 +421,9 @@ namespace timetracker
 				eventProcessor.Stop();
 				eventNetwork.Stop();
 
-//				kHook.DeInit();
 				fHook.DeInit();
 				nHook.DeInit();
-//				mHook.DeInit();
+				mHook.DeInit();
 
 				eventInternet.Dispose();
 				eventOS.Dispose();
@@ -632,7 +630,6 @@ namespace timetracker
 			tracker.OnProcessorLoad = ProcessorLoad;
 			tracker.OnNetworkBandwidth = NetworkBandwitch;
 
-			tracker.kHook.keyEvent = KeyEvent;
 			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
 

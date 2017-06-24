@@ -221,34 +221,45 @@ namespace timetracker.WinAPI
 			GetRootOwner = 3
 		}
 
-		/// <summary>
-		/// An application-defined or library-defined callback function used
-		/// with the SetWindowsHookEx function. The system calls this function
-		/// every time a new event is about to be posted into a thread input
-		/// queue.
-		/// </summary>
-		/// <param name="nCode">
-		/// A code the hook procedure uses to determine how to process the
-		/// message. If nCode is less than zero, the hook procedure must pass
-		/// the message to the CallNextHookEx function without further
-		/// processing and should return the value returned by CallNextHookEx.
-		/// This parameter can be one of the following values.
-		/// </param>
-		/// <param name="wParam"></param>
-		/// <param name="lParam"></param>
-		/// <returns>
-		/// If nCode is less than zero, the hook procedure must return the
-		/// value returned by CallNextHookEx.
-		/// If nCode is greater than or equal to zero, and the hook procedure
-		/// did not process the message, it is highly recommended that you
-		/// call CallNextHookEx and return the value it returns; otherwise,
-		/// other applications that have installed WH_MOUSE_LL hooks will not
-		/// receive hook notifications and may behave incorrectly as a result.
-		/// If the hook procedure processed the message, it may return a
-		/// nonzero value to prevent the system from passing the message to
-		/// the rest of the hook chain or the target window procedure.
-		/// </returns>
-		public delegate int SetWindowsHookProc(int nCode, IntPtr wParam, IntPtr lParam);
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NativeMessage
+        {
+            public IntPtr handle;
+            public uint msg;
+            public IntPtr wParam;
+            public IntPtr lParam;
+            public uint time;
+            public Point p;
+        }
+
+        /// <summary>
+        /// An application-defined or library-defined callback function used
+        /// with the SetWindowsHookEx function. The system calls this function
+        /// every time a new event is about to be posted into a thread input
+        /// queue.
+        /// </summary>
+        /// <param name="nCode">
+        /// A code the hook procedure uses to determine how to process the
+        /// message. If nCode is less than zero, the hook procedure must pass
+        /// the message to the CallNextHookEx function without further
+        /// processing and should return the value returned by CallNextHookEx.
+        /// This parameter can be one of the following values.
+        /// </param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns>
+        /// If nCode is less than zero, the hook procedure must return the
+        /// value returned by CallNextHookEx.
+        /// If nCode is greater than or equal to zero, and the hook procedure
+        /// did not process the message, it is highly recommended that you
+        /// call CallNextHookEx and return the value it returns; otherwise,
+        /// other applications that have installed WH_MOUSE_LL hooks will not
+        /// receive hook notifications and may behave incorrectly as a result.
+        /// If the hook procedure processed the message, it may return a
+        /// nonzero value to prevent the system from passing the message to
+        /// the rest of the hook chain or the target window procedure.
+        /// </returns>
+        public delegate int SetWindowsHookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
 		/// <summary>
 		/// An application-defined callback (or hook) function that the system
@@ -699,5 +710,61 @@ namespace timetracker.WinAPI
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern int GetWindowText(IntPtr hWnd,
 			StringBuilder lpString,	int nMaxCount);
-	}
+
+        public const uint PM_NOREMOVE = 0x0000;
+        public const uint PM_REMOVE = 0x0001;
+        public const uint PM_NOYIELD = 0x0002;
+
+        /// <summary>
+        /// Dispatches incoming sent messages, checks the thread message 
+        /// queue for a posted message, and retrieves the message (if any exist).
+        /// </summary>
+        /// <param name="lpMsg">A pointer to an MSG structure that receives message information</param>
+        /// <param name="hWnd">A handle to the window whose messages are to 
+        /// be retrieved. The window must belong to the current thread.
+        /// 
+        /// If hWnd is NULL, PeekMessage retrieves messages for any window 
+        /// that belongs to the current thread, and any messages on the current 
+        /// thread's message queue whose hwnd value is NULL (see the MSG 
+        /// structure). Therefore if hWnd is NULL, both window messages and 
+        /// thread messages are processed.
+        /// 
+        /// If hWnd is -1, PeekMessage retrieves only messages on the current 
+        /// thread's message queue whose hwnd value is NULL, that is, thread 
+        /// messages as posted by PostMessage (when the hWnd parameter is 
+        /// NULL) or PostThreadMessage.</param>
+        /// <param name="wMsgFilterMin">The value of the first message in 
+        /// the range of messages to be examined. Use WM_KEYFIRST (0x0100) 
+        /// to specify the first keyboard message or WM_MOUSEFIRST (0x0200) 
+        /// to specify the first mouse message.
+        /// 
+        /// If wMsgFilterMin and wMsgFilterMax are both zero, PeekMessage 
+        /// returns all available messages(that is, no range filtering 
+        /// is performed).</param>
+        /// <param name="wMsgFilterMax">The value of the last message in the 
+        /// range of messages to be examined. Use WM_KEYLAST to specify the 
+        /// last keyboard message or WM_MOUSELAST to specify the last 
+        /// mouse message.
+        /// 
+        /// If wMsgFilterMin and wMsgFilterMax are both zero, PeekMessage 
+        /// returns all available messages(that is, no range filtering is 
+        /// performed).</param>
+        /// <param name="wRemoveMsg">Specifies how messages are to be handled. 
+        /// This parameter can be one or more of the following values.
+        /// * PM_NOREMOVE Messages are not removed from the queue after 
+        /// processing by PeekMessage.
+        /// * PM_REMOVE Messages are removed from the queue after 
+        /// processing by PeekMessage.
+        /// * PM_NOYIELD Prevents the system from releasing any thread 
+        /// that is waiting for the caller to go idle (see WaitForInputIdle).
+        /// Combine this value with either PM_NOREMOVE or PM_REMOVE.
+        /// </param>
+        /// <returns>If a message is available, the return value is nonzero.
+        /// 
+        /// If no messages are available, the return value is zero. </returns>
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool PeekMessage(out NativeMessage lpMsg, IntPtr hWnd,
+            uint wMsgFilterMin, uint wMsgFilterMax, uint wRemoveMsg);
+    }
 }

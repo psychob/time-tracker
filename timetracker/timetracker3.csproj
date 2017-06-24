@@ -106,7 +106,6 @@
     <Compile Include="Entities\WaitStruct.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ForegroundHook.cs" />
-    <Compile Include="KeyboardHook.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,7 +123,6 @@
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
     <Compile Include="TrackSystem_Foreground.cs" />
-    <Compile Include="TrackSystem_Keyboard.cs" />
     <Compile Include="TrackSystem_Memory.cs" />
     <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
@@ -192,6 +190,10 @@
     <ProjectReference Include="..\timetracker.BasePlugin\timetracker.BasePlugin.csproj">
       <Project>{b1ccfe96-d40e-48ca-9be8-2177ce5981f0}</Project>
       <Name>timetracker.BasePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\timetracker.Plugin.KeyboardTracker\timetracker.Plugin.KeyboardTracker.csproj">
+      <Project>{64a228e3-11cc-4423-82db-2d49e22bec73}</Project>
+      <Name>timetracker.Plugin.KeyboardTracker</Name>
     </ProjectReference>
     <ProjectReference Include="..\timetracker.winapi\timetracker.WinAPI.csproj">
       <Project>{8013c0fb-ddec-4c82-8dba-f1ff2122deaf}</Project>

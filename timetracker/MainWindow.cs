@@ -10,6 +10,7 @@ using timetracker.Entities;
 using static timetracker.WinAPI.WinUser;
 using static timetracker.WinAPI.Kernel32;
 using System.Globalization;
+using timetracker.BasePlugin;
 
 namespace timetracker
 {
@@ -96,8 +97,6 @@ namespace timetracker
 
 			var PixelDistance = TrackSystem.TrackingSystemState.MouseDistance;
 			var MouseDistanceSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
-			var KeyboardStrokes = TrackSystem.TrackingSystemState.KeyboardStrokes;
-			var KeyboardSpeed = TrackSystem.TrackingSystemState.KeyboardSpeed;
 			var MouseClick = TrackSystem.TrackingSystemState.MouseClickCount;
 			var MouseClickSpeed = TrackSystem.TrackingSystemState.MouseClickSpeed;
 			var NetworkReciver = TrackSystem.TrackingSystemState.ReciverSpeed;
@@ -118,8 +117,8 @@ namespace timetracker
 
 			tsslPixelDistance.Text = "{0} px".FormatWith(PixelDistance.ToMetric());
 			tsslPixelDistanceRaw.Text = "{0} px/s".FormatWith(MouseDistanceSpeed.ToMetric());
-			tsslKeyStrokes.Text = "{0} keys".FormatWith(KeyboardStrokes.ToMetric());
-			tsslKeyPerSecond.Text = "{0} key/m".FormatWith(KeyboardSpeed.ToMetric());
+			tsslKeyStrokes.Text = "{0} keys".FormatWith(0);
+			tsslKeyPerSecond.Text = "{0} key/m".FormatWith(0);
 			tsslMouseClickCount.Text = "{0} mclk".FormatWith(MouseClick.ToMetric());
 			tsslMouseClickSpeed.Text = "{0} mclk/m".FormatWith(MouseClickSpeed.ToMetric());
 

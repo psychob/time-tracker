@@ -11,7 +11,7 @@
 		/// <returns>
 		/// Three letter string that indicate type of token
 		/// </returns>
-		string GetType();
+		string GetInnerType();
 
 		/// <summary>
 		/// Get data that need to be written to IBinaryStream
