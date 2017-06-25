@@ -8,7 +8,17 @@ namespace timetracker.BasePlugin
 {
     public abstract class AbstractToken : IToken
     {
-        public abstract string GetInnerType();
+        protected string Type;
+
+        public AbstractToken(string type)
+        {
+            Type = type;
+        }
+
+        public string GetInnerType()
+        {
+            return Type;
+        }
 
         protected abstract byte[] ToBinary();
 

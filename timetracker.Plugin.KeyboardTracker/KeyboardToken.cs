@@ -8,13 +8,12 @@ namespace timetracker.Plugin.KeyboardTracker
         protected uint VirtualKey;
         protected uint ScanCode;
 
-        public KeyboardToken(uint virtualKey, uint scanCode)
+        public KeyboardToken(string type, uint virtualKey, uint scanCode)
+            : base(type)
         {
             VirtualKey = virtualKey;
             ScanCode = scanCode;
         }
-
-        public abstract override string GetInnerType();
 
         protected override byte[] ToBinary()
         {

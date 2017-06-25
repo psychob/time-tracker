@@ -4,6 +4,7 @@ using timetracker.BasePlugin;
 using timetracker.WinAPI;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker.Plugin.KeyboardTracker
 {
@@ -74,7 +75,11 @@ namespace timetracker.Plugin.KeyboardTracker
 
         public string[] RegisterTokens()
 		{
-			throw new NotImplementedException();
+            return new string[]
+            {
+                CurrentMessages.MessageHeader_KeyPressed,
+                CurrentMessages.MessageHeader_KeyUnpressed,
+            };
 		}
 
 		public void SetObjects(IValueStorage storage, IBinaryStream stream,

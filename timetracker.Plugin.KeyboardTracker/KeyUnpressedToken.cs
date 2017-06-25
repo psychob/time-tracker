@@ -10,13 +10,8 @@ namespace timetracker.Plugin.KeyboardTracker
     class KeyUnpressedToken : KeyboardToken
     {
         public KeyUnpressedToken(uint virtualKey, uint scanCode)
-            : base(virtualKey, scanCode)
+            : base(CurrentMessages.MessageHeader_KeyPressed, virtualKey, scanCode)
         {
-        }
-
-        public override string GetInnerType()
-        {
-            return CurrentMessages.MessageHeader_KeyPressed;
         }
     }
 }
