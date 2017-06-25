@@ -111,7 +111,6 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MouseHook.cs" />
     <Compile Include="NameChangeHook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,7 +122,6 @@
     <Compile Include="TrackSystem_Events.cs" />
     <Compile Include="TrackSystem_Foreground.cs" />
     <Compile Include="TrackSystem_Memory.cs" />
-    <Compile Include="TrackSystem_Mouse.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="TrackSystem_Processor.cs" />
     <Compile Include="XmlOutputHelper.cs" />
@@ -156,7 +154,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="timetracker3_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

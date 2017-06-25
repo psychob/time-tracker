@@ -44,6 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MouseAxis.cs" />
+    <Compile Include="MouseButtron.cs" />
+    <Compile Include="MouseHorizontalToken.cs" />
+    <Compile Include="MouseMoveToken.cs" />
+    <Compile Include="MousePressToken.cs" />
+    <Compile Include="MouseSpy.cs" />
+    <Compile Include="MouseToken.cs" />
+    <Compile Include="MouseUnpressToken.cs" />
+    <Compile Include="MouseVerticalToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

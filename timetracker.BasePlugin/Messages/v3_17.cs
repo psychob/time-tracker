@@ -13,9 +13,12 @@ namespace timetracker.BasePlugin.Messages.v3_17
         public const byte BinaryEndInnerMessage = (byte)'}';
         public const byte BinaryEndMessage = (byte)']';
 
-        public const byte MessageHeader_MouseClick = (byte)'C';
-        public const byte MessageHeader_MouseMove = (byte)'M';
-        public const byte MessageHeader_MouseWheel = (byte)'W';
+        public const string MessageHeader_MousePressClick = "$MP";
+        public const string MessageHeader_MouseUnpressClick = "$MU";
+        public const string MessageHeader_MouseVerticalWheel = "$MV";
+        public const string MessageHeader_MouseHorizontalWheel = "$MH";
+        public const string MessageHeader_MouseMove = "$MM";
+
         public const string MessageHeader_KeyPressed = "$KP";
         public const string MessageHeader_KeyUnpressed = "$KU";
         public const byte MessageHeader_ForegroundChange = (byte)'F';

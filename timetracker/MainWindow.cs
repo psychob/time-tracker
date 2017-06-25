@@ -95,10 +95,6 @@ namespace timetracker
 
 			TickCount++;
 
-			var PixelDistance = TrackSystem.TrackingSystemState.MouseDistance;
-			var MouseDistanceSpeed = TrackSystem.TrackingSystemState.MouseDistanceSpeed;
-			var MouseClick = TrackSystem.TrackingSystemState.MouseClickCount;
-			var MouseClickSpeed = TrackSystem.TrackingSystemState.MouseClickSpeed;
 			var NetworkReciver = TrackSystem.TrackingSystemState.ReciverSpeed;
 			var NetworkSent = TrackSystem.TrackingSystemState.SentSpeed;
 			var TotalNetworkReciver = TrackSystem.TrackingSystemState.ReciverData;
@@ -115,12 +111,12 @@ namespace timetracker
 			else
 				tsslTime.Text = time.ToString(@"s\s", CultureInfo.InvariantCulture);
 
-			tsslPixelDistance.Text = "{0} px".FormatWith(PixelDistance.ToMetric());
-			tsslPixelDistanceRaw.Text = "{0} px/s".FormatWith(MouseDistanceSpeed.ToMetric());
+			tsslPixelDistance.Text = "{0} px".FormatWith(0);
+			tsslPixelDistanceRaw.Text = "{0} px/s".FormatWith(0);
 			tsslKeyStrokes.Text = "{0} keys".FormatWith(0);
 			tsslKeyPerSecond.Text = "{0} key/m".FormatWith(0);
-			tsslMouseClickCount.Text = "{0} mclk".FormatWith(MouseClick.ToMetric());
-			tsslMouseClickSpeed.Text = "{0} mclk/m".FormatWith(MouseClickSpeed.ToMetric());
+			tsslMouseClickCount.Text = "{0} mclk".FormatWith(0);
+			tsslMouseClickSpeed.Text = "{0} mclk/m".FormatWith(0);
 
 			tsslNetworkReciver.Text = "↓ {0}B/s".FormatWith(NetworkReciver.ToMetric(1024, "i"));
 			tsslNetSent.Text = "↑ {0}B/s".FormatWith(NetworkSent.ToMetric(1024, "i"));
