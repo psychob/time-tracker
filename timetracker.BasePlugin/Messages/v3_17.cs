@@ -35,7 +35,7 @@ namespace timetracker.BasePlugin.Messages.v3_17
         public const byte MessageHeader_ResolutionChange = (byte)'D';
         public const byte MessageHeader_NetworkAdapter = (byte)'A';
 
-        public const byte MessageHeader_Memory = (byte)'I';
+        public const string MessageHeader_Memory = "MEM";
         public const byte MessageHeader_NetworkBandwidth = (byte)'T';
 
         public const byte MessageHeader_Version = (byte)'V';

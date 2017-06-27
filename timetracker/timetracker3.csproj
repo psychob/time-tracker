@@ -119,7 +119,6 @@
     <Compile Include="TrackSystem.cs" />
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />
-    <Compile Include="TrackSystem_Memory.cs" />
     <Compile Include="TrackSystem_Namechange.cs" />
     <Compile Include="TrackSystem_Processor.cs" />
     <Compile Include="XmlOutputHelper.cs" />
@@ -192,6 +191,10 @@
     <ProjectReference Include="..\timetracker.Plugin.KeyboardTracker\timetracker.Plugin.KeyboardTracker.csproj">
       <Project>{64a228e3-11cc-4423-82db-2d49e22bec73}</Project>
       <Name>timetracker.Plugin.KeyboardTracker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\timetracker.Plugin.Memory\timetracker.Plugin.Memory.csproj">
+      <Project>{f8d90bdb-8a8a-455b-b505-e4ae2c842ddc}</Project>
+      <Name>timetracker.Plugin.Memory</Name>
     </ProjectReference>
     <ProjectReference Include="..\timetracker.Plugin.MouseTracker\timetracker.Plugin.MouseTracker.csproj">
       <Project>{ec9f4e1b-ff53-45ca-87fc-da8360076652}</Project>
