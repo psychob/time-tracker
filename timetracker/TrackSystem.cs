@@ -309,8 +309,7 @@ namespace timetracker
 			ManagementEventWatcher eventOS;
 			ManagementEventWatcher eventProcessor;
 			ManagementEventWatcher eventNetwork;
-
-			internal ForegroundHook fHook = new ForegroundHook();
+            
 			internal NamechangeHook nHook = new NamechangeHook();
 
 			public void Start()
@@ -338,7 +337,6 @@ namespace timetracker
 				eventNetwork = new ManagementEventWatcher(NameSpace, NetworkSql);
 				eventNetwork.EventArrived += networkEventArrived;
                 
-				fHook.Init();
 				nHook.Init();
 
 				PullAllInternet();
@@ -418,8 +416,7 @@ namespace timetracker
 				eventOS.Stop();
 				eventProcessor.Stop();
 				eventNetwork.Stop();
-
-				fHook.DeInit();
+                
 				nHook.DeInit();
 
 				eventInternet.Dispose();
@@ -627,7 +624,6 @@ namespace timetracker
 			tracker.OnProcessorLoad = ProcessorLoad;
 			tracker.OnNetworkBandwidth = NetworkBandwitch;
 
-			tracker.fHook.foregroundChanged = ForegroundEvent;
 			tracker.nHook.namechangeEvent = NamechangeEvent;
 
 			var x = System.Windows.Forms.Screen.PrimaryScreen;

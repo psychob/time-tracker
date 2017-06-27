@@ -21,7 +21,9 @@ namespace timetracker.BasePlugin.Messages.v3_17
 
         public const string MessageHeader_KeyPressed = "$KP";
         public const string MessageHeader_KeyUnpressed = "$KU";
-        public const byte MessageHeader_ForegroundChange = (byte)'F';
+
+        public const string MessageHeader_ForegroundChange = "FOR";
+
         public const byte MessageHeader_Processor = (byte)'R';
         public const byte MessageHeader_Namechange = (byte)'N';
 
