@@ -8,6 +8,7 @@ using timetracker.BasePlugin;
 using timetracker.WinAPI;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using timetracker.BasePlugin.Messages;
 
 namespace timetracker.Plugin.MouseTracker
 {
@@ -32,7 +33,14 @@ namespace timetracker.Plugin.MouseTracker
 
         public string[] RegisterTokens()
         {
-            throw new NotImplementedException();
+            return new string[]
+            {
+                CurrentMessages.MessageHeader_MouseHorizontalWheel,
+                CurrentMessages.MessageHeader_MouseVerticalWheel,
+                CurrentMessages.MessageHeader_MousePressClick,
+                CurrentMessages.MessageHeader_MouseUnpressClick,
+                CurrentMessages.MessageHeader_MouseMove,
+            };
         }
 
         public void SetObjects(IValueStorage storage, 
