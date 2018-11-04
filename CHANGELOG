@@ -1,8 +1,6 @@
 next:
-
-4.0:
-	* Removed not used Spys
-	* Moved WMI and rest of WinAPI stuff to this project
+	* Complete rewrite codebase
+	* Move data to sqlite database instead of custom format
 
 3.16.3:
 	* Added support for tracking 64 bit applications

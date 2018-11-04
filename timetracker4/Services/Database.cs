@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using SQLite;
 using timetracker4.Entity;
+using timetracker4.Exceptions;
 using Version = timetracker4.Entity.Version;
 
 namespace timetracker4.Services
@@ -10,6 +11,7 @@ namespace timetracker4.Services
     internal class Database: IDisposable
     {
         private SQLiteConnection _connection;
+        private const int LastMigration = 2;
 
         public void Init()
         {
@@ -19,6 +21,7 @@ namespace timetracker4.Services
             }
             else
             {
+                OpenDatabase();
                 UpdateDatabase();
             }
         }
@@ -32,12 +35,29 @@ namespace timetracker4.Services
         {
             _connection = new SQLiteConnection("./tracks.db3", true, null);
 
-            Migrate(1);
+            Migrate(1, 0);
+        }
+
+        private void OpenDatabase()
+        {
+            _connection = new SQLiteConnection("./tracks.db3", true, null);
         }
 
         private void UpdateDatabase()
         {
-            var last = QueryFirst<Version>("selet * from version order by Id Desc");
+            var last = QueryFirst<Version>("select * from Version order by Id Desc");
+
+            if (last == null)
+            {
+                // This should not happen, since when database is created we initialize it with correct
+                // tables
+                throw new IncorrectStateException();
+            }
+
+            if (last.Id < LastMigration)
+            {
+                Migrate(LastMigration, last.Id);
+            }
         }
 
         public T QueryFirst<T>(string sql) where T : new()
@@ -45,12 +65,18 @@ namespace timetracker4.Services
             return _connection.Query<T>(sql).FirstOrDefault();
         }
 
-        private void Migrate(int which)
+        private void Migrate(int which, Int64 currentMigration)
         {
-            if (which == 1)
+            if (which >= 1 && currentMigration < 1)
             {
                 _connection.CreateTables<Application, RuleGroup, Rule, Version>();
                 Insert(new Version { Id = 1 });
+            }
+            
+            if (which >= 2 && currentMigration < 2)
+            {
+                _connection.CreateTable<Event>();
+                Insert(new Version { Id = 2 });
             }
         }
 

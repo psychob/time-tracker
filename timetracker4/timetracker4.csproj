@@ -64,12 +64,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\Application.cs" />
+    <Compile Include="Entity\Event.cs" />
     <Compile Include="Entity\Rule.cs" />
     <Compile Include="Entity\RuleGroup.cs" />
     <Compile Include="Entity\RuleGroupType.cs" />
     <Compile Include="Entity\RuleMatchAlgorithm.cs" />
     <Compile Include="Entity\RuleMatchTo.cs" />
     <Compile Include="Entity\Version.cs" />
+    <Compile Include="Exceptions\IncorrectStateException.cs" />
     <Compile Include="Forms\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>

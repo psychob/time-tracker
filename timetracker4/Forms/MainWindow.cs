@@ -24,8 +24,10 @@ namespace timetracker4.Forms
 
         private void OnLoad(object sender, EventArgs e)
         {
-            var db = new Database();
-            db.Init();
+            using (var db = new Database())
+            {
+                db.Init();
+            }
         }
     }
 }
