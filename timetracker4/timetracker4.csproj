@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\NinjectBindings.cs" />
     <Compile Include="Entity\Application.cs" />
     <Compile Include="Entity\Event.cs" />
     <Compile Include="Entity\Rule.cs" />
