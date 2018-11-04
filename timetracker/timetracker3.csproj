@@ -123,8 +123,6 @@
     <Compile Include="Tracking\ProcessorLoad\ProcessorLoadTracker.cs" />
     <Compile Include="Tracking\SystemMemory\MemoryEvent.cs" />
     <Compile Include="Tracking\SystemMemory\MemoryTracker.cs" />
-    <Compile Include="Tracking\Version\VersionEvent.cs" />
-    <Compile Include="Tracking\Version\VersionTracker.cs" />
     <Compile Include="TrackSystem.cs" />
     <Compile Include="TrackSystem_BinaryStream.cs" />
     <Compile Include="TrackSystem_Events.cs" />

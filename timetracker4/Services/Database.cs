@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using SQLite;
 using timetracker4.Entity;
 using timetracker4.Exceptions;
@@ -8,7 +9,7 @@ using Version = timetracker4.Entity.Version;
 
 namespace timetracker4.Services
 {
-    internal class Database: IDisposable
+    internal class Database: IDisposable, IDatabase
     {
         private SQLiteConnection _connection;
         private const int LastMigration = 2;
@@ -89,6 +90,18 @@ namespace timetracker4.Services
         {
             _connection?.Close();
             _connection = null;
+        }
+
+        public void NewEvent<T>(T obj, DateTime? when = null)
+        {
+            var eva = new Event
+            {
+                Type = typeof(T).FullName,
+                When = when ?? new DateTime(),
+                MetaData = JsonConvert.SerializeObject(obj)
+            };
+
+            _connection.Insert(eva);
         }
     }
 }

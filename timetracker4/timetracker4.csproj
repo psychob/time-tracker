@@ -85,6 +85,12 @@
     <Compile Include="Entity\RuleMatchTo.cs" />
     <Compile Include="Entity\Version.cs" />
     <Compile Include="Exceptions\IncorrectStateException.cs" />
+    <Compile Include="Forms\ImporterWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImporterWindow.Designer.cs">
+      <DependentUpon>ImporterWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +100,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Database.cs" />
+    <Compile Include="Services\IDatabase.cs" />
+    <Compile Include="Spies\ISpy.cs" />
+    <Compile Include="Spies\Version\VersionEvent.cs" />
+    <Compile Include="Spies\Version\VersionSpy.cs" />
+    <EmbeddedResource Include="Forms\ImporterWindow.resx">
+      <DependentUpon>ImporterWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

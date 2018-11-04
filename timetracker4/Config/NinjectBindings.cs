@@ -7,7 +7,7 @@ namespace timetracker4.Config
     {
         public override void Load()
         {
-            Bind<Database>().To<Database>().InSingletonScope();
+            Bind<IDatabase>().To<Database>().InSingletonScope();
         }
     }
 }
