@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ninject;
+using Ninject.Extensions.Logging.Log4net;
 using timetracker4.Forms;
 
 namespace timetracker4
@@ -24,6 +25,7 @@ namespace timetracker4
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new ImporterWindow());
             Application.Run(new MainWindow());
         }
     }
