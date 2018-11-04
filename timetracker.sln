@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker3", "timetracker\timetracker3.csproj", "{880367EB-DC6A-4851-821B-8361B202022E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker4", "timetracker4\timetracker4.csproj", "{BD749B1C-79F4-406F-9957-2E5EDDD12648}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{880367EB-DC6A-4851-821B-8361B202022E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{880367EB-DC6A-4851-821B-8361B202022E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{880367EB-DC6A-4851-821B-8361B202022E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD749B1C-79F4-406F-9957-2E5EDDD12648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD749B1C-79F4-406F-9957-2E5EDDD12648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD749B1C-79F4-406F-9957-2E5EDDD12648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD749B1C-79F4-406F-9957-2E5EDDD12648}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37A8D1B3-EFA2-4932-9A72-0E85C44AC802}
 	EndGlobalSection
 EndGlobal
