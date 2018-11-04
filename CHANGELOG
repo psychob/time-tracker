@@ -1,6 +1,7 @@
 next:
 	* Complete rewrite codebase
 	* Move data to sqlite database instead of custom format
+	* Add license
 
 3.16.3:
 	* Added support for tracking 64 bit applications
