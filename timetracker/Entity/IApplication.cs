@@ -2,11 +2,11 @@
 
 namespace timetracker.Entity
 {
-    public interface Application
+    public interface IApplication
     {
         string GetUniqueId();
         string GetName();
-        List<RuleSet> GetRules();
+        List<IRuleSet> GetRules();
         bool GetReportOnlyOne();
         bool GetCountGroupAsOne();
     }

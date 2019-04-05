@@ -2,10 +2,10 @@
 
 namespace timetracker.Entity
 {
-    public interface RuleSet
+    public interface IRuleSet
     {
         RuleSetType GetRuleType();
         RuleSetPriority GetPriority();
-        List<Rule> GetRules();
+        List<IRule> GetRules();
     }
 }
