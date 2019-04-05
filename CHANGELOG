@@ -1,9 +1,5 @@
 next:
 
-4.0:
-	* Removed not used Spys
-	* Moved WMI and rest of WinAPI stuff to this project
-
 3.16.3:
 	* Added support for tracking 64 bit applications
 
