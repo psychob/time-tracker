@@ -8,6 +8,7 @@ namespace timetracker4.Config
         public override void Load()
         {
             Bind<IDatabase>().To<Database>().InSingletonScope();
+            Bind<ITrackerManager>().To<TrackerManager>().InSingletonScope();
         }
     }
 }

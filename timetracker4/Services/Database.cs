@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using log4net;
 using Newtonsoft.Json;
+using Ninject.Extensions.Logging;
 using SQLite;
 using timetracker4.Entity;
 using timetracker4.Exceptions;
@@ -9,13 +11,23 @@ using Version = timetracker4.Entity.Version;
 
 namespace timetracker4.Services
 {
-    internal class Database: IDisposable, IDatabase
+    internal class Database : IDisposable, IDatabase
     {
         private SQLiteConnection _connection;
-        private const int LastMigration = 2;
+        protected ILogger Logger { get; set; }
+        private const int LastMigration = 3;
 
-        public void Init()
+        public Database(ILogger logger)
         {
+            Logger = logger;
+
+            Init();
+        }
+
+        private void Init()
+        {
+            Logger.Debug("Initialize database");
+
             if (!IsDatabaseExist())
             {
                 CreateDatabase();
@@ -36,7 +48,7 @@ namespace timetracker4.Services
         {
             _connection = new SQLiteConnection("./tracks.db3", true, null);
 
-            Migrate(1, 0);
+            Migrate(LastMigration, 0);
         }
 
         private void OpenDatabase()
@@ -73,11 +85,17 @@ namespace timetracker4.Services
                 _connection.CreateTables<Application, RuleGroup, Rule, Version>();
                 Insert(new Version { Id = 1 });
             }
-            
+
             if (which >= 2 && currentMigration < 2)
             {
                 _connection.CreateTable<Event>();
                 Insert(new Version { Id = 2 });
+            }
+
+            if (which >= 3 && currentMigration < 3)
+            {
+                _connection.CreateTable<Application>();
+                Insert(new Version { Id = 3 });
             }
         }
 

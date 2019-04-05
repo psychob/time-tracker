@@ -43,5 +43,10 @@ namespace timetracker4.Spies.Version
         {
             // noop
         }
+
+        public List<SpyOption> GetOptions()
+        {
+            return new List<SpyOption>();
+        }
     }
 }

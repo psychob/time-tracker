@@ -11,5 +11,7 @@ namespace timetracker4.Spies
         string GetName();
         void Start();
         void Stop();
+
+        List<SpyOption> GetOptions();
     }
 }

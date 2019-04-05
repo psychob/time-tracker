@@ -15,5 +15,7 @@ namespace timetracker4.Entity
 
         public bool AllowOnlyOne { get; set; }
         public bool OnlyCountMaster { get; set; }
+
+        public string MetaData { get; set; }
     }
 }

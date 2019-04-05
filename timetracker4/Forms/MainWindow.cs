@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Ninject;
 using SQLite;
 using timetracker4.Entity;
 using timetracker4.Services;
@@ -24,10 +25,7 @@ namespace timetracker4.Forms
 
         private void OnLoad(object sender, EventArgs e)
         {
-            using (var db = new Database())
-            {
-                db.Init();
-            }
+            var db = Program.DependencyInjection.Get<IDatabase>();
         }
     }
 }
