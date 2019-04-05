@@ -9,5 +9,7 @@ namespace timetracker.Entity
         List<IRuleSet> GetRules();
         bool GetReportOnlyOne();
         bool GetCountGroupAsOne();
+        IApplicationStats GetStats();
+        IStats GetStats(string Spy);
     }
 }
