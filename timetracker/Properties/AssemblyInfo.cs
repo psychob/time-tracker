@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("budzanowski.pl")]
 [assembly: AssemblyProduct("timetracker")]
-[assembly: AssemblyCopyright("(c) 2015 - 2017 Andrzej Budzanowski")]
+[assembly: AssemblyCopyright("(c) 2015 - 2019 Andrzej Budzanowski")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
