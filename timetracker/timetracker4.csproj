@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,8 +28,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -99,6 +99,13 @@
     <Compile Include="ApplicationDefinition.Designer.cs">
       <DependentUpon>ApplicationDefinition.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entity\Application.cs" />
+    <Compile Include="Entity\Rule.cs" />
+    <Compile Include="Entity\RuleAlgorithm.cs" />
+    <Compile Include="Entity\RuleMatchTo.cs" />
+    <Compile Include="Entity\RuleSet.cs" />
+    <Compile Include="Entity\RuleSetPriority.cs" />
+    <Compile Include="Entity\RuleSetType.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ForegroundHook.cs" />
     <Compile Include="KeyboardHook.cs" />
