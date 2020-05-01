@@ -1,6 +1,7 @@
 next:
 3.17:
-	
+	* Add Count only Parent option for statistics
+	* Update time format in main window
 
 3.16.3:
 	* Added support for tracking 64 bit applications
