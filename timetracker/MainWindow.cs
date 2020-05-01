@@ -108,11 +108,11 @@ namespace timetracker
             var time = (DateTime.Now - StartTime);
 
             if (time.Days > 0)
-                tsslTime.Text = time.ToString(@"d\d\:h\h\:m\m\:s\s", CultureInfo.InvariantCulture);
+                tsslTime.Text = time.ToString(@"d\:hh\:mm\:ss", CultureInfo.InvariantCulture);
             else if (time.Hours > 0)
-                tsslTime.Text = time.ToString(@"h\h\:m\m\:s\s", CultureInfo.InvariantCulture);
+                tsslTime.Text = time.ToString(@"h\:mm\:ss", CultureInfo.InvariantCulture);
             else if (time.Minutes > 0)
-                tsslTime.Text = time.ToString(@"m\m\:s\s", CultureInfo.InvariantCulture);
+                tsslTime.Text = time.ToString(@"m\:ss", CultureInfo.InvariantCulture);
             else
                 tsslTime.Text = time.ToString(@"s\s", CultureInfo.InvariantCulture);
 
