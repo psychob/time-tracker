@@ -8,55 +8,55 @@ using static timetracker.Messages.v3_16.Constants;
 
 namespace timetracker
 {
-	public partial class TrackSystem
-	{
-		class NamechangeToken : TokenValue
-		{
-			public byte Type;
-			public uint PID;
-			public string Name;
+    public partial class TrackSystem
+    {
+        class NamechangeToken : TokenValue
+        {
+            public byte Type;
+            public uint PID;
+            public string Name;
 
-			public NamechangeToken(uint pid, string name)
-			{
-				Type = MessageHeader_Namechange;
-				PID = pid;
-				Name = name;
-			}
+            public NamechangeToken(uint pid, string name)
+            {
+                Type = MessageHeader_Namechange;
+                PID = pid;
+                Name = name;
+            }
 
-			public int AsByteStream(ref byte[] str, int start, int length)
-			{
-				int Written = 0;
-				byte[] buff;
+            public int AsByteStream(ref byte[] str, int start, int length)
+            {
+                int Written = 0;
+                byte[] buff;
 
-				str[start + Written++] = Type;
+                str[start + Written++] = Type;
 
-				// work
-				buff = BitConverter.GetBytes(PID);
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
+                // work
+                buff = BitConverter.GetBytes(PID);
+                buff.CopyTo(str, start + Written);
+                Written += buff.Length;
 
-				buff = Name.GetBytesEncoded();
-				buff.CopyTo(str, start + Written);
-				Written += buff.Length;
+                buff = Name.GetBytesEncoded();
+                buff.CopyTo(str, start + Written);
+                Written += buff.Length;
 
-				return Written;
-			}
-		}
+                return Written;
+            }
+        }
 
-		uint LastNameChangePID = 0;
-		string LastNameChangeTitle = "";
+        uint LastNameChangePID = 0;
+        string LastNameChangeTitle = "";
 
-		private void NamechangeEvent(uint PID, string winTitle)
-		{
-			DateTime x = DateTime.Now;
+        private void NamechangeEvent(uint PID, string winTitle)
+        {
+            DateTime x = DateTime.Now;
 
-			if (PID == LastNameChangePID && winTitle == LastNameChangeTitle)
-				return;
+            if (PID == LastNameChangePID && winTitle == LastNameChangeTitle)
+                return;
 
-			LastNameChangePID = PID;
-			LastNameChangeTitle = winTitle;
+            LastNameChangePID = PID;
+            LastNameChangeTitle = winTitle;
 
-			AppendBinary(new NamechangeToken(PID, winTitle), x);
-		}
-	}
+            AppendBinary(new NamechangeToken(PID, winTitle), x);
+        }
+    }
 }
