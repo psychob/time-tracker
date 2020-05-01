@@ -33,8 +33,10 @@ namespace timetracker
 				public string Name, UniqueID;
 				public ulong Time, StartCounter;
 				public bool IsShell;
+                private bool? _AllowOnlyOne;
+                private bool? _CountOnlyParent;
 
-				public AppRuleSet[] Rules;
+                public AppRuleSet[] Rules;
 
 				public bool AllowOnlyOne
 				{
@@ -52,6 +54,19 @@ namespace timetracker
 					}
 				}
 
+                public bool CountOnlyParent
+                {
+                    get
+                    {
+                        return _CountOnlyParent ?? false;
+                    }
+
+                    set
+                    {
+                        _CountOnlyParent = value;
+                    }
+                }
+
 				public bool AllowOnlyOneSpecified
 				{
 					get
@@ -59,8 +74,6 @@ namespace timetracker
 						return _AllowOnlyOne.HasValue;
 					}
 				}
-
-				private bool? _AllowOnlyOne;
 
 				public App(App copy)
 				{
@@ -71,6 +84,7 @@ namespace timetracker
 					IsShell = copy.IsShell;
 					Rules = copy.Rules;
 					_AllowOnlyOne = copy._AllowOnlyOne;
+                    _CountOnlyParent = copy._CountOnlyParent;
 				}
 			}
 
@@ -1061,7 +1075,7 @@ namespace timetracker
 
 		public Structs.App AddNewDefinition(string applicationName,
 			string applicationUniqueID, Structs.AppRuleSet[] applicationRules,
-			bool allowOnlyOne)
+			bool allowOnlyOne, bool countOnlyParent)
 		{
 			string application_unique_id = applicationUniqueID;
 			int counter = 2;
@@ -1082,6 +1096,7 @@ namespace timetracker
 			app.Time = 0;
 
 			app.AllowOnlyOne = allowOnlyOne;
+            app.CountOnlyParent = countOnlyParent;
 
 			definedApps.Add(app);
 

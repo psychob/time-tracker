@@ -787,5 +787,19 @@ namespace timetracker
 
 			treeView1.Nodes.Remove(treeView1.SelectedNode);
 		}
-	}
+
+        public bool ApplicationCountOnlyParent
+        {
+            get
+            {
+                return cbCountOnlyParent.Checked;
+            }
+
+            set
+            {
+                cbCountOnlyParent.Checked = value;
+            }
+        }
+
+    }
 }

@@ -50,7 +50,7 @@ namespace timetracker
 			if (ad.IsValid)
 			{
 				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
+					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne, ad.ApplicationCountOnlyParent);
 
 				var lvi = new ListViewItem(new string[]
 				{
@@ -104,17 +104,24 @@ namespace timetracker
 			adef.ApplicationRules = idata.Rules;
 			adef.ApplicationEditing = true;
 			adef.ApplicationAllowOnlyOne = idata.AllowOnlyOne;
+            adef.ApplicationCountOnlyParent = idata.CountOnlyParent;
 
 			adef.ShowDialog();
 
 			idata.Name = adef.ApplicationName;
 			idata.Rules = adef.ApplicationRules;
 			idata.AllowOnlyOne = adef.ApplicationAllowOnlyOne;
+            idata.CountOnlyParent = adef.ApplicationCountOnlyParent;
 
-			if (adef.ApplicationAllowOnlyOne)
-				sic.BackColor = Color.PaleGreen;
-			else
-				sic.BackColor = Color.White;
+            if (adef.ApplicationAllowOnlyOne)
+                sic.BackColor = Color.PaleGreen;
+            else
+            {
+                if (adef.ApplicationCountOnlyParent)
+                    sic.BackColor = Color.AliceBlue;
+                else
+                    sic.BackColor = Color.White;
+            }
 
 			TrackSystem.TrackingSystemState.UpdateApp(idata.UniqueID, idata);
 		}

@@ -76,15 +76,17 @@ namespace timetracker
 				{
 					ListViewItem liv = new ListViewItem(it.PID.ToString());
 
-					if (it.App.AllowOnlyOne)
-						liv.BackColor = Color.PaleGreen;
+                    if (it.App.AllowOnlyOne)
+                        liv.BackColor = Color.PaleGreen;
+                    else if (it.App.CountOnlyParent)
+                        liv.BackColor = Color.LightBlue;
 
 					liv.SubItems.AddRange(new string[]{
-					it.App.Name,
-					TrackSystem.Utils.GetTime(GetTickCount64() - it.StartTime),
-					TrackSystem.Utils.GetTime(it.AllTime + (GetTickCount64() - it.StartTime)),
-					it.StartCount.ToString(),
-				});
+					    it.App.Name,
+					    TrackSystem.Utils.GetTime(GetTickCount64() - it.StartTime),
+					    TrackSystem.Utils.GetTime(it.AllTime + (GetTickCount64() - it.StartTime)),
+					    it.StartCount.ToString(),
+				    });
 
 					lvTrackedApps.Items.Add(liv);
 				}
@@ -265,7 +267,7 @@ namespace timetracker
 			if (ad.IsValid)
 			{
 				var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
+					ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne, ad.ApplicationCountOnlyParent);
 
 				TrackSystem.TrackingSystemState.GrabAll();
 			}
@@ -340,7 +342,7 @@ namespace timetracker
 				if (ad.IsValid)
 				{
 					var appinfo = TrackSystem.TrackingSystemState.AddNewDefinition(ad.ApplicationName,
-						ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne);
+						ad.ApplicationUniqueID, ad.ApplicationRules, ad.ApplicationAllowOnlyOne, ad.ApplicationCountOnlyParent);
 
 					TrackSystem.TrackingSystemState.GrabAll();
 
