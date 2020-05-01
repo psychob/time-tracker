@@ -5,6 +5,16 @@ VisualStudioVersion = 15.0.28307.1082
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker3", "timetracker\timetracker3.csproj", "{880367EB-DC6A-4851-821B-8361B202022E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker4", "timetracker4\timetracker4.csproj", "{0E10F6F0-18FE-40BB-9876-3B17C2FDD431}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BDE25737-A843-41ED-90C8-6A35D70FEBF8} = {BDE25737-A843-41ED-90C8-6A35D70FEBF8}
+		{CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171} = {CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker4-shared", "timetracker4-shared\timetracker4-shared.csproj", "{CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timetracker4-importer", "timetracker4-importer\timetracker4-importer.csproj", "{BDE25737-A843-41ED-90C8-6A35D70FEBF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,18 @@ Global
 		{880367EB-DC6A-4851-821B-8361B202022E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{880367EB-DC6A-4851-821B-8361B202022E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{880367EB-DC6A-4851-821B-8361B202022E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E10F6F0-18FE-40BB-9876-3B17C2FDD431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E10F6F0-18FE-40BB-9876-3B17C2FDD431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E10F6F0-18FE-40BB-9876-3B17C2FDD431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E10F6F0-18FE-40BB-9876-3B17C2FDD431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFAFCC9A-BB3B-40F4-BB69-8CBD83F28171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE25737-A843-41ED-90C8-6A35D70FEBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE25737-A843-41ED-90C8-6A35D70FEBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE25737-A843-41ED-90C8-6A35D70FEBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE25737-A843-41ED-90C8-6A35D70FEBF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
